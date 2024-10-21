@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import mermaid from 'mermaid';
 import Image from 'next/image'
+import svgPanZoom from 'svg-pan-zoom'
 
 interface Message {
   id: number
@@ -80,14 +81,43 @@ export function ChatInterfaceComponent() {
       if (element) {
         mermaid.render('mermaid-svg', currentDiagram.content).then(({ svg }) => {
           element.innerHTML = svg;
-          // Add this line to get the SVG element
           const svgElement = element.querySelector('svg');
           if (svgElement) {
-            // Apply styles to make SVG responsive
             svgElement.style.width = '100%';
             svgElement.style.height = '100%';
             svgElement.style.maxWidth = '100%';
             svgElement.style.maxHeight = '100%';
+
+            // Initialize svg-pan-zoom with initial zoom level
+            const panZoom = svgPanZoom(svgElement, {
+              zoomEnabled: true,
+              controlIconsEnabled: true,
+              fit: false, // Changed to false
+              center: true,
+              minZoom: 0.1,
+              maxZoom: 10,
+              zoomScaleSensitivity: 0.5,
+              initialZoom: 0.7 // Set initial zoom level
+            });
+
+            // Apply initial zoom after a short delay
+            setTimeout(() => {
+              panZoom.zoom(0.7);
+              panZoom.center();
+            }, 100);
+
+            // Resize the pan-zoom when the window is resized
+            const resizeObserver = new ResizeObserver(() => {
+              panZoom.resize();
+              panZoom.center();
+            });
+            resizeObserver.observe(element);
+
+            // Clean up function
+            return () => {
+              panZoom.destroy();
+              resizeObserver.disconnect();
+            };
           }
         });
       }
@@ -454,7 +484,7 @@ export function ChatInterfaceComponent() {
                 exit={{ x: '100%' }}
                 transition={{ duration: 0.3 }}
               >
-                <div id="diagram-container" className="flex-grow bg-muted p-4 rounded-lg relative m-4 shadow-lg flex flex-col">
+                <div id="diagram-container" className="flex-grow bg-muted p-4 rounded-lg relative m-4 shadow-lg flex flex-col overflow-hidden">
                   <div className="absolute top-2 left-2 right-2 flex justify-between items-center p-2">
                     <h2 className="text-xl font-bold">{currentDiagram.title}</h2>
                     <Button variant="ghost" size="icon" onClick={() => toggleDiagram(null)}>
