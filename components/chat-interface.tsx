@@ -9,6 +9,7 @@ import { Send, ChevronRight, ChevronLeft, User, Bot, Image as ImageIcon, X, Pape
 import { motion, AnimatePresence } from 'framer-motion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import mermaid from 'mermaid';
+import Image from 'next/image'
 
 interface Message {
   id: number
@@ -18,7 +19,7 @@ interface Message {
     title: string
     content: string
     type: 'mermaid'
-  }
+  } | null
   file?: File
 }
 
@@ -81,7 +82,7 @@ export function ChatInterfaceComponent() {
 
   const streamResponse = async (response: string) => {
     setIsStreaming(true)
-    const newMessage: Message = { id: Date.now(), text: '', sender: 'ai', diagram: null }
+    const newMessage: Message = { id: Date.now(), text: '', sender: 'ai' }
     setCurrentChat(prevChat => ({
       ...prevChat,
       messages: [...prevChat.messages, newMessage]
@@ -302,9 +303,9 @@ export function ChatInterfaceComponent() {
               <Input
                 ref={titleInputRef}
                 value={editedTitle}
-                onChange={(e) => setEditedTitle(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditedTitle(e.target.value)}
                 onBlur={handleTitleSave}
-                onKeyPress={(e) => e.key === 'Enter' && handleTitleSave()}
+                onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleTitleSave()}
                 className="text-2xl font-bold w-64"
               />
             ) : (
@@ -336,7 +337,13 @@ export function ChatInterfaceComponent() {
                           {message.file ? (
                             message.file.type.startsWith('image/') ? (
                               <div className="flex flex-col items-start">
-                                <img src={URL.createObjectURL(message.file)} alt={message.file.name} className="max-w-full h-auto rounded-lg" />
+                                <Image 
+                                  src={URL.createObjectURL(message.file)} 
+                                  alt={message.file.name} 
+                                  width={200} 
+                                  height={200} 
+                                  className="max-w-full h-auto rounded-lg" 
+                                />
                                 <span className="mt-2 text-sm text-gray-500">{message.file.name}</span>
                               </div>
                             ) : (
@@ -385,9 +392,9 @@ export function ChatInterfaceComponent() {
                 )}
                 <Textarea
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
                   placeholder="Type your message..."
-                  onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
+                  onKeyPress={(e: React.KeyboardEvent<HTMLTextAreaElement>) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
                   className="w-full min-h-[120px] pr-12 pl-6 py-4 resize-none rounded-lg"
                   rows={3}
                 />
