@@ -65,7 +65,12 @@ export function ChatInterfaceComponent() {
       startOnLoad: true,
       theme: 'default',
       securityLevel: 'loose',
-      fontSize: 16, // Adjust this value as needed
+      fontSize: 16,
+      // Add these options
+      flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true
+      }
     });
   }, []);
 
@@ -75,6 +80,15 @@ export function ChatInterfaceComponent() {
       if (element) {
         mermaid.render('mermaid-svg', currentDiagram.content).then(({ svg }) => {
           element.innerHTML = svg;
+          // Add this line to get the SVG element
+          const svgElement = element.querySelector('svg');
+          if (svgElement) {
+            // Apply styles to make SVG responsive
+            svgElement.style.width = '100%';
+            svgElement.style.height = '100%';
+            svgElement.style.maxWidth = '100%';
+            svgElement.style.maxHeight = '100%';
+          }
         });
       }
     }
@@ -440,7 +454,7 @@ export function ChatInterfaceComponent() {
                 exit={{ x: '100%' }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="flex-grow bg-muted p-4 rounded-lg relative m-4 shadow-lg flex flex-col">
+                <div id="diagram-container" className="flex-grow bg-muted p-4 rounded-lg relative m-4 shadow-lg flex flex-col">
                   <div className="absolute top-2 left-2 right-2 flex justify-between items-center p-2">
                     <h2 className="text-xl font-bold">{currentDiagram.title}</h2>
                     <Button variant="ghost" size="icon" onClick={() => toggleDiagram(null)}>
@@ -450,7 +464,7 @@ export function ChatInterfaceComponent() {
                   </div>
                   <div className="mt-12 flex-grow flex items-center justify-center overflow-auto">
                     {currentDiagram.type === 'mermaid' && (
-                      <div id="mermaid-diagram" className="max-w-full max-h-full transform scale-75" />
+                      <div id="mermaid-diagram" className="w-full h-full flex items-center justify-center" />
                     )}
                   </div>
                 </div>
