@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Send, ChevronRight, ChevronLeft, User, Bot, Image as ImageIcon, X, Paperclip, Plus, File, FileText, FileImage, FileAudio, FileVideo } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import mermaid from 'mermaid';
 
 interface Message {
   id: number
@@ -16,6 +17,7 @@ interface Message {
   diagram?: {
     title: string
     content: string
+    type: 'mermaid'
   }
   file?: File
 }
@@ -57,6 +59,26 @@ export function ChatInterfaceComponent() {
     setEditedTitle(currentChat.title)
   }, [currentChat])
 
+  useEffect(() => {
+    mermaid.initialize({ 
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontSize: 16, // Adjust this value as needed
+    });
+  }, []);
+
+  useEffect(() => {
+    if (showDiagram && currentDiagram && currentDiagram.type === 'mermaid') {
+      const element = document.getElementById('mermaid-diagram');
+      if (element) {
+        mermaid.render('mermaid-svg', currentDiagram.content).then(({ svg }) => {
+          element.innerHTML = svg;
+        });
+      }
+    }
+  }, [showDiagram, currentDiagram]);
+
   const streamResponse = async (response: string) => {
     setIsStreaming(true)
     const newMessage: Message = { id: Date.now(), text: '', sender: 'ai', diagram: null }
@@ -87,8 +109,14 @@ export function ChatInterfaceComponent() {
       updatedMessages[updatedMessages.length - 1] = {
         ...lastMessage,
         diagram: {
-          title: 'Sample Diagram',
-          content: 'This is where the actual diagram content would go. In a real implementation, this could be SVG content, a canvas element, or any other diagram representation.'
+          title: 'Sample Mermaid Diagram',
+          content: `
+            graph TD
+              A[Client] --> B[Load Balancer]
+              B --> C[Server1]
+              B --> D[Server2]
+          `,
+          type: 'mermaid'
         }
       }
       return { ...prevChat, messages: updatedMessages }
@@ -96,8 +124,14 @@ export function ChatInterfaceComponent() {
 
     setShowDiagram(true)
     setCurrentDiagram({
-      title: 'Sample Diagram',
-      content: 'This is where the actual diagram content would go. In a real implementation, this could be SVG content, a canvas element, or any other diagram representation.'
+      title: 'Sample Mermaid Diagram',
+      content: `
+        graph TD
+          A[Client] --> B[Load Balancer]
+          B --> C[Server1]
+          B --> D[Server2]
+      `,
+      type: 'mermaid'
     })
   }
 
@@ -399,7 +433,7 @@ export function ChatInterfaceComponent() {
                 exit={{ x: '100%' }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="flex-grow bg-muted p-4 rounded-lg relative m-4 shadow-lg">
+                <div className="flex-grow bg-muted p-4 rounded-lg relative m-4 shadow-lg flex flex-col">
                   <div className="absolute top-2 left-2 right-2 flex justify-between items-center p-2">
                     <h2 className="text-xl font-bold">{currentDiagram.title}</h2>
                     <Button variant="ghost" size="icon" onClick={() => toggleDiagram(null)}>
@@ -407,11 +441,10 @@ export function ChatInterfaceComponent() {
                       <span className="sr-only">Close diagram</span>
                     </Button>
                   </div>
-                  <div className="mt-12 h-full flex items-center justify-center">
-                    <ImageIcon className="h-32 w-32 text-muted-foreground" />
-                    <p className="mt-4 text-center text-muted-foreground">
-                      {currentDiagram.content}
-                    </p>
+                  <div className="mt-12 flex-grow flex items-center justify-center overflow-auto">
+                    {currentDiagram.type === 'mermaid' && (
+                      <div id="mermaid-diagram" className="max-w-full max-h-full transform scale-75" />
+                    )}
                   </div>
                 </div>
               </motion.div>
