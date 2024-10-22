@@ -352,26 +352,28 @@ const ChatInterfaceComponent: React.FC = () => {
                         }`}>
                           {message.content.replace(/<mermaid title="(.*?)">([\s\S]*?)<\/mermaid>/g, '')}
                         </div>
-                        {message.role === 'assistant' && message.content.includes('<mermaid title="') && (
-                          <Button 
-                            variant="outline" 
-                            className="mt-2 self-start" 
-                            onClick={() => {
-                              const mermaidMatch = message.content.match(/<mermaid title="(.*?)">([\s\S]*?)<\/mermaid>/);
-                              if (mermaidMatch) {
-                                toggleDiagram({
-                                  title: mermaidMatch[1],
-                                  content: mermaidMatch[2].trim(),
-                                  type: 'mermaid'
-                                });
-                              }
-                            }}
-                          >
-                            <ImageIcon className="mr-2 h-4 w-4" />
-                            {showDiagram ? mermaidMatch?.[1] || 'View Diagram' : 'View Diagram'}
-                            {showDiagram ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
-                          </Button>
-                        )}
+                        {message.role === 'assistant' && message.content.includes('<mermaid title="') && (() => {
+                          const mermaidMatch = message.content.match(/<mermaid title="(.*?)">([\s\S]*?)<\/mermaid>/);
+                          return (
+                            <Button 
+                              variant="outline" 
+                              className="mt-2 self-start" 
+                              onClick={() => {
+                                if (mermaidMatch) {
+                                  toggleDiagram({
+                                    title: mermaidMatch[1],
+                                    content: mermaidMatch[2].trim(),
+                                    type: 'mermaid'
+                                  });
+                                }
+                              }}
+                            >
+                              <ImageIcon className="mr-2 h-4 w-4" />
+                              {showDiagram ? mermaidMatch?.[1] || 'View Diagram' : 'View Diagram'}
+                              {showDiagram ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
+                            </Button>
+                          );
+                        })()}
                       </div>
                     </div>
                   </div>
@@ -399,7 +401,12 @@ const ChatInterfaceComponent: React.FC = () => {
                   value={input}
                   onChange={handleInputChange}
                   placeholder="Type your message..."
-                  onKeyPress={(e: React.KeyboardEvent<HTMLTextAreaElement>) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend(e as React.FormEvent<HTMLFormElement>))}
+                  onKeyPress={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSend(e);
+                    }
+                  }}
                   className="w-full min-h-[120px] pr-12 pl-6 py-4 resize-none rounded-lg"
                   rows={3}
                 />
