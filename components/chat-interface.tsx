@@ -42,7 +42,7 @@ const ChatInterfaceComponent: React.FC = () => {
   const [currentDiagram, setCurrentDiagram] = useState<Message['diagram'] | null>(null)
   const [showSidebar, setShowSidebar] = useState(false)
   const [isInitialInput, setIsInitialInput] = useState(true)
-  const [selectedModel, setSelectedModel] = useState("gpt-3.5-turbo")
+  const [selectedModel, setSelectedModel] = useState("gpt-4o")
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [editedTitle, setEditedTitle] = useState(currentChat.title)
