@@ -74,7 +74,8 @@ const ChatInterfaceComponent: React.FC = () => {
         ...prevChat,
         messages: [...prevChat.messages, newMessage]
       }));
-    }
+    },
+    body: { model: selectedModel }, // Add this line to pass the selected model
   });
 
   const scrollToBottom = () => {
@@ -367,7 +368,7 @@ const ChatInterfaceComponent: React.FC = () => {
                             }}
                           >
                             <ImageIcon className="mr-2 h-4 w-4" />
-                            View Diagram
+                            {showDiagram ? mermaidMatch?.[1] || 'View Diagram' : 'View Diagram'}
                             {showDiagram ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
                           </Button>
                         )}
