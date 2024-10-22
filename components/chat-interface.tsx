@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import mermaid from 'mermaid';
 import Image from 'next/image'
 import svgPanZoom from 'svg-pan-zoom'
+import { useChat } from 'ai/react'
 
 interface Message {
   id: number
@@ -37,11 +38,9 @@ const ChatInterfaceComponent: React.FC = () => {
     { id: 3, title: "User Journey Map", messages: [] },
   ])
   const [currentChat, setCurrentChat] = useState<Chat>(chats[0])
-  const [input, setInput] = useState('')
   const [showDiagram, setShowDiagram] = useState(false)
   const [currentDiagram, setCurrentDiagram] = useState<Message['diagram'] | null>(null)
   const [showSidebar, setShowSidebar] = useState(false)
-  const [isStreaming, setIsStreaming] = useState(false)
   const [isInitialInput, setIsInitialInput] = useState(true)
   const [selectedModel, setSelectedModel] = useState("gpt-3.5-turbo")
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
@@ -51,11 +50,39 @@ const ChatInterfaceComponent: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const titleInputRef = useRef<HTMLInputElement>(null)
 
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+    api: '/api/chat',
+    onFinish: (message) => {
+      const mermaidMatch = message.content.match(/```mermaid([\s\S]*?)```/)
+      const newMessage: Message = {
+        id: Date.now(),
+        text: message.content,
+        sender: 'ai',
+        diagram: null
+      }
+
+      if (mermaidMatch) {
+        newMessage.diagram = {
+          title: 'Generated Diagram',
+          content: mermaidMatch[1].trim(),
+          type: 'mermaid'
+        }
+        setCurrentDiagram(newMessage.diagram)
+        setShowDiagram(true)
+      }
+
+      setCurrentChat(prevChat => ({
+        ...prevChat,
+        messages: [...prevChat.messages, newMessage]
+      }))
+    }
+  })
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
-  useEffect(scrollToBottom, [currentChat.messages])
+  useEffect(scrollToBottom, [messages])
 
   useEffect(() => {
     setEditedTitle(currentChat.title)
@@ -124,64 +151,9 @@ const ChatInterfaceComponent: React.FC = () => {
     }
   }, [showDiagram, currentDiagram]);
 
-  const streamResponse = async (response: string) => {
-    setIsStreaming(true)
-    const newMessage: Message = { id: Date.now(), text: '', sender: 'ai' }
-    setCurrentChat(prevChat => ({
-      ...prevChat,
-      messages: [...prevChat.messages, newMessage]
-    }))
-
-    for (let i = 0; i < response.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, 20))
-      setCurrentChat(prevChat => {
-        const updatedMessages = [...prevChat.messages]
-        const lastMessage = updatedMessages[updatedMessages.length - 1]
-        updatedMessages[updatedMessages.length - 1] = {
-          ...lastMessage,
-          text: lastMessage.text + response[i]
-        }
-        return { ...prevChat, messages: updatedMessages }
-      })
-    }
-
-    setIsStreaming(false)
-
-    // Add diagram after streaming text
-    setCurrentChat(prevChat => {
-      const updatedMessages = [...prevChat.messages]
-      const lastMessage = updatedMessages[updatedMessages.length - 1]
-      updatedMessages[updatedMessages.length - 1] = {
-        ...lastMessage,
-        diagram: {
-          title: 'Sample Mermaid Diagram',
-          content: `
-            graph TD
-              A[Client] --> B[Load Balancer]
-              B --> C[Server1]
-              B --> D[Server2]
-          `,
-          type: 'mermaid'
-        }
-      }
-      return { ...prevChat, messages: updatedMessages }
-    })
-
-    setShowDiagram(true)
-    setCurrentDiagram({
-      title: 'Sample Mermaid Diagram',
-      content: `
-        graph TD
-          A[Client] --> B[Load Balancer]
-          B --> C[Server1]
-          B --> D[Server2]
-      `,
-      type: 'mermaid'
-    })
-  }
-
-  const handleSend = () => {
-    if ((input.trim() || uploadedFile) && !isStreaming) {
+  const handleSend = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if ((input.trim() || uploadedFile) && !isLoading) {
       const newMessages: Message[] = []
 
       if (uploadedFile) {
@@ -205,11 +177,9 @@ const ChatInterfaceComponent: React.FC = () => {
         ...prevChat,
         messages: [...prevChat.messages, ...newMessages]
       }))
-      setInput('')
       setUploadedFile(null)
       setIsInitialInput(false)
-      // Simulate AI response
-      streamResponse("I've received your message and/or file. Here's a sample response.")
+      handleSubmit(e)
     }
   }
 
@@ -365,49 +335,38 @@ const ChatInterfaceComponent: React.FC = () => {
         <div className="flex flex-grow overflow-hidden">
           <div className={`flex flex-col justify-between w-full max-w-3xl mx-auto transition-all duration-300 ${showDiagram ? 'mr-[50%]' : ''}`}>
             <ScrollArea className="flex-grow p-4">
-              {currentChat.messages.map(message => (
-                <div key={message.id} className={`mb-4 flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`flex items-start max-w-[70%] ${message.sender === 'user' ? 'flex-row-reverse' : ''}`}>
+              {messages.map((message, index) => (
+                <div key={index} className={`mb-4 flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`flex items-start max-w-[70%] ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
                     <div className="w-8 h-8 mt-1 flex items-center justify-center">
-                      {message.sender === 'user' ? <User className="h-6 w-6" /> : <Bot className="h-6 w-6" />}
+                      {message.role === 'user' ? <User className="h-6 w-6" /> : <Bot className="h-6 w-6" />}
                     </div>
-                    <div className={`mx-2 ${message.sender === 'user' ? 'text-right' : 'text-left'}`}>
+                    <div className={`mx-2 ${message.role === 'user' ? 'text-right' : 'text-left'}`}>
                       <div className="flex flex-col">
                         <div className={`inline-block p-3 rounded-lg ${
-                          message.sender === 'user'
+                          message.role === 'user'
                             ? 'text-foreground'
                             : 'bg-secondary text-secondary-foreground'
                         }`}>
-                          {message.file ? (
-                            message.file.type.startsWith('image/') ? (
-                              <div className="flex flex-col items-start">
-                                <Image 
-                                  src={URL.createObjectURL(message.file)} 
-                                  alt={message.file.name} 
-                                  width={200} 
-                                  height={200} 
-                                  className="max-w-full h-auto rounded-lg" 
-                                />
-                                <span className="mt-2 text-sm text-gray-500">{message.file.name}</span>
-                              </div>
-                            ) : (
-                              <div className="flex items-center">
-                                {getFileIcon(message.file.type)}
-                                <span className="ml-2">{message.file.name}</span>
-                              </div>
-                            )
-                          ) : (
-                            message.text
-                          )}
+                          {message.content.replace(/```mermaid[\s\S]*?```/g, '')}
                         </div>
-                        {message.diagram && (
+                        {message.role === 'assistant' && message.content.includes('```mermaid') && (
                           <Button 
                             variant="outline" 
                             className="mt-2 self-start" 
-                            onClick={() => toggleDiagram(message.diagram)}
+                            onClick={() => {
+                              const mermaidMatch = message.content.match(/```mermaid([\s\S]*?)```/)
+                              if (mermaidMatch) {
+                                toggleDiagram({
+                                  title: 'Generated Diagram',
+                                  content: mermaidMatch[1].trim(),
+                                  type: 'mermaid'
+                                })
+                              }
+                            }}
                           >
                             <ImageIcon className="mr-2 h-4 w-4" />
-                            {message.diagram.title}
+                            View Diagram
                             {showDiagram ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
                           </Button>
                         )}
@@ -436,9 +395,9 @@ const ChatInterfaceComponent: React.FC = () => {
                 )}
                 <Textarea
                   value={input}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
+                  onChange={handleInputChange}
                   placeholder="Type your message..."
-                  onKeyPress={(e: React.KeyboardEvent<HTMLTextAreaElement>) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
+                  onKeyPress={(e: React.KeyboardEvent<HTMLTextAreaElement>) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend(e as any))}
                   className="w-full min-h-[120px] pr-12 pl-6 py-4 resize-none rounded-lg"
                   rows={3}
                 />
@@ -465,8 +424,8 @@ const ChatInterfaceComponent: React.FC = () => {
                   </Select>
                 </div>
                 <Button 
-                  onClick={handleSend} 
-                  disabled={isStreaming}
+                  onClick={(e) => handleSend(e as any)} 
+                  disabled={isLoading}
                   className="absolute right-2 bottom-2 z-10"
                 >
                   <Send className="h-4 w-4" />
