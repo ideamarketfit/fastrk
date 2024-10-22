@@ -52,30 +52,30 @@ const ChatInterfaceComponent: React.FC = () => {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: '/api/chat',
     onFinish: (message) => {
-      const mermaidMatch = message.content.match(/```mermaid([\s\S]*?)```/)
+      const mermaidMatch = message.content.match(/<mermaid title="(.*?)">([\s\S]*?)<\/mermaid>/);
       const newMessage: Message = {
         id: Date.now(),
         text: message.content,
         sender: 'ai',
         diagram: null
-      }
+      };
 
       if (mermaidMatch) {
         newMessage.diagram = {
-          title: 'Generated Diagram',
-          content: mermaidMatch[1].trim(),
+          title: mermaidMatch[1],
+          content: mermaidMatch[2].trim(),
           type: 'mermaid'
-        }
-        setCurrentDiagram(newMessage.diagram)
-        setShowDiagram(true)
+        };
+        setCurrentDiagram(newMessage.diagram);
+        setShowDiagram(true);
       }
 
       setCurrentChat(prevChat => ({
         ...prevChat,
         messages: [...prevChat.messages, newMessage]
-      }))
+      }));
     }
-  })
+  });
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -180,7 +180,7 @@ const ChatInterfaceComponent: React.FC = () => {
       }))
       setUploadedFile(null)
       setIsInitialInput(false)
-      handleSubmit(e as React.FormEvent<HTMLFormElement>)
+      handleSubmit(e)
     }
   }
 
@@ -349,20 +349,20 @@ const ChatInterfaceComponent: React.FC = () => {
                             ? 'text-foreground'
                             : 'bg-secondary text-secondary-foreground'
                         }`}>
-                          {message.content.replace(/```mermaid[\s\S]*?```/g, '')}
+                          {message.content.replace(/<mermaid title="(.*?)">([\s\S]*?)<\/mermaid>/g, '')}
                         </div>
-                        {message.role === 'assistant' && message.content.includes('```mermaid') && (
+                        {message.role === 'assistant' && message.content.includes('<mermaid title="') && (
                           <Button 
                             variant="outline" 
                             className="mt-2 self-start" 
                             onClick={() => {
-                              const mermaidMatch = message.content.match(/```mermaid([\s\S]*?)```/)
+                              const mermaidMatch = message.content.match(/<mermaid title="(.*?)">([\s\S]*?)<\/mermaid>/);
                               if (mermaidMatch) {
                                 toggleDiagram({
-                                  title: 'Generated Diagram',
-                                  content: mermaidMatch[1].trim(),
+                                  title: mermaidMatch[1],
+                                  content: mermaidMatch[2].trim(),
                                   type: 'mermaid'
-                                })
+                                });
                               }
                             }}
                           >
@@ -398,12 +398,7 @@ const ChatInterfaceComponent: React.FC = () => {
                   value={input}
                   onChange={handleInputChange}
                   placeholder="Type your message..."
-                  onKeyPress={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSend(e);
-                    }
-                  }}
+                  onKeyPress={(e: React.KeyboardEvent<HTMLTextAreaElement>) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend(e as React.FormEvent<HTMLFormElement>))}
                   className="w-full min-h-[120px] pr-12 pl-6 py-4 resize-none rounded-lg"
                   rows={3}
                 />
@@ -430,7 +425,7 @@ const ChatInterfaceComponent: React.FC = () => {
                   </Select>
                 </div>
                 <Button 
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleSend(e)} 
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleSend(e as unknown as React.FormEvent<HTMLFormElement>)} 
                   disabled={isLoading}
                   className="absolute right-2 bottom-2 z-10"
                 >

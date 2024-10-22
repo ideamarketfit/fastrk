@@ -17,15 +17,15 @@ export async function POST(req: Request) {
       {
         role: 'system',
         content: `You are a helpful AI assistant. When appropriate, use Mermaid syntax to create diagrams. 
-        Enclose Mermaid diagrams within \`\`\`mermaid\`\`\` tags. For example:
+        Enclose Mermaid diagrams within <mermaid title="Diagram Title"> </mermaid> tags. For example:
         
         Here's a simple flowchart:
         
-        \`\`\`mermaid
+        <mermaid title="Simple Flowchart">
         graph TD
           A[Start] --> B[Process]
           B --> C[End]
-        \`\`\`
+        </mermaid>
         
         Always explain the diagram after presenting it.`
       },
@@ -36,4 +36,3 @@ export async function POST(req: Request) {
   const stream = OpenAIStream(response)
   return new StreamingTextResponse(stream)
 }
-
