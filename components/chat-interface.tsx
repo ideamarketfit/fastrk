@@ -9,7 +9,6 @@ import { Send, ChevronRight, ChevronLeft, User, Bot, Image as ImageIcon, X, Pape
 import { motion, AnimatePresence } from 'framer-motion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import mermaid from 'mermaid';
-import Image from 'next/image'
 import svgPanZoom from 'svg-pan-zoom'
 import { useChat } from 'ai/react'
 
@@ -151,8 +150,10 @@ const ChatInterfaceComponent: React.FC = () => {
     }
   }, [showDiagram, currentDiagram]);
 
-  const handleSend = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleSend = (e?: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e) {
+      e.preventDefault();
+    }
     if ((input.trim() || uploadedFile) && !isLoading) {
       const newMessages: Message[] = []
 
@@ -179,7 +180,7 @@ const ChatInterfaceComponent: React.FC = () => {
       }))
       setUploadedFile(null)
       setIsInitialInput(false)
-      handleSubmit(e)
+      handleSubmit(e as React.FormEvent<HTMLFormElement>)
     }
   }
 
@@ -397,7 +398,12 @@ const ChatInterfaceComponent: React.FC = () => {
                   value={input}
                   onChange={handleInputChange}
                   placeholder="Type your message..."
-                  onKeyPress={(e: React.KeyboardEvent<HTMLTextAreaElement>) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend(e as any))}
+                  onKeyPress={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSend(e);
+                    }
+                  }}
                   className="w-full min-h-[120px] pr-12 pl-6 py-4 resize-none rounded-lg"
                   rows={3}
                 />
@@ -424,7 +430,7 @@ const ChatInterfaceComponent: React.FC = () => {
                   </Select>
                 </div>
                 <Button 
-                  onClick={(e) => handleSend(e as any)} 
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleSend(e)} 
                   disabled={isLoading}
                   className="absolute right-2 bottom-2 z-10"
                 >
