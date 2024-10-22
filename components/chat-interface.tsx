@@ -30,7 +30,7 @@ interface Chat {
   messages: Message[]
 }
 
-export function ChatInterfaceComponent() {
+const ChatInterfaceComponent: React.FC = () => {
   const [chats, setChats] = useState<Chat[]>([
     { id: 1, title: "Chat Diagram", messages: [] },
     { id: 2, title: "Concept Map", messages: [] },
@@ -97,7 +97,7 @@ export function ChatInterfaceComponent() {
               minZoom: 0.1,
               maxZoom: 10,
               zoomScaleSensitivity: 0.5,
-              initialZoom: 0.7 // Set initial zoom level
+              // initialZoom: 0.7 // Set initial zoom level
             });
 
             // Apply initial zoom after a short delay
@@ -506,3 +506,5 @@ export function ChatInterfaceComponent() {
     </div>
   )
 }
+
+export default ChatInterfaceComponent
