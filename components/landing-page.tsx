@@ -10,7 +10,8 @@ import {
   LayoutGrid, 
   Clock, 
   Workflow,
-  ChevronDown
+  ChevronDown,
+  MonitorSmartphone
 } from 'lucide-react'
 
 export function LandingPageComponent() {
@@ -108,13 +109,13 @@ export function LandingPageComponent() {
               <div className="w-3 h-3 rounded-full bg-green-500"></div>
               <div className="flex-grow text-center text-sm text-gray-600">chatdiagram.com</div>
             </div>
-            <div className="p-4">
+            <div className="bg-gray-100">
               <Image 
-                src="/placeholder.svg?height=400&width=600" 
-                height={400} 
-                width={600} 
+                src="/chat-diagram-demo.png" 
                 alt="Chat Diagram Demo" 
-                className="w-full rounded-md shadow"
+                width={800} 
+                height={600} 
+                className="w-full h-auto rounded-md shadow-md"
               />
             </div>
           </div>
