@@ -11,7 +11,6 @@ import {
   Clock, 
   Workflow,
   ChevronDown,
-  MonitorSmartphone
 } from 'lucide-react'
 
 export function LandingPageComponent() {
