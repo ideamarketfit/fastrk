@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
-import { Send, ChevronRight, ChevronLeft, User, Bot, Image as ImageIcon, X, Paperclip, Plus, File, FileText, FileImage, FileAudio, FileVideo } from 'lucide-react'
+import { Send, ChevronRight, ChevronLeft, User, Bot, Image as ImageIcon, X, Paperclip, Plus, File, FileText, FileImage, FileAudio, FileVideo, Download } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import mermaid from 'mermaid';
 import svgPanZoom from 'svg-pan-zoom'
 import { useChat } from 'ai/react'
+import html2canvas from 'html2canvas';
 
 interface Message {
   id: number
@@ -247,6 +248,35 @@ const ChatInterfaceComponent: React.FC = () => {
     }
   }
 
+  const handleExportDiagram = () => {
+    const element = document.getElementById('mermaid-diagram');
+    if (element) {
+      html2canvas(element, {
+        scale: 2,
+        backgroundColor: null,
+        logging: true,
+        onclone: (clonedDoc) => {
+          const clonedElement = clonedDoc.getElementById('mermaid-diagram');
+          if (clonedElement) {
+            clonedElement.style.width = '100%';
+            clonedElement.style.height = '100%';
+          }
+        }
+      }).then(canvas => {
+        const pngFile = canvas.toDataURL('image/png');
+        const downloadLink = document.createElement('a');
+        const fileName = `${currentDiagram?.title || 'diagram'}.png`;
+        downloadLink.download = fileName;
+        downloadLink.href = pngFile;
+        downloadLink.click();
+      }).catch(error => {
+        console.error('Error exporting diagram:', error);
+      });
+    } else {
+      console.error('Diagram element not found');
+    }
+  };
+
   return (
     <div className="flex h-screen bg-background">
       {/* Sidebar */}
@@ -455,10 +485,16 @@ const ChatInterfaceComponent: React.FC = () => {
                 <div id="diagram-container" className="flex-grow bg-muted p-4 rounded-lg relative m-4 shadow-lg flex flex-col overflow-hidden">
                   <div className="absolute top-2 left-2 right-2 flex justify-between items-center p-2">
                     <h2 className="text-xl font-bold">{currentDiagram.title}</h2>
-                    <Button variant="ghost" size="icon" onClick={() => toggleDiagram(null)}>
-                      <X className="h-4 w-4" />
-                      <span className="sr-only">Close diagram</span>
-                    </Button>
+                    <div className="flex items-center">
+                      <Button variant="ghost" size="icon" onClick={handleExportDiagram} className="mr-2">
+                        <Download className="h-4 w-4" />
+                        <span className="sr-only">Export diagram</span>
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => toggleDiagram(null)}>
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Close diagram</span>
+                      </Button>
+                    </div>
                   </div>
                   <div className="mt-12 flex-grow flex items-center justify-center overflow-auto">
                     {currentDiagram.type === 'mermaid' && (
