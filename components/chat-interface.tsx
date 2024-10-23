@@ -42,7 +42,7 @@ const ChatInterfaceComponent: React.FC = () => {
   const [currentDiagram, setCurrentDiagram] = useState<Message['diagram'] | null>(null)
   const [showSidebar, setShowSidebar] = useState(false)
   const [isInitialInput, setIsInitialInput] = useState(true)
-  const [selectedModel, setSelectedModel] = useState("gpt-4o")
+  const [selectedModel, setSelectedModel] = useState("gpt-4o-mini")
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [editedTitle, setEditedTitle] = useState(currentChat.title)
@@ -456,7 +456,7 @@ const ChatInterfaceComponent: React.FC = () => {
                       <SelectValue placeholder="Select model" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="gpt-4o">GPT-4o</SelectItem>
+                      <SelectItem value="gpt-4o-mini">GPT-4o Mini</SelectItem>
                       <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo</SelectItem>
                       <SelectItem value="claude-v1">Claude v1</SelectItem>
                     </SelectContent>

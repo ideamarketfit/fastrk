@@ -10,14 +10,7 @@ export const runtime = 'edge'
 export async function POST(req: Request) {
   const { messages, model } = await req.json()
 
-  // Map the frontend model names to the actual OpenAI model names
-  const modelMap: { [key: string]: string } = {
-    'gpt-4o': 'gpt-4',
-    'gpt-3.5-turbo': 'gpt-3.5-turbo',
-    'claude-v1': 'gpt-3.5-turbo' // Fallback to GPT-3.5-turbo if Claude is not available
-  }
-
-  const selectedModel = modelMap[model] || 'gpt-3.5-turbo' // Default to GPT-3.5-turbo if no match
+  const selectedModel = model || 'gpt-3.5-turbo' // Default to GPT-3.5-turbo if no model is specified
 
   const response = await openai.chat.completions.create({
     model: selectedModel,
