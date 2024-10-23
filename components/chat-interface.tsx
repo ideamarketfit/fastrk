@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import mermaid from 'mermaid';
 import svgPanZoom from 'svg-pan-zoom'
 import { useChat } from 'ai/react'
+import html2canvas from 'html2canvas';
 
 interface Message {
   id: number
