@@ -52,7 +52,7 @@ const ChatInterfaceComponent: React.FC = () => {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: '/api/chat',
     onFinish: (message) => {
-      const mermaidMatch = message.content.match(/<mermaid title="(.*?)">([\s\S]*?)<\/mermaid>/);
+      const diagramMatch = message.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
       const newMessage: Message = {
         id: Date.now(),
         text: message.content,
@@ -60,10 +60,10 @@ const ChatInterfaceComponent: React.FC = () => {
         diagram: null
       };
 
-      if (mermaidMatch) {
+      if (diagramMatch) {
         newMessage.diagram = {
-          title: mermaidMatch[1],
-          content: mermaidMatch[2].trim(),
+          title: diagramMatch[1],
+          content: diagramMatch[2].trim(),
           type: 'mermaid'
         };
         setCurrentDiagram(newMessage.diagram);
@@ -350,26 +350,26 @@ const ChatInterfaceComponent: React.FC = () => {
                             ? 'text-foreground'
                             : 'bg-secondary text-secondary-foreground'
                         }`}>
-                          {message.content.replace(/<mermaid title="(.*?)">([\s\S]*?)<\/mermaid>/g, '')}
+                          {message.content.replace(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/g, '')}
                         </div>
-                        {message.role === 'assistant' && message.content.includes('<mermaid title="') && (() => {
-                          const mermaidMatch = message.content.match(/<mermaid title="(.*?)">([\s\S]*?)<\/mermaid>/);
+                        {message.role === 'assistant' && message.content.includes('<diagram title="') && (() => {
+                          const diagramMatch = message.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
                           return (
                             <Button 
                               variant="outline" 
                               className="mt-2 self-start" 
                               onClick={() => {
-                                if (mermaidMatch) {
+                                if (diagramMatch) {
                                   toggleDiagram({
-                                    title: mermaidMatch[1],
-                                    content: mermaidMatch[2].trim(),
+                                    title: diagramMatch[1],
+                                    content: diagramMatch[2].trim(),
                                     type: 'mermaid'
                                   });
                                 }
                               }}
                             >
                               <ImageIcon className="mr-2 h-4 w-4" />
-                              {showDiagram ? mermaidMatch?.[1] || 'View Diagram' : 'View Diagram'}
+                              {showDiagram ? diagramMatch?.[1] || 'View Diagram' : 'View Diagram'}
                               {showDiagram ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
                             </Button>
                           );
