@@ -11,7 +11,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import mermaid from 'mermaid';
 import svgPanZoom from 'svg-pan-zoom'
 import { useChat } from 'ai/react'
-import html2canvas from 'html2canvas';
 
 interface Message {
   id: number
@@ -399,7 +398,7 @@ const ChatInterfaceComponent: React.FC = () => {
                               }}
                             >
                               <ImageIcon className="mr-2 h-4 w-4" />
-                              {showDiagram ? diagramMatch?.[1] || 'View Diagram' : 'View Diagram'}
+                              {diagramMatch?.[1] || 'View Diagram'}
                               {showDiagram ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
                             </Button>
                           );

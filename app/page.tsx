@@ -1,7 +1,5 @@
-import dynamic from 'next/dynamic'
+import { LandingPageComponent } from '@/components/landing-page'
 
-const ChatInterfaceComponent = dynamic(() => import('@/components/chat-interface'),{ ssr: false })
-
-export default function Page() {
-  return <ChatInterfaceComponent />
+export default function Home() {
+  return <LandingPageComponent />
 }
