@@ -40,7 +40,7 @@
   "extensiveTemplateLibraryDesc": "迅速な開始のために、幅広い事前作成されたテンプレートから選択できます。",
   "exportIntegration": "エクスポートと統合",
   "exportIntegrationDesc": "図表を様々な形式でエクスポートし、人気のあるツールと統合できます。",
-  "frequentlyAskedQuestions": "よくあ���質問",
+  "frequentlyAskedQuestions": "よくあ質問",
   "readyToStartDiagramming": "図表作成を始める準備はできましたか？",
   "joinThousandsOfTeams": "すでにチャットダイアグラムを使用している何千ものチームに参加しましょう",
   "signUpNow": "今すぐサインアップ",
@@ -67,6 +67,7 @@
   "sendMessage": "メッセージを送信",
   "viewDiagram": "図表を表示",
   "exportDiagram": "図表をエクスポート",
-  "closeDiagram": "図表を閉じる"
+  "closeDiagram": "図表を閉じる",
+  "metaTitle": "チャットダイアグラム - 無料オンラインAI図表作成ツール",
+  "metaDescription": "AI駆動の会話を通じて、プロフェッショナルな図表を簡単に作成。描画スキル不要。無料で図表作成を始めましょう。"
 }
-
