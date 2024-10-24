@@ -90,7 +90,7 @@ export function LandingPageComponent() {
             <span className="text-2xl font-bold text-gray-800">{t('title')}</span>
           </div>
           <Link
-            href={`/${locale}/chat`}
+            href="/chat"
             className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition duration-300"
           >
             {t('getStarted')}
@@ -104,7 +104,7 @@ export function LandingPageComponent() {
           <h1 className="text-4xl md:text-5xl font-bold mb-4 lg:mb-6 text-gray-900">{t('tagline')}</h1>
           <p className="text-lg md:text-xl text-gray-600 mb-10 lg:mb-16 max-w-3xl mx-auto">{t('description')}</p>
           <Link
-            href={`/${locale}/chat`}
+            href="/chat"
             className="bg-purple-600 text-white px-6 py-3 rounded-md text-lg hover:bg-purple-700 transition duration-300 mb-4 lg:mb-6"
           >
             {t('startDiagramming')}
