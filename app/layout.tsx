@@ -15,7 +15,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Chat Diagram - Free Online AI Diagram Maker",
-  description: "Create mind maps, flow charts, entity relationship charts, pie charts, user journey maps, quadrant charts, timelines, and UML diagrams with AI-powered conversations. No drawing skills needed. Start diagramming for free.",
+  description: "Create professional diagrams effortlessly through AI-powered conversations. No drawing skills needed. Start diagramming for free.",
 };
 
 export default function RootLayout({

@@ -1,5 +1,9 @@
 import { ReactNode } from 'react';
+import { Metadata } from 'next';
 import { dir } from 'i18next';
+import en from '../../public/locales/en/common.json';
+import ja from '../../public/locales/ja/common.json';
+import zhHant from '../../public/locales/zh-Hant/common.json';
 
 export async function generateStaticParams() {
   return [
@@ -7,6 +11,15 @@ export async function generateStaticParams() {
     { locale: 'ja' },
     { locale: 'zh-Hant' },
   ];
+}
+
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+  const translations = locale === 'ja' ? ja : locale === 'zh-Hant' ? zhHant : en;
+
+  return {
+    title: translations.metaTitle,
+    description: translations.metaDescription,
+  };
 }
 
 export default function LocaleLayout({
@@ -41,4 +54,3 @@ export default function LocaleLayout({
     </html>
   );
 }
-

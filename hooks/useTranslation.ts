@@ -15,7 +15,7 @@ export function useTranslation() {
   const params = useParams();
   const locale = (params.locale as string) || 'en';
   return {
-    t: (key: string) => translations[locale as keyof typeof translations][key] || key,
+    t: (key: keyof typeof en) => translations[locale as keyof typeof translations][key] || key,
     locale
   };
 }
