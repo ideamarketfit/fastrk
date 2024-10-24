@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 export function LandingPageComponent() {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
 
   const faqs = [
     {
@@ -117,7 +117,7 @@ export function LandingPageComponent() {
               <div className="w-3 h-3 rounded-full bg-red-500"></div>
               <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
               <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              <div className="flex-grow text-center text-sm text-gray-600">{t('chatDiagramDomain')}</div>
+              <div className="flex-grow text-center text-sm text-gray-600">chatdiagram.com</div>
             </div>
             <div className="bg-gray-100">
               <Image 
