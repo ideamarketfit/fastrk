@@ -35,7 +35,7 @@
   "aiPoweredDiagramming": "人工智能驅動的圖表繪製",
   "aiPoweredDiagrammingDesc": "使用自然語言描述輕鬆創建圖表。",
   "realTimeCollaboration": "實時協作",
-  "realTimeCollaborationDesc": "與您的團隊在同一圖表上實時協作。",
+  "realTimeCollaborationDesc": "與您的���隊在同一圖表上實時協作。",
   "extensiveTemplateLibrary": "豐富的模板庫",
   "extensiveTemplateLibraryDesc": "從廣泛的預製模板中選擇，快速開始。",
   "exportIntegration": "導出和集成",
@@ -69,5 +69,7 @@
   "exportDiagram": "導出圖表",
   "closeDiagram": "關閉圖表",
   "metaTitle": "對話圖表 - 免費在線AI圖表製作工具",
-  "metaDescription": "通過AI驅動的對話輕鬆創建專業圖表。無需繪圖技能。免費開始製作圖表。"
+  "metaDescription": "通過AI驅動的對話輕鬆創建專業圖表。無需繪圖技能。免費開始製作圖表。",
+  "tagline": "創建圖表的最簡單方式",
+  "noSignupNeeded": "無需註冊，完全免費"
 }
