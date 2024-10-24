@@ -1,80 +1,85 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { 
-  MessageSquare, 
-  Network, 
-  GitBranch, 
-  Database, 
-  PieChart, 
-  Map, 
-  LayoutGrid, 
-  Clock, 
+'use client';
+
+import { useTranslation } from '@/hooks/useTranslation';
+import Link from 'next/link';
+import Image from 'next/image';
+import {
+  MessageSquare,
+  Network,
+  GitBranch,
+  Database,
+  PieChart,
+  Map,
+  LayoutGrid,
+  Clock,
   Workflow,
   ChevronDown,
-} from 'lucide-react'
+} from 'lucide-react';
 
 export function LandingPageComponent() {
+  const { t, locale } = useTranslation();
+
   const faqs = [
     {
-      question: "How does Chat Diagram work?",
-      answer: "Chat Diagram uses advanced AI to convert your text descriptions into professional diagrams. Simply describe what you want, and our AI will generate the diagram for you."
+      question: t('faq1Question'),
+      answer: t('faq1Answer'),
     },
     {
-      question: "Can I collaborate with my team in real-time?",
-      answer: "Yes! Chat Diagram supports real-time collaboration. Multiple team members can work on the same diagram simultaneously, discussing ideas and seeing changes instantly."
+      question: t('faq2Question'),
+      answer: t('faq2Answer'),
     },
     {
-      question: "What types of diagrams can I create?",
-      answer: "You can create a wide variety of diagrams including flowcharts, org charts, mind maps, network diagrams, and more. If you can describe it, Chat Diagram can create it."
+      question: t('faq3Question'),
+      answer: t('faq3Answer'),
     },
     {
-      question: "How can I export my diagrams?",
-      answer: "Chat Diagram allows you to export your diagrams in multiple formats including PNG, SVG, and PDF. You can also integrate with popular tools and workflows."
-    }
-  ]
+      question: t('faq4Question'),
+      answer: t('faq4Answer'),
+    },
+  ];
 
   const diagrams = [
     {
       icon: Network,
-      title: "Mind Map",
-      description: "Visualize ideas and concepts with interconnected nodes."
+      title: t('diagramMindMap'),
+      description: t('diagramMindMapDesc'),
     },
     {
       icon: GitBranch,
-      title: "Flow Chart",
-      description: "Illustrate processes, systems, or algorithms step by step."
+      title: t('diagramFlowChart'),
+      description: t('diagramFlowChartDesc'),
     },
     {
       icon: Database,
-      title: "Entity Relationship Chart",
-      description: "Model the relationships between entities in a database."
+      title: t('diagramERD'),
+      description: t('diagramERDDesc'),
     },
     {
       icon: PieChart,
-      title: "Pie Chart",
-      description: "Display data in circular graph divided into slices."
+      title: t('diagramPieChart'),
+      description: t('diagramPieChartDesc'),
     },
     {
       icon: Map,
-      title: "User Journey Map",
-      description: "Map out the steps a user takes when interacting with a product."
+      title: t('diagramUserJourney'),
+      description: t('diagramUserJourneyDesc'),
     },
     {
       icon: LayoutGrid,
-      title: "Quadrant Chart",
-      description: "Plot data points in four sections for easy comparison."
+      title: t('diagramQuadrant'),
+      description: t('diagramQuadrantDesc'),
     },
     {
       icon: Clock,
-      title: "Timeline",
-      description: "Visualize events or milestones in chronological order."
+      title: t('diagramTimeline'),
+      description: t('diagramTimelineDesc'),
     },
     {
       icon: Workflow,
-      title: "UML Diagram",
-      description: "Model software systems using Unified Modeling Language."
-    }
-  ]
+      title: t('diagramUML'),
+      description: t('diagramUMLDesc'),
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -82,10 +87,13 @@ export function LandingPageComponent() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <MessageSquare className="h-8 w-8 text-purple-600" />
-            <span className="text-2xl font-bold text-gray-800">Chat Diagram</span>
+            <span className="text-2xl font-bold text-gray-800">{t('title')}</span>
           </div>
-          <Link href="/chat" className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition duration-300">
-            Get Started Free
+          <Link
+            href={`/${locale}/chat`}
+            className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition duration-300"
+          >
+            {t('getStarted')}
           </Link>
         </div>
       </header>
@@ -93,12 +101,15 @@ export function LandingPageComponent() {
       <main className="container mx-auto px-4 py-12">
         {/* Hero Section */}
         <section className="text-center mb-20 relative py-16 md:py-24 lg:py-32">
-          <h1 className="text-4xl md:text-5xl font-bold mb-8 lg:mb-12 text-gray-900">Easiest Way to Craft Diagrams</h1>
-          <p className="text-lg md:text-xl text-gray-600 mb-10 lg:mb-16 max-w-3xl mx-auto">Create professional diagrams effortlessly through AI-powered conversations. No manual drawing required.</p>
-          <Link href="/chat" className="bg-purple-600 text-white px-6 py-3 rounded-md text-lg hover:bg-purple-700 transition duration-300 mb-4 lg:mb-6">
-            Start Diagramming
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 lg:mb-6 text-gray-900">{t('tagline')}</h1>
+          <p className="text-lg md:text-xl text-gray-600 mb-10 lg:mb-16 max-w-3xl mx-auto">{t('description')}</p>
+          <Link
+            href={`/${locale}/chat`}
+            className="bg-purple-600 text-white px-6 py-3 rounded-md text-lg hover:bg-purple-700 transition duration-300 mb-4 lg:mb-6"
+          >
+            {t('startDiagramming')}
           </Link>
-          <p className="text-sm text-gray-500 mb-16 lg:mb-24 mt-2">No signup needed, completely free</p>
+          <p className="text-sm text-gray-500 mb-16 lg:mb-24 mt-2">{t('noSignupNeeded')}</p>
 
           {/* Window Frame for Demo */}
           <div className="mt-16 lg:mt-24 bg-white rounded-lg shadow-2xl overflow-hidden max-w-4xl mx-auto relative">
@@ -106,7 +117,7 @@ export function LandingPageComponent() {
               <div className="w-3 h-3 rounded-full bg-red-500"></div>
               <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
               <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              <div className="flex-grow text-center text-sm text-gray-600">chatdiagram.com</div>
+              <div className="flex-grow text-center text-sm text-gray-600">{t('chatDiagramDomain')}</div>
             </div>
             <div className="bg-gray-100">
               <Image 
@@ -123,7 +134,7 @@ export function LandingPageComponent() {
         {/* Supported Diagrams Section */}
         <section className="py-16 bg-gray-50 mb-20">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Supported Diagram Types</h2>
+            <h2 className="text-3xl font-bold text-center mb-12">{t('supportedDiagramTypes')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {diagrams.map((diagram, index) => (
                 <div key={index} className="bg-white p-6 rounded-lg shadow-md">
@@ -138,30 +149,30 @@ export function LandingPageComponent() {
 
         {/* Features Section */}
         <section className="mb-20">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">Key Features</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">{t('keyFeatures')}</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">AI-Powered Diagramming</h3>
-              <p className="text-gray-600">Simply describe your diagram, and our AI will generate it for you. No need for manual drawing or complex tools.</p>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">{t('aiPoweredDiagramming')}</h3>
+              <p className="text-gray-600">{t('aiPoweredDiagrammingDesc')}</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Real-time Collaboration</h3>
-              <p className="text-gray-600">Work together with your team in real-time. Discuss ideas and see changes instantly within the platform.</p>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">{t('realTimeCollaboration')}</h3>
+              <p className="text-gray-600">{t('realTimeCollaborationDesc')}</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Extensive Template Library</h3>
-              <p className="text-gray-600">Choose from a vast collection of pre-made templates for various diagram types and industries to kickstart your projects.</p>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">{t('extensiveTemplateLibrary')}</h3>
+              <p className="text-gray-600">{t('extensiveTemplateLibraryDesc')}</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Export & Integration</h3>
-              <p className="text-gray-600">Easily export your diagrams in multiple formats and integrate seamlessly with your favorite tools and workflows.</p>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">{t('exportIntegration')}</h3>
+              <p className="text-gray-600">{t('exportIntegrationDesc')}</p>
             </div>
           </div>
         </section>
 
         {/* FAQ Section */}
         <section className="mb-20">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">Frequently Asked Questions</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">{t('frequentlyAskedQuestions')}</h2>
           <div className="space-y-4">
             {faqs.map((faq, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -180,7 +191,7 @@ export function LandingPageComponent() {
         {/* CTA Section */}
         <section className="bg-purple-100 py-20 rounded-lg">
           <div className="text-center">
-            <h2 className="text-3xl font-bold mb-6 text-gray-900">Ready to start diagramming smarter?</h2>
+            <h2 className="text-3xl font-bold mb-6 text-gray-900">{t('readyToStartDiagramming')}</h2>
             <p className="text-xl text-gray-600 mb-8">Join thousands of teams already using Chat Diagram to streamline their processes.</p>
             <Link href="/chat" className="bg-purple-600 text-white px-6 py-3 rounded-md text-lg hover:bg-purple-700 transition duration-300">
               Sign Up Now
