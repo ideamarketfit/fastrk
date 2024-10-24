@@ -1,9 +1,9 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://example.com'
-  const languages = ['en', 'fr', 'es']
-  const routes = ['', '/about', '/contact']
+  const baseUrl = 'https://www.chatdiagram.com'
+  const languages = ['en', 'ja', 'zh-Hant']
+  const routes = ['']
 
   return routes.flatMap((route) => {
     return languages.map((lang) => ({
