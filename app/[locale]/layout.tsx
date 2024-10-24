@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { dir } from 'i18next';
-import { languages } from '../../next-i18next.config';
 
 export async function generateStaticParams() {
   return [
@@ -42,3 +41,4 @@ export default function LocaleLayout({
     </html>
   );
 }
+

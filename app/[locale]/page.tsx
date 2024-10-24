@@ -1,12 +1,6 @@
 import { LandingPageComponent } from '@/components/landing-page';
 
-interface Props {
-  params: {
-    locale: string;
-  };
-}
-
-export default function LocaleHomePage({ params: { locale } }: Props) {
+export default function LocaleHomePage() {
   return <LandingPageComponent />;
 }
 
