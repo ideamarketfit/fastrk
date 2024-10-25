@@ -54,6 +54,6 @@ const toolsData: Record<string, ToolData> = {
   // Add more tools as needed
 }
 
-export function getToolData(slug: string): ToolData | undefined {
-  return toolsData[slug]
+export function getToolData(slug: string): ToolData | Record<string, ToolData> {
+  return slug ? toolsData[slug] : toolsData;
 }
