@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useRef } from 'react'
-import { MessageSquare, ChevronDown, ChevronUp, Paperclip, Send, X, Sparkles, Zap, BarChart } from 'lucide-react'
+import { MessageSquare, ChevronDown, ChevronUp, Paperclip, Send, X, Sparkles, Zap, BarChart, FileText, Image as ImageIcon, Film, Music, Archive, Code, FileSpreadsheet, File } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -25,7 +25,7 @@ export function ToolLandingPage({
   const router = useRouter()
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [input, setInput] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading] = useState(false)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [selectedModel, setSelectedModel] = useState('gpt-4o-mini')
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -50,8 +50,25 @@ export function ToolLandingPage({
   }
 
   const getFileIcon = (fileType: string) => {
-    // You can add more file type checks and return appropriate icons
-    return <Paperclip className="h-4 w-4" />
+    const type = fileType.toLowerCase()
+    
+    if (type.includes('text') || type.includes('pdf')) {
+      return <FileText className="h-4 w-4" />
+    } else if (type.includes('image')) {
+      return <ImageIcon className="h-4 w-4" />
+    } else if (type.includes('video')) {
+      return <Film className="h-4 w-4" />
+    } else if (type.includes('audio')) {
+      return <Music className="h-4 w-4" />
+    } else if (type.includes('zip') || type.includes('rar') || type.includes('7z')) {
+      return <Archive className="h-4 w-4" />
+    } else if (type.includes('javascript') || type.includes('typescript') || type.includes('python') || type.includes('java')) {
+      return <Code className="h-4 w-4" />
+    } else if (type.includes('csv') || type.includes('excel') || type.includes('spreadsheet')) {
+      return <FileSpreadsheet className="h-4 w-4" />
+    } else {
+      return <File className="h-4 w-4" />
+    }
   }
 
   return (

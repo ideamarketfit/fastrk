@@ -2,9 +2,10 @@ import { ToolLandingPage } from '@/components/tool-landing-page'
 import { getToolData } from '@/lib/tools'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
+import { ToolData } from '@/lib/tools'
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const toolData = getToolData(params.slug)
+  const toolData = getToolData(params.slug) as ToolData | undefined;
   if (!toolData) {
     return {
       title: 'Tool Not Found',
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default function ToolPage({ params }: { params: { slug: string } }) {
-  const toolData = getToolData(params.slug)
+  const toolData = getToolData(params.slug) as ToolData;
 
   if (!toolData) {
     notFound()

@@ -1,4 +1,4 @@
-interface ToolData {
+export interface ToolData {
   name: string
   description: string
   faqs: { question: string; answer: string }[]
