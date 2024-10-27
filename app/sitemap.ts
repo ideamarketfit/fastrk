@@ -1,11 +1,12 @@
 import { MetadataRoute } from 'next'
-import { getToolData } from '@/lib/tools'
+import { getToolData, ToolData } from '@/lib/tools'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.chatdiagram.com'
   const languages = ['en', 'ja', 'zh-Hant']
   const routes = ['', '/tools']
-  const tools = Object.keys(getToolData(''))
+  const allTools = getToolData('') as Record<string, ToolData>
+  const tools = Object.keys(allTools)
 
   const pages = routes.concat(tools.map(tool => `/tool/${tool}`))
 

@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.chatdiagram.com
+
+# Sitemaps
+Sitemap: https://www.chatdiagram.com/sitemap.xml

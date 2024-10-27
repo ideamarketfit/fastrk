@@ -1,13 +1,15 @@
 import { AiDiagrammingTools } from "@/components/tool-collection";
-import { getToolData, ToolData } from "@/lib/tools"; // Import ToolData from here
+import { getToolData, ToolData } from "@/lib/tools";
 
 export default function ToolsPage() {
   const allTools = getToolData("") as Record<string, ToolData>;
-  const tools = Object.entries(allTools).map(([slug, data]) => ({
+  if (!allTools) return null;
+
+  const tools = Object.entries(allTools).map(([slug, tool]) => ({
     slug,
-    name: data.name,
-    description: data.description,
-    image: data.exampleImage,
+    name: tool.translations.en.name,
+    description: tool.translations.en.description,
+    image: tool.translations.en.exampleImage,
     category: slug.charAt(0).toUpperCase() + slug.slice(1),
   }));
 
