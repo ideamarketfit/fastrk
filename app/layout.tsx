@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { HreflangTags } from '@/components/hreflang-tags';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <HreflangTags />
         <script
           defer
           data-domain="chatdiagram.com"
