@@ -1,10 +1,10 @@
 import { ToolLandingPage } from '@/components/tool-landing-page'
-import { getToolData } from '@/lib/tools'
+import { getToolData, LocalizedToolData, ToolData } from '@/lib/tools'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 
 export async function generateMetadata({ params }: { params: { slug: string; locale: string } }): Promise<Metadata> {
-  const toolData = getToolData(params.slug, params.locale);
+  const toolData = getToolData(params.slug, params.locale) as LocalizedToolData & { exampleImage: string; command: string };
   if (!toolData) {
     return {
       title: 'Tool Not Found',
@@ -18,8 +18,7 @@ export async function generateMetadata({ params }: { params: { slug: string; loc
 }
 
 export default function ToolPage({ params }: { params: { slug: string; locale: string } }) {
-  const toolData = getToolData(params.slug, params.locale);
-
+  const toolData = getToolData(params.slug, params.locale) as LocalizedToolData;
   if (!toolData) {
     notFound()
   }
@@ -36,7 +35,8 @@ export default function ToolPage({ params }: { params: { slug: string; locale: s
 }
 
 export async function generateStaticParams() {
-  const tools = Object.keys(getToolData(''));
+  const allTools = getToolData('') as Record<string, ToolData>;
+  const tools = Object.keys(allTools);
   const locales = ['en', 'ja', 'zh-Hant'];
   
   return tools.flatMap(slug => 

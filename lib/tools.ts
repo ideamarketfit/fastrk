@@ -1,6 +1,8 @@
 export interface LocalizedToolData {
   name: string
   description: string
+  exampleImage: string  // Added
+  command: string      // Added
   faqs: { question: string; answer: string }[]
   meta: {
     title: string
@@ -9,8 +11,6 @@ export interface LocalizedToolData {
 }
 
 export interface ToolData {
-  exampleImage: string
-  command: string
   translations: {
     en: LocalizedToolData
     ja: LocalizedToolData
@@ -21,12 +21,12 @@ export interface ToolData {
 
 const toolsData: Record<string, ToolData> = {
   mindmap: {
-    exampleImage: "/chat-diagram-demo.png",
-    command: "Create a Mind Map",
     translations: {
       en: {
         name: "Mind Map Creator",
         description: "Visualize your ideas and concepts with our AI-powered Mind Map Creator.",
+        exampleImage: "/chat-diagram-demo.png",
+        command: "Create a Mind Map",
         faqs: [
           {
             question: "What is a mind map?",
@@ -45,6 +45,8 @@ const toolsData: Record<string, ToolData> = {
       ja: {
         name: "マインドマップ作成ツール",
         description: "AI駆動のマインドマップ作成ツールで、アイデアと概念を視覚化します。",
+        exampleImage: "/chat-diagram-demo-ja.png",
+        command: "マインドマップを作成する",
         faqs: [
           {
             question: "マインドマップとは何ですか？",
@@ -63,6 +65,8 @@ const toolsData: Record<string, ToolData> = {
       ko: {
         name: "마인드맵 제작 도구",
         description: "AI 기반 마인드맵 제작 도구로 아이디어와 개념을 시각화하세요.",
+        exampleImage: "/chat-diagram-demo-ko.png",
+        command: "마인드맵 만들기",
         faqs: [
           {
             question: "마인드맵이란 무엇인가요?",
@@ -75,12 +79,14 @@ const toolsData: Record<string, ToolData> = {
         ],
         meta: {
           title: "AI 기반 마인드맵 제작 도구 | 채팅 다이어그램",
-          description: "AI 기반 마인드맵 제작 도구로 손쉽게 멋진 마인드맵을 만드세요. 순식간에 아이디어와 개념을 시각화합니다."
+          description: "AI 기반 마인드맵 제작 도구로 손쉽게 멋진 마인드맵을 만드세요. 순식간에 아이디어 개념을 시각화합니다."
         }
       },
       "zh-Hant": {
         name: "思維導圖製作工具",
         description: "使用AI驅動的思維導圖製作工具，將您的想法和概念視覺化。",
+        exampleImage: "/chat-diagram-demo-zh-hant.png",
+        command: "創建思維導圖",
         faqs: [
           {
             question: "什麼是思維導圖？",
@@ -101,15 +107,17 @@ const toolsData: Record<string, ToolData> = {
   // Add other tools with translations...
 }
 
-export function getToolData(slug: string, locale: string = 'en'): LocalizedToolData & { exampleImage: string; command: string } | Record<string, ToolData> {
-  if (!slug) return toolsData;
+export function getToolData(slug?: string, locale?: string): LocalizedToolData | ToolData | Record<string, ToolData> | null {
+  if (!slug) {
+    return toolsData;
+  }
   
   const tool = toolsData[slug];
   if (!tool) return null;
 
-  return {
-    ...tool.translations[locale as keyof typeof tool.translations],
-    exampleImage: tool.exampleImage,
-    command: tool.command
-  };
+  if (locale) {
+    return tool.translations[locale as keyof typeof tool.translations] || null;
+  }
+  
+  return tool;
 }
