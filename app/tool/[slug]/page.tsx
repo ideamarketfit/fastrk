@@ -5,7 +5,7 @@ import { Metadata } from 'next'
 import { ToolData } from '@/lib/tools'
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const tool = getToolData(params.slug) as ToolData | null;
+  const tool = await getToolData(params.slug) as ToolData | null;
   if (!tool) {
     return {
       title: 'Tool Not Found',
@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default function ToolPage({ params }: { params: { slug: string } }) {
-  const tool = getToolData(params.slug) as ToolData | null;
+export default async function ToolPage({ params }: { params: { slug: string } }) {
+  const tool = await getToolData(params.slug) as ToolData | null;
   if (!tool) {
     notFound();
   }

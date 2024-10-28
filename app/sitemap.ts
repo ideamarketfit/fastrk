@@ -1,11 +1,11 @@
 import { MetadataRoute } from 'next'
 import { getToolData, ToolData } from '@/lib/tools'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {  // Made async
   const baseUrl = 'https://www.chatdiagram.com'
   const languages = ['en', 'ja', 'zh-Hant']
   const routes = ['', '/tools']
-  const allTools = getToolData('') as Record<string, ToolData>
+  const allTools = await getToolData('') as Record<string, ToolData>  // Added await
   const tools = Object.keys(allTools)
 
   const pages = routes.concat(tools.map(tool => `/tool/${tool}`))

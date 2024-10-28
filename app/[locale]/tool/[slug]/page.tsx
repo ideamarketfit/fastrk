@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 
 export async function generateMetadata({ params }: { params: { slug: string; locale: string } }): Promise<Metadata> {
-  const toolData = getToolData(params.slug, params.locale) as LocalizedToolData & { exampleImage: string; command: string };
+  const toolData = await getToolData(params.slug, params.locale) as LocalizedToolData;
   if (!toolData) {
     return {
       title: 'Tool Not Found',
@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: { params: { slug: string; loc
   }
 }
 
-export default function ToolPage({ params }: { params: { slug: string; locale: string } }) {
-  const toolData = getToolData(params.slug, params.locale) as LocalizedToolData;
+export default async function ToolPage({ params }: { params: { slug: string; locale: string } }) {
+  const toolData = await getToolData(params.slug, params.locale) as LocalizedToolData;
   if (!toolData) {
     notFound()
   }
@@ -34,7 +34,7 @@ export default function ToolPage({ params }: { params: { slug: string; locale: s
 }
 
 export async function generateStaticParams() {
-  const allTools = getToolData('') as Record<string, ToolData>;
+  const allTools = await getToolData('') as Record<string, ToolData>;
   const tools = Object.keys(allTools);
   const locales = ['en', 'ja', 'zh-Hant'];
   
