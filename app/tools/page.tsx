@@ -9,6 +9,7 @@ export default function ToolsPage() {
     slug,
     name: tool.translations.en.name,
     description: tool.translations.en.description,
+    image: "/chat-diagram-demo.png", // Hardcoded image path
     category: slug.charAt(0).toUpperCase() + slug.slice(1),
   }));
 
