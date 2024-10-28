@@ -13,14 +13,12 @@ export function ToolLandingPage({
   toolName, 
   toolDescription, 
   faqs,
-  exampleImage,
-  command // Add this prop
+  command
 }: {
   toolName: string;
   toolDescription: string;
   faqs: { question: string; answer: string }[];
-  exampleImage: string;
-  command: string; // Add this to the props type
+  command: string;
 }) {
   const router = useRouter()
   const [openFaq, setOpenFaq] = useState<number | null>(null)
@@ -215,7 +213,7 @@ export function ToolLandingPage({
               </div>
               <div className="frame-image">
                 <Image 
-                  src={exampleImage}
+                  src="/chat-diagram-demo.png"
                   height={400} 
                   width={600} 
                   alt={`${toolName} Example`}

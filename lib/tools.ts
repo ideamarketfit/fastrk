@@ -1,8 +1,7 @@
 export interface LocalizedToolData {
   name: string
   description: string
-  exampleImage: string  // Added
-  command: string      // Added
+  command: string
   faqs: { question: string; answer: string }[]
   meta: {
     title: string
@@ -25,7 +24,6 @@ const toolsData: Record<string, ToolData> = {
       en: {
         name: "Mind Map Creator",
         description: "Visualize your ideas and concepts with our AI-powered Mind Map Creator.",
-        exampleImage: "/chat-diagram-demo.png",
         command: "Create a Mind Map",
         faqs: [
           {
@@ -45,7 +43,6 @@ const toolsData: Record<string, ToolData> = {
       ja: {
         name: "マインドマップ作成ツール",
         description: "AI駆動のマインドマップ作成ツールで、アイデアと概念を視覚化します。",
-        exampleImage: "/chat-diagram-demo-ja.png",
         command: "マインドマップを作成する",
         faqs: [
           {
@@ -65,7 +62,6 @@ const toolsData: Record<string, ToolData> = {
       ko: {
         name: "마인드맵 제작 도구",
         description: "AI 기반 마인드맵 제작 도구로 아이디어와 개념을 시각화하세요.",
-        exampleImage: "/chat-diagram-demo-ko.png",
         command: "마인드맵 만들기",
         faqs: [
           {
@@ -74,7 +70,7 @@ const toolsData: Record<string, ToolData> = {
           },
           {
             question: "AI는 어떻게 마인드맵을 만드나요?",
-            answer: "AI가 입력된 내용을 분석하여 주요 개념과 그 관계를 파악합니다. 그런 다음 이러한 개념들을 계층 구조로 배치하여 마인드맵을 생성합니다."
+            answer: "AI가 입력된 내용을 분석하여 주요 개념과 그 관계를 파악합니다. 그런 다음 이러한 개념들을 ���층 구조로 배치하여 마인드맵을 생성합니다."
           }
         ],
         meta: {
@@ -85,7 +81,6 @@ const toolsData: Record<string, ToolData> = {
       "zh-Hant": {
         name: "思維導圖製作工具",
         description: "使用AI驅動的思維導圖製作工具，將您的想法和概念視覺化。",
-        exampleImage: "/chat-diagram-demo-zh-hant.png",
         command: "創建思維導圖",
         faqs: [
           {
@@ -99,7 +94,7 @@ const toolsData: Record<string, ToolData> = {
         ],
         meta: {
           title: "AI驅動的思維導圖製作工具 | 對話圖表",
-          description: "使用AI驅動的思維導圖製作工具輕鬆創建精美的思維導圖。瞬間將想法和概念視覺化。"
+          description: "使用AI驅動的思維導圖製作工具輕鬆創建精美的思維導圖。瞬間將想法��概念視覺化。"
         }
       }
     }

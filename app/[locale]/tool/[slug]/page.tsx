@@ -28,7 +28,6 @@ export default function ToolPage({ params }: { params: { slug: string; locale: s
       toolName={toolData.name}
       toolDescription={toolData.description}
       faqs={toolData.faqs}
-      exampleImage={toolData.exampleImage}
       command={toolData.command}
     />
   )

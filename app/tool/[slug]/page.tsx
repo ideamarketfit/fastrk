@@ -32,7 +32,6 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
       toolName={toolData.name}
       toolDescription={toolData.description}
       faqs={toolData.faqs}
-      exampleImage={toolData.exampleImage}
       command={toolData.command}
     />
   );
