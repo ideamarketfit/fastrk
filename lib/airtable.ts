@@ -9,6 +9,13 @@ export interface AirtableToolData {
   ja: string;
   ko: string;
   'zh-Hant': string;
+  es: string;
+  fr: string;
+  pt: string;
+  de: string;
+  it: string;
+  he: string;
+  ar: string;
 }
 
 export async function getAllTools(): Promise<AirtableToolData[]> {
@@ -24,6 +31,13 @@ export async function getAllTools(): Promise<AirtableToolData[]> {
       ja: record.get('ja') as string,
       ko: record.get('ko') as string,
       'zh-Hant': record.get('zh-Hant') as string,
+      es: record.get('es') as string,
+      fr: record.get('fr') as string,
+      pt: record.get('pt') as string,
+      de: record.get('de') as string,
+      it: record.get('it') as string,
+      he: record.get('he') as string,
+      ar: record.get('ar') as string,
     }));
   } catch (error) {
     console.error('Error fetching tools from Airtable:', error);
@@ -48,6 +62,13 @@ export async function getToolBySlug(slug: string): Promise<AirtableToolData | nu
       ja: record.get('ja') as string,
       ko: record.get('ko') as string,
       'zh-Hant': record.get('zh-Hant') as string,
+      es: record.get('es') as string,
+      fr: record.get('fr') as string,
+      pt: record.get('pt') as string,
+      de: record.get('de') as string,
+      it: record.get('it') as string,
+      he: record.get('he') as string,
+      ar: record.get('ar') as string,
     };
   } catch (error) {
     console.error('Error fetching tool from Airtable:', error);
