@@ -9,7 +9,6 @@ export default function ToolsPage() {
     slug,
     name: tool.translations.en.name,
     description: tool.translations.en.description,
-    image: tool.translations.en.exampleImage,
     category: slug.charAt(0).toUpperCase() + slug.slice(1),
   }));
 
