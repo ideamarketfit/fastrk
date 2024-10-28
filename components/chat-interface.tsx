@@ -12,6 +12,8 @@ import mermaid from 'mermaid';
 import svgPanZoom from 'svg-pan-zoom'
 import { useChat } from 'ai/react'
 import html2canvas from 'html2canvas';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { generateChatId, getChatsFromLocalStorage, saveChatToLocalStorage, saveChatsToLocalStorage, getLastOpenedChatId, setLastOpenedChatId } from '@/lib/chat';
 
 interface Message {
   id: number
@@ -26,18 +28,87 @@ interface Message {
 }
 
 interface Chat {
-  id: number
+  id: string
   title: string
   messages: Message[]
 }
 
 const ChatInterfaceComponent: React.FC = () => {
-  const [chats, setChats] = useState<Chat[]>([
-    { id: 1, title: "Chat Diagram", messages: [] },
-    { id: 2, title: "Concept Map", messages: [] },
-    { id: 3, title: "User Journey Map", messages: [] },
-  ])
-  const [currentChat, setCurrentChat] = useState<Chat>(chats[0])
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const chatId = searchParams.get('cid');
+
+  // Initialize chats from localStorage
+  const [chats, setChats] = useState<Chat[]>(() => {
+    if (typeof window !== 'undefined') {
+      return getChatsFromLocalStorage();
+    }
+    return [];
+  });
+
+  // Initialize current chat based on URL parameter, last opened chat, or create new chat
+  const [currentChat, setCurrentChat] = useState<Chat>(() => {
+    if (typeof window !== 'undefined') {
+      const savedChats = getChatsFromLocalStorage();
+      
+      // If there's a chat ID in the URL, try to find that chat
+      if (chatId) {
+        const existingChat = savedChats.find(chat => chat.id === chatId);
+        if (existingChat) {
+          setLastOpenedChatId(existingChat.id);
+          return existingChat;
+        }
+      }
+      
+      // If no chat ID in URL but we have saved chats, try to load last opened chat
+      if (savedChats.length > 0) {
+        const lastOpenedId = getLastOpenedChatId();
+        if (lastOpenedId) {
+          const lastOpenedChat = savedChats.find(chat => chat.id === lastOpenedId);
+          if (lastOpenedChat) {
+            router.replace(`/chat?cid=${lastOpenedId}`);
+            return lastOpenedChat;
+          }
+        }
+        // If no last opened chat found, use the most recent chat
+        router.replace(`/chat?cid=${savedChats[0].id}`);
+        setLastOpenedChatId(savedChats[0].id);
+        return savedChats[0];
+      }
+      
+      // If no existing chats, create a new one
+      const newChatId = generateChatId();
+      const newChat = { id: newChatId, title: "New Chat", messages: [] };
+      
+      savedChats.unshift(newChat);
+      saveChatsToLocalStorage(savedChats);
+      setLastOpenedChatId(newChatId);
+      router.replace(`/chat?cid=${newChatId}`);
+      
+      return newChat;
+    }
+    return { id: generateChatId(), title: "New Chat", messages: [] };
+  });
+
+  // Update last opened chat ID when current chat changes
+  useEffect(() => {
+    if (currentChat.id) {
+      setLastOpenedChatId(currentChat.id);
+    }
+  }, [currentChat.id]);
+
+  // Update chats state when currentChat changes
+  useEffect(() => {
+    if (!chatId) {
+      setChats(prevChats => {
+        if (!prevChats.find(chat => chat.id === currentChat.id)) {
+          return [currentChat, ...prevChats];
+        }
+        return prevChats;
+      });
+    }
+  }, [currentChat.id, chatId]);
+
   const [showDiagram, setShowDiagram] = useState(false)
   const [currentDiagram, setCurrentDiagram] = useState<Message['diagram'] | null>(null)
   const [showSidebar, setShowSidebar] = useState(false)
@@ -71,12 +142,21 @@ const ChatInterfaceComponent: React.FC = () => {
         setShowDiagram(true);
       }
 
-      setCurrentChat(prevChat => ({
-        ...prevChat,
-        messages: [...prevChat.messages, newMessage]
-      }));
+      const updatedChat = {
+        ...currentChat,
+        messages: [...currentChat.messages, newMessage]
+      };
+      
+      setCurrentChat(updatedChat);
+      saveChatToLocalStorage(updatedChat);
+      
+      setChats(prevChats =>
+        prevChats.map(chat =>
+          chat.id === currentChat.id ? updatedChat : chat
+        )
+      );
     },
-    body: { model: selectedModel }, // Add this line to pass the selected model
+    body: { model: selectedModel },
   });
 
   const scrollToBottom = () => {
@@ -196,18 +276,22 @@ const ChatInterfaceComponent: React.FC = () => {
   }
 
   const addNewChat = () => {
+    const newChatId = generateChatId();
     const newChat: Chat = {
-      id: Date.now(),
+      id: newChatId,
       title: "New Chat",
       messages: []
-    }
-    setChats(prevChats => [newChat, ...prevChats])
-    setCurrentChat(newChat)
-  }
+    };
+    setChats(prevChats => [newChat, ...prevChats]);
+    setCurrentChat(newChat);
+    router.push(`/chat?cid=${newChatId}`);
+  };
 
   const selectChat = (chat: Chat) => {
-    setCurrentChat(chat)
-  }
+    setCurrentChat(chat);
+    setLastOpenedChatId(chat.id);
+    router.push(`/chat?cid=${chat.id}`);
+  };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -276,6 +360,13 @@ const ChatInterfaceComponent: React.FC = () => {
       console.error('Diagram element not found');
     }
   };
+
+  // Add this effect to save chats when they change
+  useEffect(() => {
+    if (chats.length > 0) {
+      saveChatsToLocalStorage(chats);
+    }
+  }, [chats]);
 
   return (
     <div className="flex h-screen bg-background">
