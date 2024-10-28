@@ -3,7 +3,7 @@ import { getToolData, ToolData } from '@/lib/tools'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {  // Made async
   const baseUrl = 'https://www.chatdiagram.com'
-  const languages = ['en', 'ja', 'zh-Hant']
+  const languages = ['en', 'ja', 'ko', 'zh-Hant', 'es', 'fr', 'pt', 'de', 'it', 'he', 'ar']
   const routes = ['', '/tool']
   const allTools = await getToolData('') as Record<string, ToolData>  // Added await
   const tools = Object.keys(allTools)

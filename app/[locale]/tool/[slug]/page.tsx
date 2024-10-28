@@ -36,7 +36,7 @@ export default async function ToolPage({ params }: { params: { slug: string; loc
 export async function generateStaticParams() {
   const allTools = await getToolData('') as Record<string, ToolData>;
   const tools = Object.keys(allTools);
-  const locales = ['en', 'ja', 'zh-Hant'];
+  const locales = ['en', 'ja', 'ko', 'zh-Hant', 'es', 'fr', 'pt', 'de', 'it', 'he', 'ar'];
   
   return tools.flatMap(slug => 
     locales.map(locale => ({

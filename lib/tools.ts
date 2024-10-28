@@ -17,6 +17,13 @@ export interface ToolData {
     ja: LocalizedToolData
     ko: LocalizedToolData
     'zh-Hant': LocalizedToolData
+    es: LocalizedToolData
+    fr: LocalizedToolData
+    pt: LocalizedToolData
+    de: LocalizedToolData
+    it: LocalizedToolData
+    he: LocalizedToolData
+    ar: LocalizedToolData
   }
 }
 
@@ -44,7 +51,14 @@ function convertAirtableToToolData(airtableData: AirtableToolData): ToolData {
       en: parseLocaleData(airtableData.en),
       ja: parseLocaleData(airtableData.ja),
       ko: parseLocaleData(airtableData.ko),
-      'zh-Hant': parseLocaleData(airtableData['zh-Hant'])
+      'zh-Hant': parseLocaleData(airtableData['zh-Hant']),
+      es: parseLocaleData(airtableData.es),
+      fr: parseLocaleData(airtableData.fr),
+      pt: parseLocaleData(airtableData.pt),
+      de: parseLocaleData(airtableData.de),
+      it: parseLocaleData(airtableData.it),
+      he: parseLocaleData(airtableData.he),
+      ar: parseLocaleData(airtableData.ar)
     }
   };
 }
