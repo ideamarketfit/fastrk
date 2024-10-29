@@ -192,9 +192,9 @@ export function LandingPageComponent() {
         <section className="bg-purple-100 py-20 rounded-lg">
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-6 text-gray-900">{t('readyToStartDiagramming')}</h2>
-            <p className="text-xl text-gray-600 mb-8">Join thousands of teams already using Chat Diagram to streamline their processes.</p>
+            <p className="text-xl text-gray-600 mb-8">{t('joinOurUserGroup')}</p>
             <Link href="/chat" className="bg-purple-600 text-white px-6 py-3 rounded-md text-lg hover:bg-purple-700 transition duration-300">
-              Sign Up Now
+              {t('signUpNow')}
             </Link>
           </div>
         </section>
