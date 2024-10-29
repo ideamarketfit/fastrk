@@ -82,5 +82,6 @@
   "exportAnywhere": "Export Anywhere",
   "exportAnywhereDesc": "Get your diagram in any format you need - PNG, SVG, PDF, or even editable files. No lock-in, just flexibility.",
   "chatInputPlaceholder": "Describe your idea here...",
-  "generateButton": "Generate"
+  "generateButton": "Generate",
+  "seeItInAction": "See It in Action"
 }

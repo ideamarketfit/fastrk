@@ -210,13 +210,13 @@ export function ToolLandingPage({
         {/* Example Section */}
         <section className="bg-gray-50 py-20">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">See It in Action</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">{t('seeItInAction')}</h2>
             <div className="bg-white rounded-lg shadow-2xl overflow-hidden max-w-4xl mx-auto">
               <div className="bg-gray-200 px-4 py-2 flex items-center space-x-2">
                 <div className="w-3 h-3 rounded-full bg-red-500"></div>
                 <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                 <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                <div className="flex-grow text-center text-sm text-gray-600">Flow Chart Example</div>
+                <div className="flex-grow text-center text-sm text-gray-600">chatdiagram.com</div>
               </div>
               <div className="frame-image">
                 <Image 
@@ -234,7 +234,7 @@ export function ToolLandingPage({
         {/* FAQ Section */}
         <section className="bg-white py-20">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">{t('frequentlyAskedQuestions')}</h2>
             <div className="space-y-4 max-w-3xl mx-auto">
               {faqs.map((faq, index) => (
                 <div key={index} className="bg-gray-50 rounded-lg shadow-md overflow-hidden transition duration-300 hover:shadow-lg">

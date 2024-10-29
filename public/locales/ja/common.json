@@ -39,7 +39,7 @@
   "extensiveTemplateLibrary": "豊富なテンプレートライブラリ",
   "extensiveTemplateLibraryDesc": "迅速な開始のために、幅広い事前作成されたテンプレートから選択できます。",
   "exportIntegration": "エクスポートと統合",
-  "exportIntegrationDesc": "図表を様々な形式でエクスポートし、人気のあるツールと統合できます。",
+  "exportIntegrationDesc": "図表を様々な形式で��クスポートし、人気のあるツールと統合できます。",
   "frequentlyAskedQuestions": "よくあ質問",
   "readyToStartDiagramming": "図表作成を始める準備はできましたか？",
   "joinThousandsOfTeams": "すでにチャットダイアグラムを使用している何千ものチームに参加しましょう",
@@ -80,8 +80,9 @@
   "importAnythingDesc": "PDF、文書、画像、コード - どんなファイルでもドロップできます。ロジックを抽出し、意味のある図表を作成します。",
   "fastIterativeUpdates": "迅速な反復更新",
   "fastIterativeUpdatesDesc": "素早い反復が良い図表の鍵です。変更したい箇所を伝えるだけで、数秒で更新を確認できます。",
-  "exportAnywhere": "どこにでもエクスポート",
+  "exportAnywhere": "どこ���でもエクスポート",
   "exportAnywhereDesc": "PNG、SVG、PDF、編集可能なファイルなど、必要な形式で図表を取得できます。制限なし、柔軟性のみ。",
   "chatInputPlaceholder": "アイデアをここに説明してください...",
-  "generateButton": "生成"
+  "generateButton": "生成",
+  "seeItInAction": "実際の動作を見る"
 }
