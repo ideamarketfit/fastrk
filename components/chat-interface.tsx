@@ -13,7 +13,7 @@ import svgPanZoom from 'svg-pan-zoom'
 import { useChat } from 'ai/react'
 import html2canvas from 'html2canvas';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { generateChatId, getChatsFromLocalStorage, saveChatToLocalStorage, saveChatsToLocalStorage, getLastOpenedChatId, setLastOpenedChatId } from '@/lib/chat';
+import { getChat, getChatIds, getAllChats, saveMessage, getLastOpenedChatId, setLastOpenedChatId, createNewChat, updateChatTitle, getSidebarState, setSidebarState } from '@/lib/chat';
 
 interface Message {
   id: number
@@ -41,7 +41,7 @@ const ChatInterfaceComponent: React.FC = () => {
   // Initialize chats from localStorage
   const [chats, setChats] = useState<Chat[]>(() => {
     if (typeof window !== 'undefined') {
-      return getChatsFromLocalStorage();
+      return getAllChats();
     }
     return [];
   });
@@ -49,45 +49,43 @@ const ChatInterfaceComponent: React.FC = () => {
   // Initialize current chat based on URL parameter, last opened chat, or create new chat
   const [currentChat, setCurrentChat] = useState<Chat>(() => {
     if (typeof window !== 'undefined') {
-      const savedChats = getChatsFromLocalStorage();
-      
-      // If there's a chat ID in the URL, try to find that chat
       if (chatId) {
-        const existingChat = savedChats.find(chat => chat.id === chatId);
+        const existingChat = getChat(chatId);
         if (existingChat) {
           setLastOpenedChatId(existingChat.id);
           return existingChat;
         }
       }
       
-      // If no chat ID in URL but we have saved chats, try to load last opened chat
-      if (savedChats.length > 0) {
-        const lastOpenedId = getLastOpenedChatId();
-        if (lastOpenedId) {
-          const lastOpenedChat = savedChats.find(chat => chat.id === lastOpenedId);
-          if (lastOpenedChat) {
-            router.replace(`/chat?cid=${lastOpenedId}`);
-            return lastOpenedChat;
-          }
+      const lastOpenedId = getLastOpenedChatId();
+      if (lastOpenedId) {
+        const lastOpenedChat = getChat(lastOpenedId);
+        if (lastOpenedChat) {
+          router.replace(`/chat?cid=${lastOpenedId}`);
+          return lastOpenedChat;
         }
-        // If no last opened chat found, use the most recent chat
-        router.replace(`/chat?cid=${savedChats[0].id}`);
-        setLastOpenedChatId(savedChats[0].id);
-        return savedChats[0];
       }
       
-      // If no existing chats, create a new one
-      const newChatId = generateChatId();
-      const newChat = { id: newChatId, title: "New Chat", messages: [] };
+      const chatIds = getChatIds();
+      if (chatIds.length > 0) {
+        const mostRecentChat = getChat(chatIds[0]);
+        if (mostRecentChat) {
+          router.replace(`/chat?cid=${mostRecentChat.id}`);
+          setLastOpenedChatId(mostRecentChat.id);
+          return mostRecentChat;
+        }
+      }
       
-      savedChats.unshift(newChat);
-      saveChatsToLocalStorage(savedChats);
-      setLastOpenedChatId(newChatId);
-      router.replace(`/chat?cid=${newChatId}`);
-      
+      const newChat = createNewChat();
+      const savedChat = getChat(newChat.id);
+      if (savedChat) {
+        setLastOpenedChatId(savedChat.id);
+        router.replace(`/chat?cid=${savedChat.id}`);
+        return savedChat;
+      }
       return newChat;
     }
-    return { id: generateChatId(), title: "New Chat", messages: [] };
+    return createNewChat();
   });
 
   // Update last opened chat ID when current chat changes
@@ -102,7 +100,8 @@ const ChatInterfaceComponent: React.FC = () => {
     if (!chatId) {
       setChats(prevChats => {
         if (!prevChats.find(chat => chat.id === currentChat.id)) {
-          return [currentChat, ...prevChats];
+          const savedChat = getChat(currentChat.id);
+          return savedChat ? [savedChat, ...prevChats] : [currentChat, ...prevChats];
         }
         return prevChats;
       });
@@ -111,8 +110,12 @@ const ChatInterfaceComponent: React.FC = () => {
 
   const [showDiagram, setShowDiagram] = useState(false)
   const [currentDiagram, setCurrentDiagram] = useState<Message['diagram'] | null>(null)
-  const [showSidebar, setShowSidebar] = useState(false)
-  const [isInitialInput, setIsInitialInput] = useState(true)
+  const [showSidebar, setShowSidebar] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return getSidebarState();
+    }
+    return true;
+  });
   const [selectedModel, setSelectedModel] = useState("gpt-4o-mini")
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [isEditingTitle, setIsEditingTitle] = useState(false)
@@ -123,6 +126,12 @@ const ChatInterfaceComponent: React.FC = () => {
 
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: '/api/chat',
+    id: currentChat.id,
+    initialMessages: currentChat.messages.map(msg => ({
+      id: msg.id.toString(),
+      content: msg.text,
+      role: msg.sender === 'user' ? 'user' : 'assistant'
+    })),
     onFinish: (message) => {
       const diagramMatch = message.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
       const newMessage: Message = {
@@ -142,19 +151,11 @@ const ChatInterfaceComponent: React.FC = () => {
         setShowDiagram(true);
       }
 
-      const updatedChat = {
-        ...currentChat,
-        messages: [...currentChat.messages, newMessage]
-      };
-      
-      setCurrentChat(updatedChat);
-      saveChatToLocalStorage(updatedChat);
-      
-      setChats(prevChats =>
-        prevChats.map(chat =>
-          chat.id === currentChat.id ? updatedChat : chat
-        )
-      );
+      saveMessage(currentChat.id, newMessage);
+      setCurrentChat(prevChat => ({
+        ...prevChat,
+        messages: [...prevChat.messages, newMessage]
+      }));
     },
     body: { model: selectedModel },
   });
@@ -237,32 +238,35 @@ const ChatInterfaceComponent: React.FC = () => {
       e.preventDefault();
     }
     if ((input.trim() || uploadedFile) && !isLoading) {
-      const newMessages: Message[] = []
-
       if (uploadedFile) {
-        newMessages.push({
+        const fileMessage: Message = {
           id: Date.now(),
           text: '',
           sender: 'user',
           file: uploadedFile
-        })
+        };
+        saveMessage(currentChat.id, fileMessage);
+        setCurrentChat(prevChat => ({
+          ...prevChat,
+          messages: [...prevChat.messages, fileMessage]
+        }));
       }
 
       if (input.trim()) {
-        newMessages.push({
+        const userMessage: Message = {
           id: Date.now() + 1,
           text: input.trim(),
           sender: 'user'
-        })
+        };
+        saveMessage(currentChat.id, userMessage);
+        setCurrentChat(prevChat => ({
+          ...prevChat,
+          messages: [...prevChat.messages, userMessage]
+        }));
       }
 
-      setCurrentChat(prevChat => ({
-        ...prevChat,
-        messages: [...prevChat.messages, ...newMessages]
-      }))
-      setUploadedFile(null)
-      setIsInitialInput(false)
-      handleSubmit(e)
+      setUploadedFile(null);
+      handleSubmit(e);
     }
   }
 
@@ -272,25 +276,45 @@ const ChatInterfaceComponent: React.FC = () => {
   }
 
   const toggleSidebar = () => {
-    setShowSidebar(!showSidebar)
-  }
+    const newState = !showSidebar;
+    setShowSidebar(newState);
+    setSidebarState(newState);
+  };
 
-  const addNewChat = () => {
-    const newChatId = generateChatId();
-    const newChat: Chat = {
-      id: newChatId,
-      title: "New Chat",
-      messages: []
-    };
-    setChats(prevChats => [newChat, ...prevChats]);
-    setCurrentChat(newChat);
-    router.push(`/chat?cid=${newChatId}`);
+  const addNewChat = async () => {
+    const newChat = createNewChat();
+    
+    // Wait for localStorage to be updated
+    const savedChat = getChat(newChat.id);
+    if (savedChat) {
+      // Reset the useChat messages by providing new initialMessages
+      messages.splice(0, messages.length); // Clear existing messages array
+      
+      setChats(prevChats => [savedChat, ...prevChats]);
+      setCurrentChat(savedChat);
+      setLastOpenedChatId(savedChat.id);
+      router.push(`/chat?cid=${savedChat.id}`);
+    }
   };
 
   const selectChat = (chat: Chat) => {
-    setCurrentChat(chat);
-    setLastOpenedChatId(chat.id);
-    router.push(`/chat?cid=${chat.id}`);
+    // Get fresh chat data from localStorage
+    const savedChat = getChat(chat.id);
+    if (savedChat) {
+      // Reset messages
+      messages.splice(0, messages.length);
+      
+      setCurrentChat(savedChat);
+      setLastOpenedChatId(savedChat.id);
+      router.push(`/chat?cid=${savedChat.id}`);
+    } else {
+      // Fallback if chat not found in localStorage
+      messages.splice(0, messages.length);
+      
+      setCurrentChat(chat);
+      setLastOpenedChatId(chat.id);
+      router.push(`/chat?cid=${chat.id}`);
+    }
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -316,21 +340,26 @@ const ChatInterfaceComponent: React.FC = () => {
   }
 
   const handleTitleSave = () => {
-    setIsEditingTitle(false)
+    setIsEditingTitle(false);
     if (editedTitle.trim() !== '') {
       setCurrentChat(prevChat => ({
         ...prevChat,
         title: editedTitle
-      }))
+      }));
+      
+      // Update title in localStorage
+      updateChatTitle(currentChat.id, editedTitle);
+      
+      // Update chats list in state
       setChats(prevChats =>
         prevChats.map(chat =>
           chat.id === currentChat.id ? { ...chat, title: editedTitle } : chat
         )
-      )
+      );
     } else {
-      setEditedTitle(currentChat.title)
+      setEditedTitle(currentChat.title);
     }
-  }
+  };
 
   const handleExportDiagram = () => {
     const element = document.getElementById('mermaid-diagram');
@@ -361,12 +390,32 @@ const ChatInterfaceComponent: React.FC = () => {
     }
   };
 
-  // Add this effect to save chats when they change
+  // Add an effect to handle URL changes and ensure chat data is loaded from localStorage
   useEffect(() => {
-    if (chats.length > 0) {
-      saveChatsToLocalStorage(chats);
+    if (chatId) {
+      const savedChat = getChat(chatId);
+      if (savedChat && savedChat.id !== currentChat.id) {
+        setCurrentChat(savedChat);
+        setLastOpenedChatId(savedChat.id);
+      }
     }
-  }, [chats]);
+  }, [chatId]);
+
+  // Add an effect to reset UI when chat changes
+  useEffect(() => {
+    if (currentChat) {
+      // Reset input and diagram state
+      setShowDiagram(false);
+      setCurrentDiagram(null);
+      setUploadedFile(null);
+    }
+  }, [currentChat.id]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setSidebarState(showSidebar);
+    }
+  }, [showSidebar]);
 
   return (
     <div className="flex h-screen bg-background">
@@ -502,7 +551,7 @@ const ChatInterfaceComponent: React.FC = () => {
               ))}
               <div ref={messagesEndRef} />
             </ScrollArea>
-            <div className={`p-4 w-full max-w-3xl mx-auto ${isInitialInput ? 'fixed inset-x-0 bottom-4' : ''}`}>
+            <div className="p-4 w-full max-w-3xl mx-auto">
               <div className="relative w-full">
                 {uploadedFile && (
                   <div className="mb-2 p-2 rounded-lg flex items-center">

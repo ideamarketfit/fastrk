@@ -16,37 +16,95 @@ interface Message {
   file?: File;
 }
 
+const CHAT_IDS_KEY = 'chat_ids';
+
 export const generateChatId = (): string => {
   return Math.random().toString(36).substring(2, 10);
 };
 
-export const saveChatsToLocalStorage = (chats: Chat[]) => {
-  localStorage.setItem('chats', JSON.stringify(chats));
+export const getChatKey = (chatId: string): string => {
+  return `chat_${chatId}`;
 };
 
-export const getChatsFromLocalStorage = (): Chat[] => {
-  const chats = localStorage.getItem('chats');
-  return chats ? JSON.parse(chats) : [];
-};
-
-export const saveChatToLocalStorage = (chat: Chat) => {
-  const chats = getChatsFromLocalStorage();
-  const existingChatIndex = chats.findIndex(c => c.id === chat.id);
+export const saveChat = (chat: Chat): void => {
+  const chatKey = getChatKey(chat.id);
+  localStorage.setItem(chatKey, JSON.stringify(chat));
   
-  if (existingChatIndex >= 0) {
-    chats[existingChatIndex] = chat;
-  } else {
-    chats.unshift(chat);
+  // Update chat IDs list
+  const chatIds = getChatIds();
+  if (!chatIds.includes(chat.id)) {
+    chatIds.unshift(chat.id);
+    localStorage.setItem(CHAT_IDS_KEY, JSON.stringify(chatIds));
   }
-  
-  saveChatsToLocalStorage(chats);
 };
 
-// Add these new functions
+export const getChat = (chatId: string): Chat | null => {
+  const chatKey = getChatKey(chatId);
+  const chatData = localStorage.getItem(chatKey);
+  return chatData ? JSON.parse(chatData) : null;
+};
+
+export const getChatIds = (): string[] => {
+  const chatIds = localStorage.getItem(CHAT_IDS_KEY);
+  return chatIds ? JSON.parse(chatIds) : [];
+};
+
+export const getAllChats = (): Chat[] => {
+  const chatIds = getChatIds();
+  return chatIds
+    .map(id => getChat(id))
+    .filter((chat): chat is Chat => chat !== null);
+};
+
+export const saveMessage = (chatId: string, message: Message): void => {
+  const chat = getChat(chatId);
+  if (chat) {
+    chat.messages.push(message);
+    saveChat(chat);
+  }
+};
+
 export const getLastOpenedChatId = (): string | null => {
   return localStorage.getItem('lastOpenedChatId');
 };
 
 export const setLastOpenedChatId = (chatId: string): void => {
   localStorage.setItem('lastOpenedChatId', chatId);
+};
+
+export const createNewChat = (title: string = "New Chat"): Chat => {
+  const newChatId = generateChatId();
+  const newChat: Chat = {
+    id: newChatId,
+    title,
+    messages: []
+  };
+  
+  // Save the new chat to localStorage
+  const chatKey = getChatKey(newChatId);
+  localStorage.setItem(chatKey, JSON.stringify(newChat));
+  
+  // Update the chat IDs list
+  const chatIds = getChatIds();
+  chatIds.unshift(newChatId);
+  localStorage.setItem(CHAT_IDS_KEY, JSON.stringify(chatIds));
+  
+  return newChat;
+};
+
+export const updateChatTitle = (chatId: string, newTitle: string): void => {
+  const chat = getChat(chatId);
+  if (chat) {
+    chat.title = newTitle;
+    saveChat(chat);
+  }
+};
+
+export const getSidebarState = (): boolean => {
+  const state = localStorage.getItem('sidebarOpen');
+  return state ? JSON.parse(state) : true; // Default to open
+};
+
+export const setSidebarState = (isOpen: boolean): void => {
+  localStorage.setItem('sidebarOpen', JSON.stringify(isOpen));
 };
