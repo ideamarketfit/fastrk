@@ -2,6 +2,7 @@ import { ToolLandingPage } from '@/components/tool-landing-page'
 import { getToolData, LocalizedToolData, ToolData } from '@/lib/tools'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
+import { getSupportedLanguageCodes } from '@/lib/languages';
 
 export async function generateMetadata({ params }: { params: { slug: string; locale: string } }): Promise<Metadata> {
   const toolData = await getToolData(params.slug, params.locale) as LocalizedToolData;
@@ -36,10 +37,9 @@ export default async function ToolPage({ params }: { params: { slug: string; loc
 export async function generateStaticParams() {
   const allTools = await getToolData('') as Record<string, ToolData>;
   const tools = Object.keys(allTools);
-  const locales = ['en', 'ja', 'ko', 'zh-Hant', 'es', 'fr', 'pt', 'de', 'it', 'he', 'ar'];
   
   return tools.flatMap(slug => 
-    locales.map(locale => ({
+    getSupportedLanguageCodes().map(locale => ({
       locale,
       slug,
     }))

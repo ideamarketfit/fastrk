@@ -4,6 +4,9 @@ import "./globals.css";
 import { HreflangTags } from '@/components/hreflang-tags';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
+// Import the translations
+import common from '@/public/locales/en/common.json';
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -16,8 +19,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Chat Diagram - Free Online AI Diagram Maker",
-  description: "Create professional diagrams effortlessly through AI-powered conversations. No drawing skills needed. Start diagramming for free.",
+  title: common.metaTitle,
+  description: common.metaDescription,
 };
 
 export default function RootLayout({
