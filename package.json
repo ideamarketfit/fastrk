@@ -2,12 +2,14 @@
   "name": "chat-diagram",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postbuild": "next-sitemap"
+    "postbuild": "next-sitemap",
+    "translate": "node --loader ts-node/esm lib/translate.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.68",
@@ -35,6 +37,7 @@
     "svg-pan-zoom": "^3.6.2",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
+    "ts-node": "^10.9.2",
     "zod": "^3.23.8",
     "zod-to-json-schema": "^3.23.3"
   },

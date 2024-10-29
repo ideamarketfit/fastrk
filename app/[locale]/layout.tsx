@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { dir } from 'i18next';
 import { HreflangTags } from '@/components/hreflang-tags';
 import { getSupportedLanguageCodes, getTranslations } from '@/lib/languages';
+import { ReactNode } from 'react';
 
 export async function generateStaticParams() {
   return getSupportedLanguageCodes().map(locale => ({ locale }));

@@ -33,7 +33,7 @@ export function useTranslation() {
 
   const t = (key: keyof typeof en): string => {
     const localeTranslations = translations[locale as keyof typeof translations] || translations.en;
-    return localeTranslations[key] || translations.en[key] || key;
+    return (localeTranslations as typeof en)[key] || translations.en[key] || key;
   };
 
   return {

@@ -4,7 +4,6 @@ import { useTranslation } from '@/hooks/useTranslation';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  MessageSquare,
   Network,
   GitBranch,
   Database,
@@ -15,6 +14,8 @@ import {
   Workflow,
   ChevronDown,
 } from 'lucide-react';
+import { HeaderComponent } from '@/components/header';
+import { FooterComponent } from '@/components/footer';
 
 export function LandingPageComponent() {
   const { t } = useTranslation();
@@ -83,20 +84,7 @@ export function LandingPageComponent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-md">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <MessageSquare className="h-8 w-8 text-purple-600" />
-            <span className="text-2xl font-bold text-gray-800">{t('title')}</span>
-          </div>
-          <Link
-            href="/chat"
-            className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition duration-300"
-          >
-            {t('getStarted')}
-          </Link>
-        </div>
-      </header>
+      <HeaderComponent />
 
       <main className="container mx-auto px-4 py-12">
         {/* Hero Section */}
@@ -200,47 +188,7 @@ export function LandingPageComponent() {
         </section>
       </main>
 
-      <footer className="bg-gray-900 text-white py-12 mt-20">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Product</h3>
-              <ul className="space-y-2">
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Features</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Pricing</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Use Cases</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Company</h3>
-              <ul className="space-y-2">
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">About Us</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Careers</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2">
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Blog</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Documentation</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Community</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2">
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Privacy Policy</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Terms of Service</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Cookie Policy</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-12 text-center text-gray-400">
-            © {new Date().getFullYear()} Chat Diagram. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <FooterComponent />
     </div>
   )
 }
