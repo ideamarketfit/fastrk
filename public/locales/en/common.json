@@ -71,5 +71,16 @@
   "exportDiagram": "Export diagram",
   "closeDiagram": "Close diagram",
   "metaTitle": "Chat Diagram - Free Online AI Diagram Maker",
-  "metaDescription": "Create professional diagrams effortlessly through AI-powered conversations. No drawing skills needed. Start diagramming for free."
+  "metaDescription": "Create professional diagrams effortlessly through AI-powered conversations. No drawing skills needed. Start diagramming for free.",
+  "whyChooseUs": "Why Choose Us",
+  "ideaToDiagram": "Idea to Diagram",
+  "ideaToDiagramDesc": "Write naturally. We handle the translation from your thoughts to visual diagrams. No more wrestling with drag-and-drop tools.",
+  "importAnything": "Import Anything",
+  "importAnythingDesc": "PDFs, docs, images, or code - drop any file. We'll extract the logic and create a diagram that makes sense.",
+  "fastIterativeUpdates": "Fast Iterative Updates",
+  "fastIterativeUpdatesDesc": "Quick iterations are the key to good diagrams. Tell us what to change, and see updates in seconds, not minutes.",
+  "exportAnywhere": "Export Anywhere",
+  "exportAnywhereDesc": "Get your diagram in any format you need - PNG, SVG, PDF, or even editable files. No lock-in, just flexibility.",
+  "chatInputPlaceholder": "Describe your idea here...",
+  "generateButton": "Generate"
 }

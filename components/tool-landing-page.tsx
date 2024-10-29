@@ -3,11 +3,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useRef } from 'react'
-import { MessageSquare, ChevronDown, ChevronUp, Paperclip, Send, X, Sparkles, Zap, BarChart, FileText, Image as ImageIcon, Film, Music, Archive, Code, FileSpreadsheet, File } from 'lucide-react'
+import { MessageSquare, ChevronDown, ChevronUp, Paperclip, Send, X, Sparkles, Zap, FileText, Image as ImageIcon, Film, Music, Archive, Code, FileSpreadsheet, File, Share } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useRouter } from 'next/navigation'
+import { useTranslation } from '@/hooks/useTranslation'
 
 export function ToolLandingPage({ 
   toolName, 
@@ -27,6 +28,7 @@ export function ToolLandingPage({
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [selectedModel, setSelectedModel] = useState('gpt-4o-mini')
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { t } = useTranslation()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value)
@@ -127,7 +129,7 @@ export function ToolLandingPage({
                 <Textarea
                   value={input}
                   onChange={handleInputChange}
-                  placeholder="Describe your flow chart here..."
+                  placeholder={t('chatInputPlaceholder')}
                   onKeyPress={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
@@ -169,32 +171,37 @@ export function ToolLandingPage({
                   }`}
                 >
                   <Send className="h-4 w-4 mr-2" />
-                  <span>Generate</span>
+                  <span>{t('generateButton')}</span>
                 </Button>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Why Choose Chat Diagram Section */}
+        {/* Why Choose Section */}
         <section className="bg-white py-20">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">Why Choose Chat Diagram?</h2>
-            <div className="grid md:grid-cols-3 gap-8">
+            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">{t('whyChooseUs')}</h2>
+            <div className="grid md:grid-cols-4 gap-8">
               <div className="bg-gray-50 rounded-lg p-6 shadow-md transition duration-300 hover:shadow-lg">
                 <Zap className="h-12 w-12 text-purple-600 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">AI-Powered Generation</h3>
-                <p className="text-gray-600">Transform text descriptions into professional flow charts with our advanced AI technology.</p>
+                <h3 className="text-xl font-semibold mb-2">{t('ideaToDiagram')}</h3>
+                <p className="text-gray-600">{t('ideaToDiagramDesc')}</p>
               </div>
               <div className="bg-gray-50 rounded-lg p-6 shadow-md transition duration-300 hover:shadow-lg">
-                <BarChart className="h-12 w-12 text-purple-600 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Customizable Designs</h3>
-                <p className="text-gray-600">Easily customize your flow charts with our intuitive drag-and-drop interface and extensive styling options.</p>
+                <FileText className="h-12 w-12 text-purple-600 mb-4" />
+                <h3 className="text-xl font-semibold mb-2">{t('importAnything')}</h3>
+                <p className="text-gray-600">{t('importAnythingDesc')}</p>
               </div>
               <div className="bg-gray-50 rounded-lg p-6 shadow-md transition duration-300 hover:shadow-lg">
                 <Sparkles className="h-12 w-12 text-purple-600 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Smart Templates</h3>
-                <p className="text-gray-600">Choose from a wide range of smart templates to kickstart your flow chart creation process.</p>
+                <h3 className="text-xl font-semibold mb-2">{t('fastIterativeUpdates')}</h3>
+                <p className="text-gray-600">{t('fastIterativeUpdatesDesc')}</p>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-6 shadow-md transition duration-300 hover:shadow-lg">
+                <Share className="h-12 w-12 text-purple-600 mb-4" />
+                <h3 className="text-xl font-semibold mb-2">{t('exportAnywhere')}</h3>
+                <p className="text-gray-600">{t('exportAnywhereDesc')}</p>
               </div>
             </div>
           </div>

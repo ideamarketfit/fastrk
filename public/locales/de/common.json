@@ -71,5 +71,16 @@
   "closeDiagram": "Diagramm schließen",
   "metaTitle": "Chat Diagram - Kostenloser Online KI-Diagramm-Editor",
   "metaDescription": "Erstellen Sie mühelos professionelle Diagramme durch KI-gestützte Gespräche. Keine Zeichenkenntnisse erforderlich. Starten Sie jetzt kostenlos mit der Diagrammerstellung.",
-  "joinOurUserGroup": "Schließen Sie sich Tausenden von Teams an, die Chat Diagram bereits zur Optimierung ihrer Prozesse nutzen"
+  "joinOurUserGroup": "Schließen Sie sich Tausenden von Teams an, die Chat Diagram bereits zur Optimierung ihrer Prozesse nutzen",
+  "whyChooseUs": "Warum Uns Wählen",
+  "ideaToDiagram": "Von der Idee zum Diagramm",
+  "ideaToDiagramDesc": "Schreiben Sie natürlich. Wir übersetzen Ihre Gedanken in visuelle Diagramme. Kein Kampf mehr mit Drag-and-Drop-Tools.",
+  "importAnything": "Alles Importieren",
+  "importAnythingDesc": "PDF, Dokumente, Bilder oder Code - laden Sie beliebige Dateien hoch. Wir extrahieren die Logik und erstellen ein sinnvolles Diagramm.",
+  "fastIterativeUpdates": "Schnelle Iterative Updates",
+  "fastIterativeUpdatesDesc": "Schnelle Iterationen sind der Schlüssel zu guten Diagrammen. Sagen Sie uns, was zu ändern ist, und sehen Sie Updates in Sekunden.",
+  "exportAnywhere": "Überall Exportieren",
+  "exportAnywhereDesc": "Erhalten Sie Ihr Diagramm in jedem gewünschten Format - PNG, SVG, PDF oder sogar bearbeitbare Dateien. Keine Einschränkungen, nur Flexibilität.",
+  "chatInputPlaceholder": "Beschreiben Sie Ihre Idee hier...",
+  "generateButton": "Generieren"
 }

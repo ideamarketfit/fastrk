@@ -71,5 +71,16 @@
   "closeDiagram": "Chiudi diagramma",
   "metaTitle": "Chat Diagram - Creatore di Diagrammi IA Gratuito Online",
   "metaDescription": "Crea diagrammi professionali senza sforzo attraverso conversazioni basate su IA. Nessuna abilità di disegno necessaria. Inizia a diagrammare gratuitamente.",
-  "joinOurUserGroup": "Unisciti a migliaia di team che già utilizzano Chat Diagram per ottimizzare i loro processi"
+  "joinOurUserGroup": "Unisciti a migliaia di team che già utilizzano Chat Diagram per ottimizzare i loro processi",
+  "whyChooseUs": "Perché Sceglierci",
+  "ideaToDiagram": "Dall'Idea al Diagramma",
+  "ideaToDiagramDesc": "Scrivi naturalmente. Gestiamo noi la traduzione dei tuoi pensieri in diagrammi visivi. Basta lottare con strumenti drag-and-drop.",
+  "importAnything": "Importa Qualsiasi Cosa",
+  "importAnythingDesc": "PDF, documenti, immagini o codice - trascina qualsiasi file. Estrarremo la logica e creeremo un diagramma sensato.",
+  "fastIterativeUpdates": "Aggiornamenti Iterativi Veloci",
+  "fastIterativeUpdatesDesc": "Le iterazioni veloci sono la chiave per buoni diagrammi. Dicci cosa cambiare e vedi gli aggiornamenti in secondi.",
+  "exportAnywhere": "Esporta Ovunque",
+  "exportAnywhereDesc": "Ottieni il tuo diagramma in qualsiasi formato - PNG, SVG, PDF o anche file modificabili. Nessun blocco, solo flessibilità.",
+  "chatInputPlaceholder": "Descrivi la tua idea qui...",
+  "generateButton": "Genera"
 }

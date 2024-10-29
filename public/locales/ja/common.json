@@ -72,5 +72,16 @@
   "metaDescription": "AI駆動の会話を通じて、プロフェッショナルな図表を簡単に作成。描画スキル不要。無料で図表作成を始めましょう。",
   "tagline": "図表作成の最も簡単な方法",
   "noSignupNeeded": "登録不要、完全無料",
-  "joinOurUserGroup": "すでにプロセスの効率化にChat Diagramを使用している何千ものチームに参加しましょう"
+  "joinOurUserGroup": "すでにプロセスの効率化にChat Diagramを使用している何千ものチームに参加しましょう",
+  "whyChooseUs": "なぜ私たちを選ぶのか",
+  "ideaToDiagram": "アイデアから図表へ",
+  "ideaToDiagramDesc": "自然に書くだけ。あなたの考えを視覚的な図表に変換します。ドラッグ＆ドロップツールとの格闘は不要です。",
+  "importAnything": "何でもインポート",
+  "importAnythingDesc": "PDF、文書、画像、コード - どんなファイルでもドロップできます。ロジックを抽出し、意味のある図表を作成します。",
+  "fastIterativeUpdates": "迅速な反復更新",
+  "fastIterativeUpdatesDesc": "素早い反復が良い図表の鍵です。変更したい箇所を伝えるだけで、数秒で更新を確認できます。",
+  "exportAnywhere": "どこにでもエクスポート",
+  "exportAnywhereDesc": "PNG、SVG、PDF、編集可能なファイルなど、必要な形式で図表を取得できます。制限なし、柔軟性のみ。",
+  "chatInputPlaceholder": "アイデアをここに説明してください...",
+  "generateButton": "生成"
 }
