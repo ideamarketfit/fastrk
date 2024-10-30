@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postbuild": "next-sitemap",
+    "postbuild": "next-sitemap --config next-sitemap.config.mjs",
     "translate": "node --loader ts-node/esm lib/translate.ts"
   },
   "dependencies": {
