@@ -544,7 +544,7 @@ const ChatInterfaceComponent: React.FC = () => {
   return (
     <div className="flex h-screen bg-background">
       {/* Sidebar */}
-      <div className={`border-r transition-all duration-300 ${showSidebar ? 'w-64' : 'w-0 overflow-hidden'}`}>
+      <div className={`border-r transition-all duration-300 ${showSidebar ? 'w-64 flex-shrink-0' : 'w-0 overflow-hidden'}`}>
         <div className="p-4 border-b flex justify-between items-center h-[60px]">
           <div className="flex items-center justify-between">
             <Button 
