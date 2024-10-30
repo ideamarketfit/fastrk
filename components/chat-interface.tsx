@@ -419,9 +419,7 @@ const ChatInterfaceComponent: React.FC = () => {
   // Add an effect to reset UI when chat changes
   useEffect(() => {
     if (currentChat) {
-      // Reset input and diagram state
-      setShowDiagram(false);
-      setCurrentDiagram(null);
+      // Only reset file upload state
       setUploadedFile(null);
     }
   }, [currentChat.id]);
@@ -504,6 +502,44 @@ const ChatInterfaceComponent: React.FC = () => {
       mounted = false;
     };
   }, [userPrompt, taskPrompt, chatId]);
+
+  const findLastDiagram = (messages: any[]) => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const message = messages[i];
+      if (message.role === 'assistant') {
+        const diagramMatch = message.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
+        if (diagramMatch || message.diagram) {
+          const diagram = message.diagram || {
+            title: diagramMatch[1],
+            content: diagramMatch[2].trim(),
+            type: 'mermaid'
+          };
+          return diagram;
+        }
+      }
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    if (messages.length > 0) {
+      timeoutId = setTimeout(() => {
+        const lastDiagram = findLastDiagram(messages);
+        if (lastDiagram) {
+          setCurrentDiagram(lastDiagram);
+          setShowDiagram(true);
+        }
+      }, 300);
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [messages.length]);
 
   return (
     <div className="flex h-screen bg-background">
@@ -593,12 +629,12 @@ const ChatInterfaceComponent: React.FC = () => {
           </div>
         </header>
         <div className="flex flex-grow overflow-hidden">
-          <div id="chat-container" className={`flex flex-col justify-between transition-all duration-300 ${
+          <div id="chat-container" className={`flex flex-col h-full transition-all duration-300 ${
             showDiagram 
-              ? 'w-1/2 md:block hidden' // Hide on mobile when diagram is shown
+              ? 'w-1/2 md:block hidden mx-auto' // Hide on mobile when diagram is shown
               : 'w-full max-w-3xl mx-auto'
           }`}>
-            <ScrollArea className="flex-grow p-4">
+            <ScrollArea className="flex-grow p-4 h-[calc(100%-160px)]">
               {messages.map((message, index) => (
                 <div key={index} className={`mb-4 flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`flex items-start max-w-[70%] ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
@@ -641,7 +677,7 @@ const ChatInterfaceComponent: React.FC = () => {
               ))}
               <div ref={messagesEndRef} />
             </ScrollArea>
-            <div className="p-4 w-full max-w-3xl mx-auto">
+            <div className="p-4 w-full max-w-3xl mx-auto bg-background h-[160px]">
               <div className="relative w-full">
                 {uploadedFile && (
                   <div className="mb-2 p-2 rounded-lg flex items-center">
@@ -706,20 +742,29 @@ const ChatInterfaceComponent: React.FC = () => {
           <AnimatePresence>
             {showDiagram && currentDiagram && (
               <motion.div
-                className={`flex flex-col ${
-                  // Take full width on mobile, half width on desktop
-                  'w-full md:w-1/2'
-                }`}
+                className="flex flex-col w-full md:w-1/2 h-full"
                 initial={{ x: '100%', opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: '100%', opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <div id="diagram-container" className="flex-grow bg-muted p-4 rounded-lg m-4 shadow-lg flex flex-col overflow-hidden">
-                  <div className="absolute top-2 left-2 right-2 flex justify-between items-center p-2">
-                    <h2 className="text-xl font-bold">{currentDiagram.title}</h2>
-                    <div className="flex items-center">
-                      <Button variant="ghost" size="icon" onClick={handleExportDiagram} className="mr-2">
+                <div id="diagram-container" className="flex flex-col h-full bg-muted p-4 rounded-lg m-4 shadow-lg">
+                  {/* Diagram Panel Header */}
+                  <div className="flex items-center justify-between mx-2">
+                    <div className="flex items-center gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => toggleDiagram(null)}
+                        className="md:hidden"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                        <span className="sr-only">Back to chat</span>
+                      </Button>
+                      <h2 className="text-xl font-bold">{currentDiagram.title}</h2>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon" onClick={handleExportDiagram}>
                         <Download className="h-4 w-4" />
                         <span className="sr-only">Export diagram</span>
                       </Button>
@@ -729,20 +774,13 @@ const ChatInterfaceComponent: React.FC = () => {
                       </Button>
                     </div>
                   </div>
-                  <div className="mt-12 flex-grow flex items-center justify-center overflow-auto">
+                  
+                  {/* Diagram Content */}
+                  <div className="flex-grow flex items-center justify-center overflow-auto">
                     {currentDiagram.type === 'mermaid' && (
                       <div id="mermaid-diagram" className="w-full h-full flex items-center justify-center" />
                     )}
                   </div>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={() => toggleDiagram(null)}
-                    className="md:hidden absolute left-6 top-4"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                    <span className="sr-only">Back to chat</span>
-                  </Button>
                 </div>
               </motion.div>
             )}
