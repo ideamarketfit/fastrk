@@ -130,7 +130,8 @@ const ChatInterfaceComponent: React.FC = () => {
     initialMessages: currentChat.messages.map(msg => ({
       id: msg.id.toString(),
       content: msg.text,
-      role: msg.sender === 'user' ? 'user' : 'assistant'
+      role: msg.sender === 'user' ? 'user' : 'assistant',
+      diagram: msg.diagram || null
     })),
     onFinish: (message) => {
       const diagramMatch = message.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
@@ -522,24 +523,22 @@ const ChatInterfaceComponent: React.FC = () => {
                         }`}>
                           {message.content.replace(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/g, '')}
                         </div>
-                        {message.role === 'assistant' && message.content.includes('<diagram title="') && (() => {
+                        {message.role === 'assistant' && (message.diagram || message.content.includes('<diagram title="')) && (() => {
                           const diagramMatch = message.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
-                          return (
+                          const diagram = message.diagram || (diagramMatch ? {
+                            title: diagramMatch[1],
+                            content: diagramMatch[2].trim(),
+                            type: 'mermaid'
+                          } : null);
+                          
+                          return diagram && (
                             <Button 
                               variant="outline" 
                               className="mt-2 self-start" 
-                              onClick={() => {
-                                if (diagramMatch) {
-                                  toggleDiagram({
-                                    title: diagramMatch[1],
-                                    content: diagramMatch[2].trim(),
-                                    type: 'mermaid'
-                                  });
-                                }
-                              }}
+                              onClick={() => toggleDiagram(diagram)}
                             >
                               <ImageIcon className="mr-2 h-4 w-4" />
-                              {diagramMatch?.[1] || 'View Diagram'}
+                              {diagram.title || 'View Diagram'}
                               {showDiagram ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
                             </Button>
                           );
