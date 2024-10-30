@@ -595,7 +595,7 @@ const ChatInterfaceComponent: React.FC = () => {
         <div className="flex flex-grow overflow-hidden">
           <div id="chat-container" className={`flex flex-col justify-between transition-all duration-300 ${
             showDiagram 
-              ? 'w-1/2' 
+              ? 'w-1/2 md:block hidden' // Hide on mobile when diagram is shown
               : 'w-full max-w-3xl mx-auto'
           }`}>
             <ScrollArea className="flex-grow p-4">
@@ -706,7 +706,10 @@ const ChatInterfaceComponent: React.FC = () => {
           <AnimatePresence>
             {showDiagram && currentDiagram && (
               <motion.div
-                className="w-1/2 flex flex-col"
+                className={`flex flex-col ${
+                  // Take full width on mobile, half width on desktop
+                  'w-full md:w-1/2'
+                }`}
                 initial={{ x: '100%', opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: '100%', opacity: 0 }}
@@ -731,6 +734,15 @@ const ChatInterfaceComponent: React.FC = () => {
                       <div id="mermaid-diagram" className="w-full h-full flex items-center justify-center" />
                     )}
                   </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => toggleDiagram(null)}
+                    className="md:hidden absolute left-6 top-4"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    <span className="sr-only">Back to chat</span>
+                  </Button>
                 </div>
               </motion.div>
             )}
