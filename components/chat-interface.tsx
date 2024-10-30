@@ -158,6 +158,21 @@ const ChatInterfaceComponent: React.FC = () => {
         };
         setCurrentDiagram(newMessage.diagram);
         setShowDiagram(true);
+
+        if (currentChat.title === "New Chat") {
+          const newTitle = diagramMatch[1];
+          setEditedTitle(newTitle);
+          updateChatTitle(currentChat.id, newTitle);
+          setCurrentChat(prevChat => ({
+            ...prevChat,
+            title: newTitle
+          }));
+          setChats(prevChats =>
+            prevChats.map(chat =>
+              chat.id === currentChat.id ? { ...chat, title: newTitle } : chat
+            )
+          );
+        }
       }
 
       // Get the current cid from URL
