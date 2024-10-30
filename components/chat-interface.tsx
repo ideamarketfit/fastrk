@@ -593,7 +593,11 @@ const ChatInterfaceComponent: React.FC = () => {
           </div>
         </header>
         <div className="flex flex-grow overflow-hidden">
-          <div className={`flex flex-col justify-between w-full max-w-3xl mx-auto transition-all duration-300 ${showDiagram ? 'mr-[50%]' : ''}`}>
+          <div id="chat-container" className={`flex flex-col justify-between transition-all duration-300 ${
+            showDiagram 
+              ? 'w-1/2' 
+              : 'w-full max-w-3xl mx-auto'
+          }`}>
             <ScrollArea className="flex-grow p-4">
               {messages.map((message, index) => (
                 <div key={index} className={`mb-4 flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -702,13 +706,13 @@ const ChatInterfaceComponent: React.FC = () => {
           <AnimatePresence>
             {showDiagram && currentDiagram && (
               <motion.div
-                className="w-1/2 flex flex-col absolute right-0 top-[60px] bottom-0"
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
+                className="w-1/2 flex flex-col"
+                initial={{ x: '100%', opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: '100%', opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <div id="diagram-container" className="flex-grow bg-muted p-4 rounded-lg relative m-4 shadow-lg flex flex-col overflow-hidden">
+                <div id="diagram-container" className="flex-grow bg-muted p-4 rounded-lg m-4 shadow-lg flex flex-col overflow-hidden">
                   <div className="absolute top-2 left-2 right-2 flex justify-between items-center p-2">
                     <h2 className="text-xl font-bold">{currentDiagram.title}</h2>
                     <div className="flex items-center">
