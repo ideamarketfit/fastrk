@@ -51,6 +51,10 @@ const ChatInterfaceComponent: React.FC = () => {
   // Initialize current chat based on URL parameter, last opened chat, or create new chat
   const [currentChat, setCurrentChat] = useState<Chat>(() => {
     if (typeof window !== 'undefined') {
+      if (userPrompt && taskPrompt && !chatId) {
+        return createNewChat();
+      }
+
       if (chatId) {
         const existingChat = getChat(chatId);
         if (existingChat) {
@@ -82,7 +86,9 @@ const ChatInterfaceComponent: React.FC = () => {
       const savedChat = getChat(newChat.id);
       if (savedChat) {
         setLastOpenedChatId(savedChat.id);
-        router.replace(`/chat?cid=${savedChat.id}`);
+        if (!chatId) {
+          router.replace(`/chat?cid=${savedChat.id}`);
+        }
         return savedChat;
       }
       return newChat;
@@ -126,9 +132,9 @@ const ChatInterfaceComponent: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const titleInputRef = useRef<HTMLInputElement>(null)
 
-  const { messages, append,input, handleInputChange, handleSubmit, isLoading } = useChat({
+  const { messages, append, input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: '/api/chat',
-    id: currentChat.id,
+    id: chatId || currentChat.id,
     initialMessages: currentChat.messages.map(msg => ({
       id: msg.id.toString(),
       content: msg.text,
@@ -154,11 +160,19 @@ const ChatInterfaceComponent: React.FC = () => {
         setShowDiagram(true);
       }
 
-      saveMessage(currentChat.id, newMessage);
-      setCurrentChat(prevChat => ({
-        ...prevChat,
-        messages: [...prevChat.messages, newMessage]
-      }));
+      // Get the current cid from URL
+      const currentChatId = new URLSearchParams(window.location.search).get('cid');
+      console.log("Saving message with chat ID from URL:", currentChatId);
+      
+      if (currentChatId) {
+        saveMessage(currentChatId, newMessage);
+        setCurrentChat(prevChat => ({
+          ...prevChat,
+          messages: [...prevChat.messages, newMessage]
+        }));
+      } else {
+        console.error("No chat ID found in URL");
+      }
     },
     body: { model: selectedModel },
   });
@@ -241,19 +255,15 @@ const ChatInterfaceComponent: React.FC = () => {
       e.preventDefault();
     }
     if ((input.trim() || uploadedFile) && !isLoading) {
-      if (uploadedFile) {
-        const fileMessage: Message = {
-          id: Date.now(),
-          text: '',
-          sender: 'user',
-          file: uploadedFile
-        };
-        saveMessage(currentChat.id, fileMessage);
-        setCurrentChat(prevChat => ({
-          ...prevChat,
-          messages: [...prevChat.messages, fileMessage]
-        }));
-      }
+      // Create and save message whether it's a file or text
+      const newMessage: Message = {
+        id: Date.now(),
+        text: input.trim(),
+        sender: 'user',
+        ...(uploadedFile && { file: uploadedFile })
+      };
+      
+      saveMessage(currentChat.id, newMessage);
 
       setUploadedFile(null);
       handleSubmit(e);
@@ -425,6 +435,9 @@ const ChatInterfaceComponent: React.FC = () => {
         const savedChat = getChat(newChat.id);
         
         if (savedChat) {
+          // Update URL first, before any state changes
+          await router.replace(`/chat?cid=${savedChat.id}`);
+
           const formattedPrompt = `${taskPrompt}: ${userPrompt}`;
           
           const userMessage = {
@@ -434,16 +447,19 @@ const ChatInterfaceComponent: React.FC = () => {
             createdAt: new Date()
           };
 
+          // Then update states
           setChats(prevChats => [savedChat, ...prevChats]);
           setCurrentChat(savedChat);
           setLastOpenedChatId(savedChat.id);
-          router.replace(`/chat?cid=${savedChat.id}`);
 
+          // Save message
           saveMessage(savedChat.id, {
             id: parseInt(userMessage.id, 36),
             text: userMessage.content,
             sender: 'user'
           });
+
+          
 
           await append(userMessage);
         }
@@ -454,6 +470,13 @@ const ChatInterfaceComponent: React.FC = () => {
       }
     }
   };
+
+  // Add this effect to verify state updates
+  useEffect(() => {
+    if (currentChat) {
+      console.log('Current chat ID updated to:', currentChat.id);
+    }
+  }, [currentChat.id]);
 
   useEffect(() => {
     let mounted = true;
