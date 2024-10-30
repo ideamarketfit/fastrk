@@ -37,6 +37,8 @@ const ChatInterfaceComponent: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const chatId = searchParams.get('cid');
+  const userPrompt = searchParams.get('user_prompt');
+  const taskPrompt = searchParams.get('task_prompt');
 
   // Initialize chats from localStorage
   const [chats, setChats] = useState<Chat[]>(() => {
@@ -124,7 +126,7 @@ const ChatInterfaceComponent: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const titleInputRef = useRef<HTMLInputElement>(null)
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+  const { messages, append,input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: '/api/chat',
     id: currentChat.id,
     initialMessages: currentChat.messages.map(msg => ({
@@ -250,19 +252,6 @@ const ChatInterfaceComponent: React.FC = () => {
         setCurrentChat(prevChat => ({
           ...prevChat,
           messages: [...prevChat.messages, fileMessage]
-        }));
-      }
-
-      if (input.trim()) {
-        const userMessage: Message = {
-          id: Date.now() + 1,
-          text: input.trim(),
-          sender: 'user'
-        };
-        saveMessage(currentChat.id, userMessage);
-        setCurrentChat(prevChat => ({
-          ...prevChat,
-          messages: [...prevChat.messages, userMessage]
         }));
       }
 
@@ -417,6 +406,66 @@ const ChatInterfaceComponent: React.FC = () => {
       setSidebarState(showSidebar);
     }
   }, [showSidebar]);
+
+  const isSubmitting = useRef(false);
+
+  const handleAutoSubmit = async () => {
+    if (isSubmitting.current) {
+      console.log('🚫 Submission already in progress, skipping...');
+      return;
+    }
+
+    if (userPrompt && taskPrompt) {
+      console.log('🚀 Starting handleAutoSubmit with:', { userPrompt, taskPrompt });
+      
+      try {
+        isSubmitting.current = true;
+
+        const newChat = createNewChat();
+        const savedChat = getChat(newChat.id);
+        
+        if (savedChat) {
+          const formattedPrompt = `${taskPrompt}: ${userPrompt}`;
+          
+          const userMessage = {
+            id: Math.random().toString(36).substr(2, 7),
+            content: formattedPrompt,
+            role: 'user' as const,
+            createdAt: new Date()
+          };
+
+          setChats(prevChats => [savedChat, ...prevChats]);
+          setCurrentChat(savedChat);
+          setLastOpenedChatId(savedChat.id);
+          router.replace(`/chat?cid=${savedChat.id}`);
+
+          saveMessage(savedChat.id, {
+            id: parseInt(userMessage.id, 36),
+            text: userMessage.content,
+            sender: 'user'
+          });
+
+          await append(userMessage);
+        }
+      } catch (error) {
+        console.error('❌ Error sending message:', error);
+      } finally {
+        isSubmitting.current = false;
+      }
+    }
+  };
+
+  useEffect(() => {
+    let mounted = true;
+
+    if ((userPrompt || taskPrompt) && !chatId && mounted) {
+      handleAutoSubmit();
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, [userPrompt, taskPrompt, chatId]);
 
   return (
     <div className="flex h-screen bg-background">
