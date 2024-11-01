@@ -36,7 +36,7 @@ export function HeaderComponent() {
           <div className="flex items-center space-x-8">
             <Link href="/" className="flex items-center space-x-2 group">
               <MessageSquare className="h-9 w-9 text-purple-600 group-hover:text-purple-700 transition-colors duration-300" />
-              <span className="text-2xl font-bold text-gray-800">
+              <span className="text-xl sm:text-2xl font-bold text-gray-800">
                 Chat Diagram
               </span>
             </Link>
@@ -62,7 +62,7 @@ export function HeaderComponent() {
             <div className="flex items-center space-x-6">
               <Button 
                 variant="ghost" 
-                className="text-lg text-gray-600 hover:text-purple-600 hover:bg-transparent transition-colors duration-300 hidden md:block relative group h-auto py-2 flex items-center"
+                className="hidden md:flex items-center text-lg text-gray-600 hover:text-purple-600 hover:bg-transparent transition-colors duration-300 relative group h-auto py-2"
               >
                 {t('login')}
                 <span className="absolute left-0 right-0 bottom-0 h-0.5 bg-purple-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
@@ -76,22 +76,6 @@ export function HeaderComponent() {
           )}
         </div>
       </div>
-      {!isChat && (
-        <nav className="md:hidden">
-          <ul className="flex justify-center space-x-8 py-3 bg-gray-100">
-            {navItems.map(({ key, href }) => (
-              <li key={key}>
-                <Link 
-                  href={href}
-                  className="text-lg text-gray-600 hover:text-purple-600 transition-colors duration-300"
-                >
-                  {t(key)}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )}
     </header>
   )
 }
