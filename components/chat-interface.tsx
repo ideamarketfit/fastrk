@@ -15,6 +15,7 @@ import html2canvas from 'html2canvas';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getChat, getChatIds, getAllChats, saveMessage, getLastOpenedChatId, setLastOpenedChatId, createNewChat, updateChatTitle, getSidebarState, setSidebarState } from '@/lib/chat';
 import ChatSidebar from '@/components/chat-sidebar'
+import DiagramContainer from '@/components/diagram-container';
 
 interface Message {
   id: number
@@ -312,6 +313,11 @@ const ChatInterfaceComponent: React.FC = () => {
     setShowDiagram(false);
     setCurrentDiagram(null);
 
+    // Close sidebar on mobile
+    if (window.innerWidth < 768) {
+      setShowSidebar(false);
+    }
+
     const newChat = createNewChat();
     const savedChat = getChat(newChat.id);
     if (savedChat) {
@@ -327,6 +333,11 @@ const ChatInterfaceComponent: React.FC = () => {
     // Close diagram panel first
     setShowDiagram(false);
     setCurrentDiagram(null);
+
+    // Close sidebar on mobile
+    if (window.innerWidth < 768) {
+      setShowSidebar(false);
+    }
 
     // Get fresh chat data from localStorage
     const savedChat = getChat(chat.id);
@@ -738,40 +749,16 @@ const ChatInterfaceComponent: React.FC = () => {
                 exit={{ x: '100%', opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <div id="diagram-container" className="flex flex-col h-full bg-muted p-4 rounded-lg m-4 shadow-lg">
-                  {/* Diagram Panel Header */}
-                  <div className="flex items-center justify-between mx-2">
-                    <div className="flex items-center gap-2">
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        onClick={() => toggleDiagram(null)}
-                        className="md:hidden"
-                      >
-                        <ChevronLeft className="h-4 w-4" />
-                        <span className="sr-only">Back to chat</span>
-                      </Button>
-                      <h2 className="text-xl font-bold">{currentDiagram.title}</h2>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon" onClick={handleExportDiagram}>
-                        <Download className="h-4 w-4" />
-                        <span className="sr-only">Export diagram</span>
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => toggleDiagram(null)}>
-                        <X className="h-4 w-4" />
-                        <span className="sr-only">Close diagram</span>
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  {/* Diagram Content */}
-                  <div className="flex-grow flex items-center justify-center overflow-auto">
-                    {currentDiagram.type === 'mermaid' && (
-                      <div id="mermaid-diagram" className="w-full h-full flex items-center justify-center" />
-                    )}
-                  </div>
-                </div>
+                <DiagramContainer
+                  title={currentDiagram.title}
+                  onClose={() => toggleDiagram(null)}
+                  onExport={handleExportDiagram}
+                  showBackButton={true}
+                >
+                  {currentDiagram.type === 'mermaid' && (
+                    <div id="mermaid-diagram" className="w-full h-full flex items-center justify-center" />
+                  )}
+                </DiagramContainer>
               </motion.div>
             )}
           </AnimatePresence>
