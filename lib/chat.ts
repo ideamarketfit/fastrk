@@ -59,7 +59,16 @@ export const getAllChats = (): Chat[] => {
 export const saveMessage = (chatId: string, message: Message): void => {
   const chat = getChat(chatId);
   if (chat) {
-    chat.messages.push(message);
+    // Ensure the message follows the Message interface structure
+    const messageToSave: Message = {
+      id: message.id,
+      text: message.text,
+      sender: message.sender,
+      diagram: message.diagram || null,
+      ...(message.file && { file: message.file })
+    };
+    
+    chat.messages.push(messageToSave);
     saveChat(chat);
   }
 };

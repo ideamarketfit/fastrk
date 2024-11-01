@@ -139,15 +139,24 @@ const ChatInterfaceComponent: React.FC = () => {
       id: msg.id.toString(),
       content: msg.text,
       role: msg.sender === 'user' ? 'user' : 'assistant',
-      diagram: msg.diagram || null
+      diagram: msg.diagram ? {
+        title: msg.diagram.title,
+        content: msg.diagram.content,
+        type: msg.diagram.type
+      } : null
     })),
     onFinish: (message) => {
       const diagramMatch = message.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
+      
       const newMessage: Message = {
         id: Date.now(),
         text: message.content,
         sender: 'ai',
-        diagram: null
+        diagram: diagramMatch ? {
+          title: diagramMatch[1],
+          content: diagramMatch[2].trim(),
+          type: 'mermaid'
+        } : null
       };
 
       if (diagramMatch) {
@@ -275,6 +284,7 @@ const ChatInterfaceComponent: React.FC = () => {
         id: Date.now(),
         text: input.trim(),
         sender: 'user',
+        diagram: null,
         ...(uploadedFile && { file: uploadedFile })
       };
       
@@ -297,14 +307,14 @@ const ChatInterfaceComponent: React.FC = () => {
   };
 
   const addNewChat = async () => {
+    // Close diagram panel first
+    setShowDiagram(false);
+    setCurrentDiagram(null);
+
     const newChat = createNewChat();
-    
-    // Wait for localStorage to be updated
     const savedChat = getChat(newChat.id);
     if (savedChat) {
-      // Reset the useChat messages by providing new initialMessages
-      messages.splice(0, messages.length); // Clear existing messages array
-      
+      messages.splice(0, messages.length);
       setChats(prevChats => [savedChat, ...prevChats]);
       setCurrentChat(savedChat);
       setLastOpenedChatId(savedChat.id);
@@ -313,19 +323,19 @@ const ChatInterfaceComponent: React.FC = () => {
   };
 
   const selectChat = (chat: Chat) => {
+    // Close diagram panel first
+    setShowDiagram(false);
+    setCurrentDiagram(null);
+
     // Get fresh chat data from localStorage
     const savedChat = getChat(chat.id);
     if (savedChat) {
-      // Reset messages
       messages.splice(0, messages.length);
-      
       setCurrentChat(savedChat);
       setLastOpenedChatId(savedChat.id);
       router.push(`/chat?cid=${savedChat.id}`);
     } else {
-      // Fallback if chat not found in localStorage
       messages.splice(0, messages.length);
-      
       setCurrentChat(chat);
       setLastOpenedChatId(chat.id);
       router.push(`/chat?cid=${chat.id}`);
@@ -503,19 +513,13 @@ const ChatInterfaceComponent: React.FC = () => {
     };
   }, [userPrompt, taskPrompt, chatId]);
 
-  const findLastDiagram = (messages: any[]) => {
+  const findLastDiagram = (messages: Message[]) => {
     for (let i = messages.length - 1; i >= 0; i--) {
       const message = messages[i];
-      if (message.role === 'assistant') {
-        const diagramMatch = message.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
-        if (diagramMatch || message.diagram) {
-          const diagram = message.diagram || {
-            title: diagramMatch[1],
-            content: diagramMatch[2].trim(),
-            type: 'mermaid'
-          };
-          return diagram;
-        }
+      const isAssistant = message.sender === 'ai';
+
+      if (isAssistant && message.diagram) {
+        return message.diagram;
       }
     }
     return null;
@@ -526,7 +530,23 @@ const ChatInterfaceComponent: React.FC = () => {
 
     if (messages.length > 0) {
       timeoutId = setTimeout(() => {
-        const lastDiagram = findLastDiagram(messages);
+        // Map the AI SDK messages to our Message interface
+        const mappedMessages: Message[] = messages.map(msg => {
+          const diagramMatch = msg.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
+          
+          return {
+            id: parseInt(msg.id),
+            text: msg.content,
+            sender: msg.role === 'user' ? 'user' : 'ai',
+            diagram: diagramMatch ? {
+              title: diagramMatch[1],
+              content: diagramMatch[2].trim(),
+              type: 'mermaid'
+            } : null
+          };
+        });
+        
+        const lastDiagram = findLastDiagram(mappedMessages);
         if (lastDiagram) {
           setCurrentDiagram(lastDiagram);
           setShowDiagram(true);
@@ -637,7 +657,7 @@ const ChatInterfaceComponent: React.FC = () => {
             <ScrollArea className="flex-grow p-4 h-[calc(100%-160px)]">
               {messages.map((message, index) => (
                 <div key={index} className={`mb-4 flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`flex items-start max-w-[70%] ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-start ${message.role === 'user' ? 'flex-row-reverse' : ''} max-w-full md:max-w-[70%]`}>
                     <div className="w-8 h-8 mt-1 flex items-center justify-center">
                       {message.role === 'user' ? <User className="h-6 w-6" /> : <Bot className="h-6 w-6" />}
                     </div>
@@ -650,13 +670,13 @@ const ChatInterfaceComponent: React.FC = () => {
                         }`}>
                           {message.content.replace(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/g, '')}
                         </div>
-                        {message.role === 'assistant' && (message.diagram || message.content.includes('<diagram title="')) && (() => {
+                        {message.role === 'assistant' && message.content.includes('<diagram title="') && (() => {
                           const diagramMatch = message.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
-                          const diagram = message.diagram || (diagramMatch ? {
+                          const diagram: { title: string; content: string; type: "mermaid" } | null = diagramMatch ? {
                             title: diagramMatch[1],
                             content: diagramMatch[2].trim(),
-                            type: 'mermaid'
-                          } : null);
+                            type: 'mermaid' as const // Explicitly specify the type as a literal
+                          } : null;
                           
                           return diagram && (
                             <Button 
