@@ -18,21 +18,10 @@ const DiagramContainer = ({
   children
 }: DiagramContainerProps) => {
   return (
-    <div className="flex flex-col h-full bg-muted p-4 rounded-lg m-4 shadow-lg">
+    <div className="flex flex-col h-full bg-muted p-4 rounded-lg m-4 shadow-lg relative">
       {/* Diagram Panel Header */}
       <div className="flex items-center justify-between mx-2">
         <div className="flex items-center gap-2">
-          {showBackButton && (
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={onClose}
-              className="md:hidden"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              <span className="sr-only">Back to chat</span>
-            </Button>
-          )}
           <h2 className="text-xl font-bold">{title}</h2>
         </div>
         <div className="flex items-center gap-2">
@@ -51,6 +40,19 @@ const DiagramContainer = ({
       <div className="flex-grow flex items-center justify-center overflow-auto">
         {children}
       </div>
+
+      {/* Back Button - Mobile Only */}
+      {showBackButton && (
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={onClose}
+          className="md:hidden absolute bottom-4 left-4"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          <span className="sr-only">Back to chat</span>
+        </Button>
+      )}
     </div>
   );
 };

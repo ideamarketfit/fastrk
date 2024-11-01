@@ -635,7 +635,7 @@ const ChatInterfaceComponent: React.FC = () => {
               ? 'w-1/2 md:block hidden mx-auto' // Hide on mobile when diagram is shown
               : 'w-full max-w-3xl mx-auto'
           }`}>
-            <ScrollArea className="flex-grow p-4 h-[calc(100%-160px)]">
+            <ScrollArea className="flex-grow p-4 max-w-3xl mx-auto h-[calc(100%-160px)]">
               {messages.map((message, index) => (
                 <div key={index} className={`mb-4 flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`flex items-start ${message.role === 'user' ? 'flex-row-reverse' : ''} max-w-full md:max-w-[70%]`}>
