@@ -60,7 +60,11 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
             className={`p-3 hover:bg-gray-100 cursor-pointer ${chat.id === currentChat.id ? 'bg-gray-100' : ''}`} 
             onClick={() => selectChat(chat)}
           >
-            <h3 className="font-medium">{chat.title}</h3>
+            <h3 className="font-medium chat-title">
+              <div className="truncate">
+                {chat.title}
+              </div>
+            </h3>
           </div>
         ))}
       </ScrollArea>
