@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic'
-import type MouseParticlesType from 'react-mouse-particles'
 
 // Define the props interface based on the library's types
 interface MouseParticlesProps {
@@ -15,9 +14,9 @@ interface MouseParticlesProps {
 
 // Use type assertion to handle the default export
 const MouseParticles = dynamic(
-  () => import('react-mouse-particles') as any,
+  () => import('react-mouse-particles') as Promise<{ default: React.ComponentType<MouseParticlesProps> }>,
   { ssr: false }
-) as unknown as React.ComponentType<MouseParticlesProps>;
+) as React.ComponentType<MouseParticlesProps>;
 
 export function ParticlesEffect() {
   return (

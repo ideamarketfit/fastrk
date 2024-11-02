@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
-import { Send, ChevronRight, ChevronLeft, User, Bot, Image as ImageIcon, X, Paperclip, Plus, File, FileText, FileImage, FileAudio, FileVideo, Download } from 'lucide-react'
+import { Send, ChevronRight, ChevronLeft, User, Bot, Image as ImageIcon, X, Paperclip, Plus, File, FileText, FileImage, FileAudio, FileVideo } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import mermaid from 'mermaid';
@@ -17,7 +17,7 @@ import { getChat, getChatIds, getAllChats, saveMessage, getLastOpenedChatId, set
 import ChatSidebar from '@/components/chat-sidebar'
 import DiagramContainer from '@/components/diagram-container';
 
-interface Message {
+export interface Message {
   id: number
   text: string
   sender: 'user' | 'ai'

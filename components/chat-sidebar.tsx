@@ -2,11 +2,12 @@ import React from 'react';
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { ChevronLeft, Plus } from 'lucide-react'
+import { Message } from '@/components/chat-interface'
 
 interface Chat {
   id: string
   title: string
-  messages: any[] // You can define a more specific type if needed
+  messages: Message[]
 }
 
 interface ChatSidebarProps {
