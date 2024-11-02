@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { HeaderComponent } from '@/components/header';
 import { FooterComponent } from '@/components/footer';
+import { ParticlesEffect } from '@/components/mouse-particles';
 
 export function LandingPageComponent() {
   const { t } = useTranslation();
@@ -84,6 +85,7 @@ export function LandingPageComponent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <ParticlesEffect />
       <HeaderComponent />
 
       <main className="container mx-auto px-4 py-12">

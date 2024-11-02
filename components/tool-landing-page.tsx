@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useRouter } from 'next/navigation'
 import { useTranslation } from '@/hooks/useTranslation'
 import { HeaderComponent } from '@/components/header'
+import { ParticlesEffect } from '@/components/mouse-particles'
 
 export function ToolLandingPage({ 
   toolName, 
@@ -74,6 +75,7 @@ export function ToolLandingPage({
 
   return (
     <div className="min-h-screen flex flex-col">
+      <ParticlesEffect />
       <HeaderComponent />
 
       <main className="flex-grow flex flex-col pt-16">
