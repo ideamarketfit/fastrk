@@ -398,35 +398,6 @@ const ChatInterfaceComponent: React.FC = () => {
     }
   };
 
-  const handleExportDiagram = () => {
-    const element = document.getElementById('mermaid-diagram');
-    if (element) {
-      html2canvas(element, {
-        scale: 2,
-        backgroundColor: null,
-        logging: true,
-        onclone: (clonedDoc) => {
-          const clonedElement = clonedDoc.getElementById('mermaid-diagram');
-          if (clonedElement) {
-            clonedElement.style.width = '100%';
-            clonedElement.style.height = '100%';
-          }
-        }
-      }).then(canvas => {
-        const pngFile = canvas.toDataURL('image/png');
-        const downloadLink = document.createElement('a');
-        const fileName = `${currentDiagram?.title || 'diagram'}.png`;
-        downloadLink.download = fileName;
-        downloadLink.href = pngFile;
-        downloadLink.click();
-      }).catch(error => {
-        console.error('Error exporting diagram:', error);
-      });
-    } else {
-      console.error('Diagram element not found');
-    }
-  };
-
   // Add an effect to handle URL changes and ensure chat data is loaded from localStorage
   useEffect(() => {
     if (chatId) {
@@ -752,7 +723,6 @@ const ChatInterfaceComponent: React.FC = () => {
                 <DiagramContainer
                   title={currentDiagram.title}
                   onClose={() => toggleDiagram(null)}
-                  onExport={handleExportDiagram}
                   showBackButton={true}
                 >
                   {currentDiagram.type === 'mermaid' && (
