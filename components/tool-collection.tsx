@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { HeaderComponent } from "@/components/header"
 import { FooterComponent } from "@/components/footer"
+import { useTranslation } from '@/hooks/useTranslation'
 
 interface Tool {
   slug: string;
@@ -19,23 +20,24 @@ interface Tool {
 
 export function AiDiagrammingTools({ tools }: { tools: Tool[] }) {
   const [openFaq, setOpenFaq] = React.useState<number | null>(null)
+  const { t } = useTranslation()
 
   const faqs = [
     {
-      question: "How do AI-powered diagramming tools work?",
-      answer: "AI-powered diagramming tools use artificial intelligence to convert text descriptions or voice input into visual diagrams. They analyze your input, understand the relationships between elements, and automatically generate professional-looking diagrams based on that understanding."
+      question: t('faq1Question'),
+      answer: t('faq1Answer')
     },
     {
-      question: "Can I edit the generated diagrams?",
-      answer: "Yes! Most AI-powered diagramming tools allow you to edit and refine the automatically generated diagrams. You can typically adjust layouts, add or remove elements, and customize styles to suit your needs."
+      question: t('faq2Question'),
+      answer: t('faq2Answer')
     },
     {
-      question: "What types of diagrams can I create with these tools?",
-      answer: "These AI-powered tools can create various types of diagrams including flow charts, mind maps, entity-relationship diagrams, process flows, network diagrams, organizational charts, and more. The specific types may vary depending on the tool you choose."
+      question: t('faq3Question'),
+      answer: t('faq3Answer')
     },
     {
-      question: "How can I export my diagrams?",
-      answer: "Most AI diagramming tools offer multiple export options. You can typically export your diagrams in formats such as PNG, SVG, and PDF. Many tools also allow you to share your diagrams directly with team members or integrate them into other productivity tools."
+      question: t('faq4Question'),
+      answer: t('faq4Answer')
     }
   ]
 
@@ -46,8 +48,8 @@ export function AiDiagrammingTools({ tools }: { tools: Tool[] }) {
       <main id="tool-collection" className="flex-grow container mx-auto px-4 py-12">
         <section className="bg-gradient-to-b from-gray-50 to-white py-12">
           <div className="container mx-auto px-4">
-            <h1 className="text-4xl font-bold text-center mb-6 text-gray-900">AI-Powered Diagramming Tools</h1>
-            <p className="text-xl text-center text-gray-600 mb-12">Discover the best AI tools for creating diagrams and visualizations</p>
+            <h1 className="text-4xl font-bold text-center mb-6 text-gray-900">{t('aiPoweredDiagrammingTools')}</h1>
+            <p className="text-xl text-center text-gray-600 mb-12">{t('discoverBestAiTools')}</p>
           </div>
         </section>
 
@@ -68,7 +70,7 @@ export function AiDiagrammingTools({ tools }: { tools: Tool[] }) {
                   <CardFooter className="mt-auto">
                     <Link href={`/tool/${tool.slug}`} className="w-full">
                       <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white transition duration-300">
-                        Try Now
+                        {t('tryNow')}
                         <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                     </Link>
@@ -81,7 +83,7 @@ export function AiDiagrammingTools({ tools }: { tools: Tool[] }) {
 
         <section className="bg-gray-50 py-20">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">{t('frequentlyAskedQuestions')}</h2>
             <div className="space-y-4 max-w-3xl mx-auto">
               {faqs.map((faq, index) => (
                 <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 hover:shadow-lg">

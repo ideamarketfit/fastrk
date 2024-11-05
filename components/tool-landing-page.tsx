@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useRef } from 'react'
 import { ChevronDown, ChevronUp, Paperclip, Send, X, Sparkles, Zap, FileText, Image as ImageIcon, Film, Music, Archive, Code, FileSpreadsheet, File, Share } from 'lucide-react'
