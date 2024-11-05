@@ -28,7 +28,7 @@ export function HeaderComponent() {
   ]
 
   return (
-    <header className={`fixed w-full z-50 transition-all duration-300 bg-white ${
+    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-white ${
       isScrolled ? 'shadow-lg' : 'shadow-md'
     }`}>
       <div className="container mx-auto px-4 py-4">
