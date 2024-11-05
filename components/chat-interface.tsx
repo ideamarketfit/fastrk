@@ -516,15 +516,35 @@ const ChatInterfaceComponent: React.FC = () => {
         const mappedMessages: Message[] = messages.map(msg => {
           const diagramMatch = msg.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
           
+          let diagram: { title: string; content: string; type: "mermaid" } | null = null;
+
+          if (diagramMatch) {
+            diagram = {
+              title: diagramMatch[1],
+              content: diagramMatch[2].trim(),
+              type: 'mermaid' as const
+            };
+          } else {
+            const startTagIndex = msg.content.indexOf('<diagram title="');
+            if (startTagIndex !== -1) {
+              const titleMatch = msg.content.substring(startTagIndex).match(/<diagram title="(.*?)">/);
+              if (titleMatch) {
+                const contentStartIndex = startTagIndex + titleMatch[0].length;
+                const content = msg.content.substring(contentStartIndex).trim();
+                diagram = {
+                  title: titleMatch[1],
+                  content: content,
+                  type: 'mermaid' as const
+                };
+              }
+            }
+          }
+
           return {
             id: parseInt(msg.id),
             text: msg.content,
             sender: msg.role === 'user' ? 'user' : 'ai',
-            diagram: diagramMatch ? {
-              title: diagramMatch[1],
-              content: diagramMatch[2].trim(),
-              type: 'mermaid'
-            } : null
+            diagram: diagram
           };
         });
         
@@ -619,7 +639,18 @@ const ChatInterfaceComponent: React.FC = () => {
                             ? 'text-foreground'
                             : 'bg-secondary text-secondary-foreground'
                         }`}>
-                          {message.content.replace(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/g, '')}
+                          {(() => {
+                            const diagramTagIndex = message.content.indexOf('<diagram');
+                            const closingTagIndex = message.content.indexOf('</diagram>');
+
+                            if (closingTagIndex !== -1) {
+                              return message.content.replace(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/g, '');
+                            } else if (diagramTagIndex !== -1) {
+                              return message.content.substring(0, diagramTagIndex);
+                            } else {
+                              return message.content;
+                            }
+                          })()}
                         </div>
                         {message.role === 'assistant' && message.content.includes('<diagram title="') && (() => {
                           const diagramMatch = message.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
