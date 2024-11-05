@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import { useTranslation } from '@/hooks/useTranslation'
 import { HeaderComponent } from '@/components/header'
 import { ParticlesEffect } from '@/components/mouse-particles'
+import { FooterComponent } from '@/components/footer'
 
 export function ToolLandingPage({ 
   toolName, 
@@ -254,47 +255,7 @@ export function ToolLandingPage({
         </section>
       </main>
 
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Product</h3>
-              <ul className="space-y-2">
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Features</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Pricing</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Use Cases</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Company</h3>
-              <ul className="space-y-2">
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">About Us</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Careers</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3  className="text-lg font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2">
-                <li><Link href="#"   className="hover:text-purple-400 transition duration-300">Blog</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Documentation</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Community</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2">
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Privacy Policy</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Terms of Service</Link></li>
-                <li><Link href="#" className="hover:text-purple-400 transition duration-300">Cookie Policy</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-12 text-center text-gray-400">
-            © {new Date().getFullYear()} Chat Diagram. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <FooterComponent />
     </div>
   )
 }
