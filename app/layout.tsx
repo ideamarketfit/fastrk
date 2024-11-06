@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { HreflangTags } from '@/components/hreflang-tags';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // Import the translations
@@ -31,7 +30,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <HreflangTags />
         <script
           defer
           data-domain="chatdiagram.com"
