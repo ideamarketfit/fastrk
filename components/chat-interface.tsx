@@ -226,55 +226,6 @@ const ChatInterfaceComponent: React.FC = () => {
     });
   }, []);
 
-  useEffect(() => {
-    if (showDiagram && currentDiagram && currentDiagram.type === 'mermaid') {
-      const element = document.getElementById('mermaid-diagram');
-      if (element) {
-        mermaid.render('mermaid-svg', currentDiagram.content).then(({ svg }) => {
-          element.innerHTML = svg;
-          const svgElement = element.querySelector('svg');
-          if (svgElement) {
-            svgElement.style.width = '100%';
-            svgElement.style.height = '100%';
-            svgElement.style.maxWidth = '100%';
-            svgElement.style.maxHeight = '100%';
-
-            // Initialize svg-pan-zoom with initial zoom level
-            const panZoom = svgPanZoom(svgElement, {
-              zoomEnabled: true,
-              controlIconsEnabled: true,
-              fit: false, // Changed to false
-              center: true,
-              minZoom: 0.1,
-              maxZoom: 10,
-              zoomScaleSensitivity: 0.5,
-              // initialZoom: 0.7 // Set initial zoom level
-            });
-
-            // Apply initial zoom after a short delay
-            setTimeout(() => {
-              panZoom.zoom(0.7);
-              panZoom.center();
-            }, 100);
-
-            // Resize the pan-zoom when the window is resized
-            const resizeObserver = new ResizeObserver(() => {
-              panZoom.resize();
-              panZoom.center();
-            });
-            resizeObserver.observe(element);
-
-            // Clean up function
-            return () => {
-              panZoom.destroy();
-              resizeObserver.disconnect();
-            };
-          }
-        });
-      }
-    }
-  }, [showDiagram, currentDiagram]);
-
   const handleSend = (e?: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e) {
       e.preventDefault();
@@ -754,11 +705,8 @@ const ChatInterfaceComponent: React.FC = () => {
                   title={currentDiagram.title}
                   onClose={() => toggleDiagram(null)}
                   showBackButton={true}
-                >
-                  {currentDiagram.type === 'mermaid' && (
-                    <div id="mermaid-diagram" className="w-full h-full flex items-center justify-center" />
-                  )}
-                </DiagramContainer>
+                  diagramContent={currentDiagram.content}
+                />
               </motion.div>
             )}
           </AnimatePresence>
