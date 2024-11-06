@@ -610,7 +610,11 @@ const ChatInterfaceComponent: React.FC = () => {
                               className="mt-2 self-start" 
                               onClick={() => toggleArtifact(artifact)}
                             >
-                              <ImageIcon className="mr-2 h-4 w-4" />
+                              {artifact.type === 'doc' ? (
+                                <FileText className="mr-2 h-4 w-4" />
+                              ) : (
+                                <ImageIcon className="mr-2 h-4 w-4" />
+                              )}
                               {artifact.title || 'View Artifact'}
                               {showArtifact ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
                             </Button>
