@@ -10,7 +10,7 @@ interface ArtifactPanelProps {
   onClose: () => void;
   showBackButton?: boolean;
   artifactContent: string;
-  type: string; // diagram, code, doc
+  type: 'diagram' | 'doc';
 }
 
 const ArtifactPanel = ({
@@ -74,7 +74,6 @@ const ArtifactPanel = ({
         });
         break;
 
-      case 'code':
       case 'doc':
         const blob = new Blob([artifactContent], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
