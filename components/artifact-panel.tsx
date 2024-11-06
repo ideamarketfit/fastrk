@@ -158,7 +158,7 @@ const ArtifactPanel = ({
         </div>
       </div>
 
-      <div id="artifact-content" className="flex-grow overflow-hidden">
+      <div id="artifact-content" className="flex-grow overflow-hidden rounded-lg">
         {renderArtifactContent()}
       </div>
     </div>

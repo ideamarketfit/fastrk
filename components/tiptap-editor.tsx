@@ -4,12 +4,18 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { marked } from 'marked'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { 
-  Bold, Italic, List, Heading1, Heading2, Heading3, 
-  Code, Quote, ListOrdered, Undo, Redo, Text, Link as LinkIcon
+  Bold, Italic, Strikethrough,
+  List, ListOrdered, Code, Quote, 
+  Undo, Redo, ChevronDown, Heading
 } from 'lucide-react'
 import { cn } from "@/lib/utils"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface MenuButtonProps {
   onClick: () => void;
@@ -47,20 +53,14 @@ export function TiptapEditorComponent({
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({
-        codeBlock: {
-          HTMLAttributes: {
-            class: 'bg-muted/50 rounded-md p-4 font-mono text-sm'
-          }
-        }
-      })
+      StarterKit
     ],
     content: processedContent,
     editable,
     editorProps: {
       attributes: {
         class: cn(
-          'prose dark:prose-invert max-w-none w-full h-full',
+          'prose prose-sm dark:prose-invert max-w-none w-full h-full',
           'focus:outline-none',
           className
         )
@@ -69,10 +69,10 @@ export function TiptapEditorComponent({
   })
 
   return (
-    <Card className="w-full h-full">
-      <CardContent className="p-0 h-full flex flex-col">
-        {editable && (
-          <div className="flex flex-wrap gap-1 p-2 bg-muted/30 border-b">
+    <div className="w-full h-full flex flex-col bg-white rounded-lg">
+      {editable && (
+        <div className="p-1 flex items-center gap-1 bg-stone-50/80 backdrop-blur-sm">
+          <div className="flex items-center gap-1 mr-2">
             <MenuButton 
               onClick={() => editor?.chain().focus().toggleBold().run()} 
               isActive={editor?.isActive('bold')}
@@ -86,6 +86,50 @@ export function TiptapEditorComponent({
               tooltip="Italic"
             />
             <MenuButton 
+              onClick={() => editor?.chain().focus().toggleStrike().run()} 
+              isActive={editor?.isActive('strike')}
+              icon={Strikethrough}
+              tooltip="Strikethrough"
+            />
+          </div>
+          
+          <div className="w-px h-6 bg-stone-200 mx-1" />
+          
+          <div className="flex items-center gap-1 mr-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 px-2 w-auto">
+                  <Heading className="h-4 w-4 mr-2" />
+                  <ChevronDown className="h-3 w-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}>
+                  Heading 1
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}>
+                  Heading 2
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}>
+                  Heading 3
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <MenuButton 
+              onClick={() => editor?.chain().focus().toggleBlockquote().run()} 
+              isActive={editor?.isActive('blockquote')}
+              icon={Quote}
+              tooltip="Quote"
+            />
+            <MenuButton 
+              onClick={() => editor?.chain().focus().toggleCodeBlock().run()} 
+              isActive={editor?.isActive('codeBlock')}
+              icon={Code}
+              tooltip="Code Block"
+            />
+          </div>
+          <div className="flex items-center gap-1">
+            <MenuButton 
               onClick={() => editor?.chain().focus().toggleBulletList().run()} 
               isActive={editor?.isActive('bulletList')}
               icon={List}
@@ -97,42 +141,9 @@ export function TiptapEditorComponent({
               icon={ListOrdered}
               tooltip="Numbered List"
             />
-            <MenuButton 
-              onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()} 
-              isActive={editor?.isActive('heading', { level: 1 })}
-              icon={Heading1}
-              tooltip="Heading 1"
-            />
-            <MenuButton 
-              onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()} 
-              isActive={editor?.isActive('heading', { level: 2 })}
-              icon={Heading2}
-              tooltip="Heading 2"
-            />
-            <MenuButton 
-              onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()} 
-              isActive={editor?.isActive('heading', { level: 3 })}
-              icon={Heading3}
-              tooltip="Heading 3"
-            />
-            <MenuButton 
-              onClick={() => editor?.chain().focus().toggleCodeBlock().run()} 
-              isActive={editor?.isActive('codeBlock')}
-              icon={Code}
-              tooltip="Code Block"
-            />
-            <MenuButton 
-              onClick={() => editor?.chain().focus().toggleBlockquote().run()} 
-              isActive={editor?.isActive('blockquote')}
-              icon={Quote}
-              tooltip="Blockquote"
-            />
-            <MenuButton 
-              onClick={() => editor?.chain().focus().setParagraph().run()} 
-              isActive={editor?.isActive('paragraph')}
-              icon={Text}
-              tooltip="Paragraph"
-            />
+          </div>
+          <div className="flex-1" />
+          <div className="flex items-center gap-1">
             <MenuButton 
               onClick={() => editor?.chain().focus().undo().run()} 
               icon={Undo}
@@ -144,17 +155,17 @@ export function TiptapEditorComponent({
               tooltip="Redo"
             />
           </div>
-        )}
-        <div className="flex-grow overflow-y-auto relative">
-          <EditorContent 
-            editor={editor} 
-            className={cn(
-              "h-full px-6 py-4",
-              className
-            )}
-          />
         </div>
-      </CardContent>
-    </Card>
+      )}
+      <div className="flex-grow overflow-y-auto relative">
+        <EditorContent 
+          editor={editor} 
+          className={cn(
+            "h-full px-6 py-4",
+            className
+          )}
+        />
+      </div>
+    </div>
   )
 }
