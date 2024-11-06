@@ -18,10 +18,10 @@ export interface Message {
   id: number
   text: string
   sender: 'user' | 'ai'
-  diagram?: {
+  artifact?: {
     title: string
     content: string
-    type: 'mermaid'
+    type: 'diagram'
   } | null
   file?: File
 }
@@ -116,7 +116,7 @@ const ChatInterfaceComponent: React.FC = () => {
   }, [currentChat.id, chatId]);
 
   const [showDiagram, setShowDiagram] = useState(false)
-  const [currentDiagram, setCurrentDiagram] = useState<Message['diagram'] | null>(null)
+  const [currentDiagram, setCurrentDiagram] = useState<Message['artifact'] | null>(null)
   const [showSidebar, setShowSidebar] = useState(() => {
     if (typeof window !== 'undefined') {
       return getSidebarState();
@@ -138,37 +138,37 @@ const ChatInterfaceComponent: React.FC = () => {
       id: msg.id.toString(),
       content: msg.text,
       role: msg.sender === 'user' ? 'user' : 'assistant',
-      diagram: msg.diagram ? {
-        title: msg.diagram.title,
-        content: msg.diagram.content,
-        type: msg.diagram.type
+      artifact: msg.artifact ? {
+        title: msg.artifact.title,
+        content: msg.artifact.content,
+        type: 'diagram'
       } : null
     })),
     onFinish: (message) => {
-      const diagramMatch = message.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
+      const artifactMatch = message.content.match(/<artifact title="([^"]*)" type="diagram">([\s\S]*?)<\/artifact>/);
       
       const newMessage: Message = {
         id: Date.now(),
         text: message.content,
         sender: 'ai',
-        diagram: diagramMatch ? {
-          title: diagramMatch[1],
-          content: diagramMatch[2].trim(),
-          type: 'mermaid'
+        artifact: artifactMatch ? {
+          title: artifactMatch[1],
+          content: artifactMatch[2].trim(),
+          type: 'diagram'
         } : null
       };
 
-      if (diagramMatch) {
-        newMessage.diagram = {
-          title: diagramMatch[1],
-          content: diagramMatch[2].trim(),
-          type: 'mermaid'
+      if (artifactMatch) {
+        newMessage.artifact = {
+          title: artifactMatch[1],
+          content: artifactMatch[2].trim(),
+          type: 'diagram'
         };
-        setCurrentDiagram(newMessage.diagram);
+        setCurrentDiagram(newMessage.artifact);
         setShowDiagram(true);
 
         if (currentChat.title === "New Chat") {
-          const newTitle = diagramMatch[1];
+          const newTitle = artifactMatch[1];
           setEditedTitle(newTitle);
           updateChatTitle(currentChat.id, newTitle);
           setCurrentChat(prevChat => ({
@@ -220,7 +220,7 @@ const ChatInterfaceComponent: React.FC = () => {
         id: Date.now(),
         text: input.trim(),
         sender: 'user',
-        diagram: null,
+        artifact: null,
         ...(uploadedFile && { file: uploadedFile })
       };
       
@@ -231,7 +231,7 @@ const ChatInterfaceComponent: React.FC = () => {
     }
   }
 
-  const toggleDiagram = (diagram: Message['diagram'] | null) => {
+  const toggleDiagram = (diagram: Message['artifact'] | null) => {
     setShowDiagram(!showDiagram)
     setCurrentDiagram(diagram)
   }
@@ -430,13 +430,13 @@ const ChatInterfaceComponent: React.FC = () => {
     };
   }, [userPrompt, taskPrompt, chatId]);
 
-  const findLastDiagram = (messages: Message[]) => {
+  const findLastArtifact = (messages: Message[]) => {
     for (let i = messages.length - 1; i >= 0; i--) {
       const message = messages[i];
       const isAssistant = message.sender === 'ai';
 
-      if (isAssistant && message.diagram) {
-        return message.diagram;
+      if (isAssistant && message.artifact) {
+        return message.artifact;
       }
     }
     return null;
@@ -449,27 +449,31 @@ const ChatInterfaceComponent: React.FC = () => {
       timeoutId = setTimeout(() => {
         // Map the AI SDK messages to our Message interface
         const mappedMessages: Message[] = messages.map(msg => {
-          const diagramMatch = msg.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
+          const artifactMatch = msg.content.match(/<artifact title="([^"]*)" type="diagram">([\s\S]*?)<\/artifact>/);
           
-          let diagram: { title: string; content: string; type: "mermaid" } | null = null;
+          let artifact: { title: string; content: string; type: "diagram" } | null = null;
 
-          if (diagramMatch) {
-            diagram = {
-              title: diagramMatch[1],
-              content: diagramMatch[2].trim(),
-              type: 'mermaid' as const
+          if (artifactMatch) {
+            artifact = {
+              title: artifactMatch[1],
+              content: artifactMatch[2].trim(),
+              type: 'diagram' as const
             };
           } else {
-            const startTagIndex = msg.content.indexOf('<diagram title="');
+            const startTagIndex = msg.content.indexOf('<artifact title="');
             if (startTagIndex !== -1) {
-              const titleMatch = msg.content.substring(startTagIndex).match(/<diagram title="(.*?)">/);
+              const titleMatch = msg.content.substring(startTagIndex).match(/<artifact title="([^"]*?)"/);
               if (titleMatch) {
-                const contentStartIndex = startTagIndex + titleMatch[0].length;
-                const content = msg.content.substring(contentStartIndex).trim();
-                diagram = {
+                const contentStartIndex = msg.content.indexOf('>', startTagIndex) + 1;
+                const endTagIndex = msg.content.indexOf('</artifact>', contentStartIndex);
+                const content = endTagIndex !== -1 
+                  ? msg.content.substring(contentStartIndex, endTagIndex).trim()
+                  : msg.content.substring(contentStartIndex).trim();
+                
+                artifact = {
                   title: titleMatch[1],
                   content: content,
-                  type: 'mermaid' as const
+                  type: 'diagram' as const
                 };
               }
             }
@@ -479,13 +483,13 @@ const ChatInterfaceComponent: React.FC = () => {
             id: parseInt(msg.id),
             text: msg.content,
             sender: msg.role === 'user' ? 'user' : 'ai',
-            diagram: diagram
+            artifact: artifact
           };
         });
         
-        const lastDiagram = findLastDiagram(mappedMessages);
-        if (lastDiagram) {
-          setCurrentDiagram(lastDiagram);
+        const lastArtifact = findLastArtifact(mappedMessages);
+        if (lastArtifact) {
+          setCurrentDiagram(lastArtifact);
           setShowDiagram(true);
         }
       }, 300);
@@ -575,34 +579,34 @@ const ChatInterfaceComponent: React.FC = () => {
                             : 'bg-secondary text-secondary-foreground'
                         }`}>
                           {(() => {
-                            const diagramTagIndex = message.content.indexOf('<diagram');
-                            const closingTagIndex = message.content.indexOf('</diagram>');
+                            const artifactTagIndex = message.content.indexOf('<artifact');
+                            const closingTagIndex = message.content.indexOf('</artifact>');
 
                             if (closingTagIndex !== -1) {
-                              return message.content.replace(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/g, '');
-                            } else if (diagramTagIndex !== -1) {
-                              return message.content.substring(0, diagramTagIndex);
+                              return message.content.replace(/<artifact title="([^"]*)" type="diagram">([\s\S]*?)<\/artifact>/g, '');
+                            } else if (artifactTagIndex !== -1) {
+                              return message.content.substring(0, artifactTagIndex);
                             } else {
                               return message.content;
                             }
                           })()}
                         </div>
-                        {message.role === 'assistant' && message.content.includes('<diagram title="') && (() => {
-                          const diagramMatch = message.content.match(/<diagram title="(.*?)">([\s\S]*?)<\/diagram>/);
-                          const diagram: { title: string; content: string; type: "mermaid" } | null = diagramMatch ? {
-                            title: diagramMatch[1],
-                            content: diagramMatch[2].trim(),
-                            type: 'mermaid' as const // Explicitly specify the type as a literal
+                        {message.role === 'assistant' && message.content.includes('<artifact title="') && (() => {
+                          const artifactMatch = message.content.match(/<artifact title="([^"]*)" type="diagram">([\s\S]*?)<\/artifact>/);
+                          const artifact: { title: string; content: string; type: "diagram" } | null = artifactMatch ? {
+                            title: artifactMatch[1],
+                            content: artifactMatch[2].trim(),
+                            type: 'diagram' as const // Explicitly specify the type as a literal
                           } : null;
                           
-                          return diagram && (
+                          return artifact && (
                             <Button 
                               variant="outline" 
                               className="mt-2 self-start" 
-                              onClick={() => toggleDiagram(diagram)}
+                              onClick={() => toggleDiagram(artifact)}
                             >
                               <ImageIcon className="mr-2 h-4 w-4" />
-                              {diagram.title || 'View Diagram'}
+                              {artifact.title || 'View Diagram'}
                               {showDiagram ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
                             </Button>
                           );

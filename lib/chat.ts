@@ -8,10 +8,10 @@ interface Message {
   id: number;
   text: string;
   sender: 'user' | 'ai';
-  diagram?: {
+  artifact?: {
     title: string;
     content: string;
-    type: 'mermaid';
+    type: 'diagram';
   } | null;
   file?: File;
 }
@@ -64,7 +64,7 @@ export const saveMessage = (chatId: string, message: Message): void => {
       id: message.id,
       text: message.text,
       sender: message.sender,
-      diagram: message.diagram || null,
+      artifact: message.artifact || null,
       ...(message.file && { file: message.file })
     };
     
