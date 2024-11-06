@@ -21,7 +21,7 @@ export interface Message {
   artifact?: {
     title: string
     content: string
-    type: 'diagram'
+    type: 'diagram' | 'doc'
   } | null
   file?: File
 }
@@ -145,7 +145,7 @@ const ChatInterfaceComponent: React.FC = () => {
       } : null
     })),
     onFinish: (message) => {
-      const artifactMatch = message.content.match(/<artifact title="([^"]*)" type="diagram">([\s\S]*?)<\/artifact>/);
+      const artifactMatch = message.content.match(/<artifact title="([^"]*)" type="([^"]*)">([\s\S]*?)<\/artifact>/);
       
       const newMessage: Message = {
         id: Date.now(),
@@ -153,16 +153,16 @@ const ChatInterfaceComponent: React.FC = () => {
         sender: 'ai',
         artifact: artifactMatch ? {
           title: artifactMatch[1],
-          content: artifactMatch[2].trim(),
-          type: 'diagram'
+          content: artifactMatch[3].trim(),
+          type: artifactMatch[2] as 'diagram' | 'doc'
         } : null
       };
 
       if (artifactMatch) {
         newMessage.artifact = {
           title: artifactMatch[1],
-          content: artifactMatch[2].trim(),
-          type: 'diagram'
+          content: artifactMatch[3].trim(),
+          type: artifactMatch[2] as 'diagram' | 'doc'
         };
         setCurrentArtifact(newMessage.artifact);
         setShowArtifact(true);
@@ -454,20 +454,20 @@ const ChatInterfaceComponent: React.FC = () => {
       timeoutId = setTimeout(() => {
         // Map the AI SDK messages to our Message interface
         const mappedMessages: Message[] = messages.map(msg => {
-          const artifactMatch = msg.content.match(/<artifact title="([^"]*)" type="diagram">([\s\S]*?)<\/artifact>/);
+          const artifactMatch = msg.content.match(/<artifact title="([^"]*)" type="([^"]*)">([\s\S]*?)<\/artifact>/);
           
-          let artifact: { title: string; content: string; type: "diagram" } | null = null;
+          let artifact: { title: string; content: string; type: "diagram" | "doc" } | null = null;
 
           if (artifactMatch) {
             artifact = {
               title: artifactMatch[1],
-              content: artifactMatch[2].trim(),
-              type: 'diagram' as const
+              content: artifactMatch[3].trim(),
+              type: artifactMatch[2] as 'diagram' | 'doc'
             };
           } else {
             const startTagIndex = msg.content.indexOf('<artifact title="');
             if (startTagIndex !== -1) {
-              const titleMatch = msg.content.substring(startTagIndex).match(/<artifact title="([^"]*?)"/);
+              const titleMatch = msg.content.substring(startTagIndex).match(/<artifact title="([^"]*?)" type="([^"]*?)"/);
               if (titleMatch) {
                 const contentStartIndex = msg.content.indexOf('>', startTagIndex) + 1;
                 const endTagIndex = msg.content.indexOf('</artifact>', contentStartIndex);
@@ -478,7 +478,7 @@ const ChatInterfaceComponent: React.FC = () => {
                 artifact = {
                   title: titleMatch[1],
                   content: content,
-                  type: 'diagram' as const
+                  type: titleMatch[2] as 'diagram' | 'doc'
                 };
               }
             }
@@ -588,7 +588,7 @@ const ChatInterfaceComponent: React.FC = () => {
                             const closingTagIndex = message.content.indexOf('</artifact>');
 
                             if (closingTagIndex !== -1) {
-                              return message.content.replace(/<artifact title="([^"]*)" type="diagram">([\s\S]*?)<\/artifact>/g, '');
+                              return message.content.replace(/<artifact title="([^"]*)" type="([^"]*)">([\s\S]*?)<\/artifact>/g, '');
                             } else if (artifactTagIndex !== -1) {
                               return message.content.substring(0, artifactTagIndex);
                             } else {
@@ -597,11 +597,11 @@ const ChatInterfaceComponent: React.FC = () => {
                           })()}
                         </div>
                         {message.role === 'assistant' && message.content.includes('<artifact title="') && (() => {
-                          const artifactMatch = message.content.match(/<artifact title="([^"]*)" type="diagram">([\s\S]*?)<\/artifact>/);
-                          const artifact: { title: string; content: string; type: "diagram" } | null = artifactMatch ? {
+                          const artifactMatch = message.content.match(/<artifact title="([^"]*)" type="([^"]*)">([\s\S]*?)<\/artifact>/);
+                          const artifact: { title: string; content: string; type: "diagram" | "doc" } | null = artifactMatch ? {
                             title: artifactMatch[1],
-                            content: artifactMatch[2].trim(),
-                            type: 'diagram' as const // Explicitly specify the type as a literal
+                            content: artifactMatch[3].trim(),
+                            type: artifactMatch[2] as 'diagram' | 'doc'
                           } : null;
                           
                           return artifact && (

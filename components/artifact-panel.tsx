@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, Download, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import DiagramDisplay from './diagram-display';
+import { TiptapEditorComponent } from './tiptap-editor'
 
 interface ArtifactPanelProps {
   title: string;
@@ -101,9 +102,11 @@ const ArtifactPanel = ({
         );
       case 'doc':
         return (
-          <div className="w-full h-full overflow-auto p-4">
-            {artifactContent}
-          </div>
+          <TiptapEditorComponent
+            content={artifactContent}
+            editable={true}
+            className="h-full"
+          />
         );
       default:
         return (
@@ -156,7 +159,7 @@ const ArtifactPanel = ({
         </div>
       </div>
 
-      <div id="artifact-content" className="flex-grow flex items-center justify-center overflow-auto min-h-[400px]">
+      <div id="artifact-content" className="flex-grow overflow-hidden">
         {renderArtifactContent()}
       </div>
     </div>
