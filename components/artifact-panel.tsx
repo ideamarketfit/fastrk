@@ -99,12 +99,6 @@ const ArtifactPanel = ({
             isPanelReady={isPanelReady}
           />
         );
-      case 'code':
-        return (
-          <pre className="w-full h-full overflow-auto p-4">
-            <code>{artifactContent}</code>
-          </pre>
-        );
       case 'doc':
         return (
           <div className="w-full h-full overflow-auto p-4">
