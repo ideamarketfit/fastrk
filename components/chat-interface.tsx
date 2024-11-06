@@ -451,6 +451,8 @@ const ChatInterfaceComponent: React.FC = () => {
     return null;
   };
 
+  const [isInitialLoaded, setIsInitialLoaded] = useState(false);
+
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
@@ -478,13 +480,23 @@ const ChatInterfaceComponent: React.FC = () => {
           };
         });
         
-        // Only open artifact panel if the last message contains a complete artifact
-        const lastMessage = mappedMessages[mappedMessages.length - 1];
-        const hasCompleteArtifact = lastMessage.text.includes('</artifact>');
-        
-        if (hasCompleteArtifact && lastMessage.artifact) {
-          setCurrentArtifact(lastMessage.artifact);
-          setShowArtifact(true);
+        if (!isInitialLoaded && messages.length > 1) {
+          // Find and show the last complete artifact when loading a chat
+          const lastArtifact = findLastArtifact(mappedMessages);
+          if (lastArtifact) {
+            setCurrentArtifact(lastArtifact);
+            setShowArtifact(true);
+          }
+          setIsInitialLoaded(true);
+        } else {
+          // Only open artifact panel if the last message contains a complete artifact
+          const lastMessage = mappedMessages[mappedMessages.length - 1];
+          const hasCompleteArtifact = lastMessage.text.includes('</artifact>');
+          
+          if (hasCompleteArtifact && lastMessage.artifact) {
+            setCurrentArtifact(lastMessage.artifact);
+            setShowArtifact(true);
+          }
         }
       }, 300);
     }
@@ -494,7 +506,12 @@ const ChatInterfaceComponent: React.FC = () => {
         clearTimeout(timeoutId);
       }
     };
-  }, [messages.length]);
+  }, [messages.length, isInitialLoaded]);
+
+  // Reset isInitialLoaded when changing chats
+  useEffect(() => {
+    setIsInitialLoaded(false);
+  }, [currentChat.id]);
 
   return (
     <div className="flex h-screen bg-background">
