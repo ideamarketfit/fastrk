@@ -12,7 +12,7 @@ import { useChat } from 'ai/react'
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getChat, getChatIds, getAllChats, saveMessage, getLastOpenedChatId, setLastOpenedChatId, createNewChat, updateChatTitle, getSidebarState, setSidebarState } from '@/lib/chat';
 import ChatSidebar from '@/components/chat-sidebar'
-import DiagramContainer from '@/components/diagram-container';
+import ArtifactPanel from './artifact-panel';
 
 export interface Message {
   id: number
@@ -115,8 +115,8 @@ const ChatInterfaceComponent: React.FC = () => {
     }
   }, [currentChat.id, chatId]);
 
-  const [showDiagram, setShowDiagram] = useState(false)
-  const [currentDiagram, setCurrentDiagram] = useState<Message['artifact'] | null>(null)
+  const [showArtifact, setShowArtifact] = useState(false)
+  const [currentArtifact, setCurrentArtifact] = useState<Message['artifact'] | null>(null)
   const [showSidebar, setShowSidebar] = useState(() => {
     if (typeof window !== 'undefined') {
       return getSidebarState();
@@ -164,8 +164,8 @@ const ChatInterfaceComponent: React.FC = () => {
           content: artifactMatch[2].trim(),
           type: 'diagram'
         };
-        setCurrentDiagram(newMessage.artifact);
-        setShowDiagram(true);
+        setCurrentArtifact(newMessage.artifact);
+        setShowArtifact(true);
 
         if (currentChat.title === "New Chat") {
           const newTitle = artifactMatch[1];
@@ -216,24 +216,29 @@ const ChatInterfaceComponent: React.FC = () => {
     }
     if ((input.trim() || uploadedFile) && !isLoading) {
       // Create and save message whether it's a file or text
-      const newMessage: Message = {
+      const newMessage = {
         id: Date.now(),
-        text: input.trim(),
-        sender: 'user',
-        artifact: null,
+        content: input.trim(),
+        role: 'user' as const,
         ...(uploadedFile && { file: uploadedFile })
       };
       
-      saveMessage(currentChat.id, newMessage);
+      // Save as your local Message type
+      saveMessage(currentChat.id, {
+        id: newMessage.id,
+        text: newMessage.content,
+        sender: 'user',
+        ...(uploadedFile && { file: uploadedFile })
+      });
 
       setUploadedFile(null);
       handleSubmit(e);
     }
   }
 
-  const toggleDiagram = (diagram: Message['artifact'] | null) => {
-    setShowDiagram(!showDiagram)
-    setCurrentDiagram(diagram)
+  const toggleArtifact = (artifact: Message['artifact'] | null) => {
+    setShowArtifact(!showArtifact)
+    setCurrentArtifact(artifact)
   }
 
   const toggleSidebar = () => {
@@ -243,9 +248,9 @@ const ChatInterfaceComponent: React.FC = () => {
   };
 
   const addNewChat = async () => {
-    // Close diagram panel first
-    setShowDiagram(false);
-    setCurrentDiagram(null);
+    // Close artifact panel first
+    setShowArtifact(false);
+    setCurrentArtifact(null);
 
     // Close sidebar on mobile
     if (window.innerWidth < 768) {
@@ -264,9 +269,9 @@ const ChatInterfaceComponent: React.FC = () => {
   };
 
   const selectChat = (chat: Chat) => {
-    // Close diagram panel first
-    setShowDiagram(false);
-    setCurrentDiagram(null);
+    // Close artifact panel first
+    setShowArtifact(false);
+    setCurrentArtifact(null);
 
     // Close sidebar on mobile
     if (window.innerWidth < 768) {
@@ -489,8 +494,8 @@ const ChatInterfaceComponent: React.FC = () => {
         
         const lastArtifact = findLastArtifact(mappedMessages);
         if (lastArtifact) {
-          setCurrentDiagram(lastArtifact);
-          setShowDiagram(true);
+          setCurrentArtifact(lastArtifact);
+          setShowArtifact(true);
         }
       }, 300);
     }
@@ -550,7 +555,7 @@ const ChatInterfaceComponent: React.FC = () => {
               />
             ) : (
               <h1 
-                className="text-2xl font-bold cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+                className="text-2xl font-bold cursor-pointer hover:bg-gray-100 px-2 py-1 rounded truncate max-w-[70vw] overflow-hidden text-ellipsis whitespace-nowrap"
                 onClick={handleTitleEdit}
               >
                 {currentChat.title}
@@ -560,8 +565,8 @@ const ChatInterfaceComponent: React.FC = () => {
         </header>
         <div className="flex flex-grow overflow-hidden">
           <div id="chat-container" className={`flex flex-col h-full transition-all duration-300 ${
-            showDiagram 
-              ? 'w-1/2 md:block hidden mx-auto' // Hide on mobile when diagram is shown
+            showArtifact 
+              ? 'w-1/2 md:block hidden mx-auto' // Hide on mobile when artifact is shown
               : 'w-full max-w-3xl mx-auto'
           }`}>
             <ScrollArea className="flex-grow p-4 max-w-3xl mx-auto h-[calc(100%-160px)]">
@@ -603,11 +608,11 @@ const ChatInterfaceComponent: React.FC = () => {
                             <Button 
                               variant="outline" 
                               className="mt-2 self-start" 
-                              onClick={() => toggleDiagram(artifact)}
+                              onClick={() => toggleArtifact(artifact)}
                             >
                               <ImageIcon className="mr-2 h-4 w-4" />
-                              {artifact.title || 'View Diagram'}
-                              {showDiagram ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
+                              {artifact.title || 'View Artifact'}
+                              {showArtifact ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
                             </Button>
                           );
                         })()}
@@ -681,7 +686,7 @@ const ChatInterfaceComponent: React.FC = () => {
             </div>
           </div>
           <AnimatePresence>
-            {showDiagram && currentDiagram && (
+            {showArtifact && currentArtifact && (
               <motion.div
                 className="flex flex-col w-full md:w-1/2 h-full"
                 initial={{ x: '100%', opacity: 0 }}
@@ -689,11 +694,12 @@ const ChatInterfaceComponent: React.FC = () => {
                 exit={{ x: '100%', opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <DiagramContainer
-                  title={currentDiagram.title}
-                  onClose={() => toggleDiagram(null)}
+                <ArtifactPanel
+                  title={currentArtifact.title}
+                  onClose={() => toggleArtifact(null)}
                   showBackButton={true}
-                  diagramContent={currentDiagram.content}
+                  artifactContent={currentArtifact.content}
+                  type={currentArtifact.type}
                 />
               </motion.div>
             )}
