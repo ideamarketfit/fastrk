@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { HreflangTags } from '@/components/hreflang-tags';
 
 export default function ToolLayout({
   children,
@@ -10,9 +9,6 @@ export default function ToolLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <HreflangTags />
-      </head>
       <body>{children}</body>
     </html>
   );
