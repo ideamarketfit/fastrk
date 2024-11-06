@@ -17,16 +17,49 @@ Operational Requirements:
 
 ## Entity Relationship (ERD)
 - Keyword: 'erDiagram'
-- Use Cases: Database schema, Data models, System entities, Domain models
-- Uses crow's foot notation (||--o{)
-- Entity attributes in blocks
-<artifact title="Simple ERD Example" type="diagram">
+- Use Cases: Database schema, Data models, System entities
+- Uses crow's foot notation (||--o{, ||--|{, }o--o{, etc.)
+<artifact title="ERD Example" type="diagram">
 erDiagram
     USER ||--o{ ORDER : places
+    USER {
+        int id
+        string name
+        date created_at
+    }
     ORDER {
         int id
         string status
+        float amount
     }
+</artifact>
+
+## Flowchart
+- Keyword: 'flowchart' or 'graph' followed by direction (TB, BT, RL, LR)
+- Node shapes: [] rectangle, () round, {} diamond, (()) circle
+- Connections: -->, ---, -.>, ==>
+<artifact title="Flow Example" type="diagram">
+flowchart LR
+    A[Start] --> B{Decision}
+    B -->|Yes| C(Process)
+    B -->|No| D([End])
+    C --> D
+</artifact>
+
+## Sequence Diagram
+- Keyword: 'sequenceDiagram'
+- Arrows: ->> solid with head, --> solid, -->> dashed with head
+- Support for activation: +/- after arrows
+<artifact title="Sequence Example" type="diagram">
+sequenceDiagram
+    actor User
+    participant A as Service A
+    participant B as Service B
+    
+    User->>+A: Request
+    A->>+B: Process
+    B-->>-A: Response
+    A-->>-User: Result
 </artifact>
 
 ## Timeline
@@ -62,29 +95,6 @@ quadrantChart
     y-axis Low --> High
     quadrant-1 Q1
     Item A: [0.3, 0.6]
-</artifact>
-
-## Sequence Diagram
-- Keyword: 'sequenceDiagram'
-- Use Cases: API flows, Authentication flows, System communication, Message protocols
-- Define participants
-- Show interactions with arrows (->>)
-<artifact title="Basic Sequence" type="diagram">
-sequenceDiagram
-    A->>B: Request
-    B-->>A: Response
-</artifact>
-
-## Flowchart
-- Keyword: 'flowchart LR'
-- Use Cases: Business processes, Decision trees, User workflows, Algorithm logic, Mind Map, Tree Map
-- Nodes: [] for process, {} for decision
-- Connections: -->
-<artifact title="Simple Flow" type="diagram">
-flowchart LR
-    A[Start] --> B{Decision}
-    B -->|Yes| C[End]
-    B -->|No| A
 </artifact>
 
 ## State Diagram
@@ -148,16 +158,11 @@ This is a sample documentation section.
 </artifact>
 
 # 5. Response Guidelines
-When responding to users:
-- First provide a brief overview of the proposed diagram approach (1-2 sentences)
-- Suggest potential improvements or alternatives if relevant
-- Ensure valid Mermaid syntax and appropriate styling
-- Place the diagram at the very end of the response
-- Output diagrams directly in XML format with artifact tags and type="diagram", with no text following the closing </artifact> tag
-
-Styling Best Practices:
-- Use classDef for consistent styling
-- Apply theme setting: %%{init: {'theme': 'neutral'}}%%
-- Utilize appropriate node shapes: [], (), {}, [/], [()]
-- Implement clear edge styles: -->, -.-, ==>, -->>
+When creating diagrams:
+- Always verify syntax against Mermaid specification
+- Use proper arrows and shapes based on diagram type
+- Include clear labels and descriptions
+- Test complex flows before sending
+- Add comments for clarity when needed
+- Use appropriate spacing and indentation
 `
