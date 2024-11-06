@@ -2,9 +2,6 @@
 
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import Heading from '@tiptap/extension-heading'
-import CodeBlock from '@tiptap/extension-code-block'
-import Link from '@tiptap/extension-link'
 import { marked } from 'marked'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -50,13 +47,13 @@ export function TiptapEditorComponent({
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
-      Heading.configure({ levels: [1, 2, 3] }),
-      CodeBlock,
-      Link.configure({
-        openOnClick: false,
-        linkOnPaste: true,
-      }),
+      StarterKit.configure({
+        codeBlock: {
+          HTMLAttributes: {
+            class: 'bg-muted/50 rounded-md p-4 font-mono text-sm'
+          }
+        }
+      })
     ],
     content: processedContent,
     editable,
