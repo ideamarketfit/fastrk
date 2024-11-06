@@ -8,8 +8,6 @@ import { Input } from "@/components/ui/input"
 import { Send, ChevronRight, ChevronLeft, User, Bot, Image as ImageIcon, X, Paperclip, Plus, File, FileText, FileImage, FileAudio, FileVideo } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import mermaid from 'mermaid';
-import svgPanZoom from 'svg-pan-zoom'
 import { useChat } from 'ai/react'
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getChat, getChatIds, getAllChats, saveMessage, getLastOpenedChatId, setLastOpenedChatId, createNewChat, updateChatTitle, getSidebarState, setSidebarState } from '@/lib/chat';
@@ -211,20 +209,6 @@ const ChatInterfaceComponent: React.FC = () => {
   useEffect(() => {
     setEditedTitle(currentChat.title)
   }, [currentChat])
-
-  useEffect(() => {
-    mermaid.initialize({ 
-      startOnLoad: true,
-      theme: 'default',
-      securityLevel: 'loose',
-      fontSize: 16,
-      // Add these options
-      flowchart: {
-        useMaxWidth: false,
-        htmlLabels: true
-      }
-    });
-  }, []);
 
   const handleSend = (e?: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e) {

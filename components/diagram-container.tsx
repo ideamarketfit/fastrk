@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Download, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
@@ -45,7 +45,16 @@ const DiagramContainer = ({
 
     const element = document.getElementById('mermaid-diagram');
     if (element) {
-      mermaid.initialize({ startOnLoad: false });
+      mermaid.initialize({ 
+        startOnLoad: false,
+        theme: 'default',
+        securityLevel: 'loose',
+        fontSize: 16,
+        flowchart: {
+          useMaxWidth: false,
+          htmlLabels: true
+        }
+      });
       
       mermaid.render('mermaid-svg', diagramContent)
         .then(({ svg }) => {
