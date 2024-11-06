@@ -76,12 +76,12 @@ sequenceDiagram
 </artifact>
 
 ## Flowchart
-- Keyword: 'flowchart TD'
+- Keyword: 'flowchart LR'
 - Use Cases: Business processes, Decision trees, User workflows, Algorithm logic, Mind Map, Tree Map
 - Nodes: [] for process, {} for decision
 - Connections: -->
 <artifact title="Simple Flow" type="diagram">
-flowchart TD
+flowchart LR
     A[Start] --> B{Decision}
     B -->|Yes| C[End]
     B -->|No| A

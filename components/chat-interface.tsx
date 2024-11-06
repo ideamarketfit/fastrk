@@ -215,6 +215,10 @@ const ChatInterfaceComponent: React.FC = () => {
       e.preventDefault();
     }
     if ((input.trim() || uploadedFile) && !isLoading) {
+      // Close artifact panel if open
+      setShowArtifact(false);
+      setCurrentArtifact(null);
+
       // Create and save message whether it's a file or text
       const newMessage = {
         id: Date.now(),
@@ -464,24 +468,6 @@ const ChatInterfaceComponent: React.FC = () => {
               content: artifactMatch[3].trim(),
               type: artifactMatch[2] as 'diagram' | 'doc'
             };
-          } else {
-            const startTagIndex = msg.content.indexOf('<artifact title="');
-            if (startTagIndex !== -1) {
-              const titleMatch = msg.content.substring(startTagIndex).match(/<artifact title="([^"]*?)" type="([^"]*?)"/);
-              if (titleMatch) {
-                const contentStartIndex = msg.content.indexOf('>', startTagIndex) + 1;
-                const endTagIndex = msg.content.indexOf('</artifact>', contentStartIndex);
-                const content = endTagIndex !== -1 
-                  ? msg.content.substring(contentStartIndex, endTagIndex).trim()
-                  : msg.content.substring(contentStartIndex).trim();
-                
-                artifact = {
-                  title: titleMatch[1],
-                  content: content,
-                  type: titleMatch[2] as 'diagram' | 'doc'
-                };
-              }
-            }
           }
 
           return {
@@ -492,9 +478,12 @@ const ChatInterfaceComponent: React.FC = () => {
           };
         });
         
-        const lastArtifact = findLastArtifact(mappedMessages);
-        if (lastArtifact) {
-          setCurrentArtifact(lastArtifact);
+        // Only open artifact panel if the last message contains a complete artifact
+        const lastMessage = mappedMessages[mappedMessages.length - 1];
+        const hasCompleteArtifact = lastMessage.text.includes('</artifact>');
+        
+        if (hasCompleteArtifact && lastMessage.artifact) {
+          setCurrentArtifact(lastMessage.artifact);
           setShowArtifact(true);
         }
       }, 300);
@@ -580,8 +569,8 @@ const ChatInterfaceComponent: React.FC = () => {
                       <div className="flex flex-col">
                         <div className={`inline-block p-3 rounded-lg ${
                           message.role === 'user'
-                            ? 'text-foreground'
-                            : 'bg-secondary text-secondary-foreground'
+                            ? 'bg-secondary text-foreground'
+                            : 'text-secondary-foreground'
                         }`}>
                           {(() => {
                             const artifactTagIndex = message.content.indexOf('<artifact');
@@ -596,29 +585,50 @@ const ChatInterfaceComponent: React.FC = () => {
                             }
                           })()}
                         </div>
-                        {message.role === 'assistant' && message.content.includes('<artifact title="') && (() => {
-                          const artifactMatch = message.content.match(/<artifact title="([^"]*)" type="([^"]*)">([\s\S]*?)<\/artifact>/);
-                          const artifact: { title: string; content: string; type: "diagram" | "doc" } | null = artifactMatch ? {
-                            title: artifactMatch[1],
-                            content: artifactMatch[3].trim(),
-                            type: artifactMatch[2] as 'diagram' | 'doc'
-                          } : null;
+                        {message.role === 'assistant' && (() => {
+                          const startTagMatch = message.content.match(/<artifact title="([^"]*)" type="([^"]*)">/);
+                          const hasClosingTag = message.content.includes('</artifact>');
                           
-                          return artifact && (
-                            <Button 
-                              variant="outline" 
-                              className="mt-2 self-start" 
-                              onClick={() => toggleArtifact(artifact)}
-                            >
-                              {artifact.type === 'doc' ? (
-                                <FileText className="mr-2 h-4 w-4" />
-                              ) : (
-                                <ImageIcon className="mr-2 h-4 w-4" />
-                              )}
-                              {artifact.title || 'View Artifact'}
-                              {showArtifact ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
-                            </Button>
-                          );
+                          if (startTagMatch) {
+                            if (!hasClosingTag) {
+                              // Show loading state when artifact is being generated
+                              return (
+                                <Button 
+                                  variant="outline" 
+                                  className="mt-2 self-start"
+                                  disabled
+                                >
+                                  <span className="animate-spin mr-2">⚪</span>
+                                  Generating {startTagMatch[1]}...
+                                </Button>
+                              );
+                            }
+                            
+                            // Show complete artifact button only when closing tag is present
+                            const artifactMatch = message.content.match(/<artifact title="([^"]*)" type="([^"]*)">([\s\S]*?)<\/artifact>/);
+                            const artifact = artifactMatch ? {
+                              title: artifactMatch[1],
+                              content: artifactMatch[3].trim(),
+                              type: artifactMatch[2] as 'diagram' | 'doc'
+                            } : null;
+                            
+                            return artifact && (
+                              <Button 
+                                variant="outline" 
+                                className="mt-2 self-start" 
+                                onClick={() => toggleArtifact(artifact)}
+                              >
+                                {artifact.type === 'doc' ? (
+                                  <FileText className="mr-2 h-4 w-4" />
+                                ) : (
+                                  <ImageIcon className="mr-2 h-4 w-4" />
+                                )}
+                                {artifact.title || 'View Artifact'}
+                                {showArtifact ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
+                              </Button>
+                            );
+                          }
+                          return null;
                         })()}
                       </div>
                     </div>
