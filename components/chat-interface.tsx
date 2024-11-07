@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
-import { Send, ChevronRight, ChevronLeft, User, Bot, Image as ImageIcon, X, Paperclip, Plus, File, FileText, FileImage, FileAudio, FileVideo } from 'lucide-react'
+import { Send, ChevronRight, ChevronLeft, User, Bot, Image as ImageIcon, X, Paperclip, Plus, File, FileText, FileImage, FileAudio, FileVideo, Layers } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useChat } from 'ai/react'
@@ -21,7 +21,7 @@ export interface Message {
   artifact?: {
     title: string
     content: string
-    type: 'diagram' | 'doc'
+    type: 'diagram' | 'doc' | 'reveal-slides'
   } | null
   file?: File
 }
@@ -154,7 +154,7 @@ const ChatInterfaceComponent: React.FC = () => {
         artifact: artifactMatch ? {
           title: artifactMatch[1],
           content: artifactMatch[3].trim(),
-          type: artifactMatch[2] as 'diagram' | 'doc'
+          type: artifactMatch[2] as 'diagram' | 'doc' | 'reveal-slides'
         } : null
       };
 
@@ -162,7 +162,7 @@ const ChatInterfaceComponent: React.FC = () => {
         newMessage.artifact = {
           title: artifactMatch[1],
           content: artifactMatch[3].trim(),
-          type: artifactMatch[2] as 'diagram' | 'doc'
+          type: artifactMatch[2] as 'diagram' | 'doc' | 'reveal-slides'
         };
         setCurrentArtifact(newMessage.artifact);
         setShowArtifact(true);
@@ -462,13 +462,13 @@ const ChatInterfaceComponent: React.FC = () => {
         const mappedMessages: Message[] = messages.map(msg => {
           const artifactMatch = msg.content.match(/<artifact title="([^"]*)" type="([^"]*)">([\s\S]*?)<\/artifact>/);
           
-          let artifact: { title: string; content: string; type: "diagram" | "doc" } | null = null;
+          let artifact: { title: string; content: string; type: "diagram" | "doc" | "reveal-slides" } | null = null;
 
           if (artifactMatch) {
             artifact = {
               title: artifactMatch[1],
               content: artifactMatch[3].trim(),
-              type: artifactMatch[2] as 'diagram' | 'doc'
+              type: artifactMatch[2] as 'diagram' | 'doc' | 'reveal-slides'
             };
           }
 
@@ -626,7 +626,7 @@ const ChatInterfaceComponent: React.FC = () => {
                             const artifact = artifactMatch ? {
                               title: artifactMatch[1],
                               content: artifactMatch[3].trim(),
-                              type: artifactMatch[2] as 'diagram' | 'doc'
+                              type: artifactMatch[2] as 'diagram' | 'doc' | 'reveal-slides'
                             } : null;
                             
                             return artifact && (
@@ -637,6 +637,8 @@ const ChatInterfaceComponent: React.FC = () => {
                               >
                                 {artifact.type === 'doc' ? (
                                   <FileText className="mr-2 h-4 w-4" />
+                                ) : artifact.type === 'reveal-slides' ? (
+                                  <Layers className="mr-2 h-4 w-4" />
                                 ) : (
                                   <ImageIcon className="mr-2 h-4 w-4" />
                                 )}

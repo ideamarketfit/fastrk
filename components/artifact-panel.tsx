@@ -4,13 +4,14 @@ import { ChevronLeft, Download, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import DiagramDisplay from './diagram-display';
 import { TiptapEditorComponent } from './tiptap-editor'
+import { RevealSlideComponent } from './reveal-slide'
 
 interface ArtifactPanelProps {
   title: string;
   onClose: () => void;
   showBackButton?: boolean;
   artifactContent: string;
-  type: 'diagram' | 'doc';
+  type: 'diagram' | 'doc' | 'reveal-slides';
 }
 
 const ArtifactPanel = ({
@@ -105,6 +106,12 @@ const ArtifactPanel = ({
             content={artifactContent}
             editable={true}
             className="h-full"
+          />
+        );
+      case 'reveal-slides':
+        return (
+          <RevealSlideComponent 
+            content={artifactContent}
           />
         );
       default:

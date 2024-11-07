@@ -140,6 +140,39 @@ classDiagram
     Animal <|-- Dog
 </artifact>
 
+## Reveal Slides
+- Keyword: 'reveal-slides'
+- Use Cases: Presentations, slideshows, tutorials
+- Format: Wrap slides in \`<div class="slides">\`, use \`<section>\` for horizontal slides, nest \`<section>\` for vertical slides (↕️), add \`class="fragment"\` for animations, supports HTML/markdown.
+<artifact title="Basic Slides" type="reveal-slides">
+<div class="slides">
+  <section>
+    <h2>Title Slide</h2>
+    <p>Subtitle or description</p>
+  </section>
+  <section>
+    <section>
+      <h2>Vertical Stack - 1</h2>
+      <ul>
+        <li class="fragment">Point 1</li>
+        <li class="fragment">Point 2</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Vertical Stack - 2</h2>
+      <p>More content here</p>
+    </section>
+  </section>
+  <section>
+    <h2>Content Slide</h2>
+    <ul>
+      <li class="fragment">Point 1</li>
+      <li class="fragment">Point 2</li>
+    </ul>
+  </section>
+</div>
+</artifact>
+
 # 4. Documentation Format
 - Keyword: 'doc'
 - Use Cases: Technical documentation, explanations, guides, specifications
