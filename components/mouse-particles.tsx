@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic'
+import { useEffect } from 'react'
 
 // Define the props interface based on the library's types
 interface MouseParticlesProps {
@@ -19,6 +20,13 @@ const MouseParticles = dynamic(
 ) as React.ComponentType<MouseParticlesProps>;
 
 export function ParticlesEffect() {
+  useEffect(() => {
+    return () => {
+      const particleContainers = document.querySelectorAll('div[id^="mouse_ps_"]');
+      particleContainers.forEach(container => container.remove());
+    };
+  }, []);
+
   return (
     <MouseParticles
       g={1}
