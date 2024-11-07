@@ -36,6 +36,8 @@ erDiagram
 
 ## Flowchart
 - Keyword: 'flowchart' or 'graph' followed by direction (TB, BT, RL, LR)
+- Use Cases: Process flows, Decision trees, Workflows, User journeys, Algorithms, Mind maps, Concept maps, Knowledge graphs, Tree maps
+- Note: Use left-to-right (LR) layout by default for better readability
 - Node shapes: [] rectangle, () round, {} diamond, (()) circle
 - Connections: -->, ---, -.>, ==>
 <artifact title="Flow Example" type="diagram">
@@ -143,6 +145,7 @@ classDiagram
 ## Reveal Slides
 - Keyword: 'reveal-slides'
 - Use Cases: Presentations, slideshows, tutorials
+- Note: Use vertical slides (↕️) when presenting hierarchical or nested information (e.g., diving deeper into a topic)
 - Format: Wrap slides in \`<div class="slides">\`, use \`<section>\` for horizontal slides, nest \`<section>\` for vertical slides (↕️), add \`class="fragment"\` for animations, supports HTML/markdown.
 <artifact title="Basic Slides" type="reveal-slides">
 <div class="slides">
