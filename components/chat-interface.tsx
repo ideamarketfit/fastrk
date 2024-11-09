@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { getChat, getChatIds, getAllChats, saveMessage, getLastOpenedChatId, setLastOpenedChatId, createNewChat, updateChatTitle, getSidebarState, setSidebarState } from '@/lib/chat';
 import ChatSidebar from '@/components/chat-sidebar'
 import ArtifactPanel from './artifact-panel';
+import ReactMarkdown from 'react-markdown'
 
 export interface Message {
   id: number
@@ -592,14 +593,29 @@ const ChatInterfaceComponent: React.FC = () => {
                           {(() => {
                             const artifactTagIndex = message.content.indexOf('<artifact');
                             const closingTagIndex = message.content.indexOf('</artifact>');
+                            let content = message.content;
 
                             if (closingTagIndex !== -1) {
-                              return message.content.replace(/<artifact title="([^"]*)" type="([^"]*)">([\s\S]*?)<\/artifact>/g, '');
+                              content = content.replace(/<artifact title="([^"]*)" type="([^"]*)">([\s\S]*?)<\/artifact>/g, '');
                             } else if (artifactTagIndex !== -1) {
-                              return message.content.substring(0, artifactTagIndex);
-                            } else {
-                              return message.content;
+                              content = content.substring(0, artifactTagIndex);
                             }
+
+                            return (
+                              <ReactMarkdown
+                                components={{
+                                  // Customize the styling of different elements if needed
+                                  p: ({children}) => <p className="mb-1">{children}</p>,
+                                  strong: ({children}) => <strong className="font-bold">{children}</strong>,
+                                  em: ({children}) => <em className="italic">{children}</em>,
+                                  code: ({children}) => <code className="bg-muted px-1 py-0.5 rounded">{children}</code>,
+                                  ul: ({children}) => <ul className="list-disc ml-4 mb-1">{children}</ul>,
+                                  ol: ({children}) => <ol className="list-decimal ml-4 mb-1">{children}</ol>,
+                                }}
+                              >
+                                {content}
+                              </ReactMarkdown>
+                            );
                           })()}
                         </div>
                         {message.role === 'assistant' && (() => {
