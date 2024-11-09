@@ -242,8 +242,23 @@ const ChatInterfaceComponent: React.FC = () => {
   }
 
   const toggleArtifact = (artifact: Message['artifact'] | null) => {
-    setShowArtifact(!showArtifact)
-    setCurrentArtifact(artifact)
+    if (!artifact) {
+      // If no artifact is provided, just close the panel
+      setShowArtifact(false);
+      setCurrentArtifact(null);
+      return;
+    }
+
+    // If an artifact is provided
+    if (!showArtifact || currentArtifact?.content !== artifact.content) {
+      // If panel is closed OR different artifact is clicked, show the new artifact
+      setShowArtifact(true);
+      setCurrentArtifact(artifact);
+    } else {
+      // If same artifact is clicked while shown, close the panel
+      setShowArtifact(false);
+      setCurrentArtifact(null);
+    }
   }
 
   const toggleSidebar = () => {
