@@ -522,7 +522,7 @@ const ChatInterfaceComponent: React.FC = () => {
         clearTimeout(timeoutId);
       }
     };
-  }, [messages.length, isInitialLoaded]);
+  }, [messages, isInitialLoaded]);
 
   // Reset isInitialLoaded when changing chats
   useEffect(() => {
