@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
-import { Send, ChevronRight, ChevronLeft, User, Bot, Image as ImageIcon, X, Paperclip, Plus, File, FileText, FileImage, FileAudio, FileVideo } from 'lucide-react'
+import { Send, ChevronRight, ChevronLeft, User, Bot, Image as ImageIcon, X, Paperclip, Plus, File, FileText, FileImage, FileAudio, FileVideo, Layers } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useChat } from 'ai/react'
@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { getChat, getChatIds, getAllChats, saveMessage, getLastOpenedChatId, setLastOpenedChatId, createNewChat, updateChatTitle, getSidebarState, setSidebarState } from '@/lib/chat';
 import ChatSidebar from '@/components/chat-sidebar'
 import ArtifactPanel from './artifact-panel';
+import ReactMarkdown from 'react-markdown'
 
 export interface Message {
   id: number
@@ -21,7 +22,7 @@ export interface Message {
   artifact?: {
     title: string
     content: string
-    type: 'diagram'
+    type: 'diagram' | 'doc' | 'reveal-slides'
   } | null
   file?: File
 }
@@ -145,7 +146,7 @@ const ChatInterfaceComponent: React.FC = () => {
       } : null
     })),
     onFinish: (message) => {
-      const artifactMatch = message.content.match(/<artifact title="([^"]*)" type="diagram">([\s\S]*?)<\/artifact>/);
+      const artifactMatch = message.content.match(/<artifact title="([^"]*)" type="([^"]*)">([\s\S]*?)<\/artifact>/);
       
       const newMessage: Message = {
         id: Date.now(),
@@ -153,16 +154,16 @@ const ChatInterfaceComponent: React.FC = () => {
         sender: 'ai',
         artifact: artifactMatch ? {
           title: artifactMatch[1],
-          content: artifactMatch[2].trim(),
-          type: 'diagram'
+          content: artifactMatch[3].trim(),
+          type: artifactMatch[2] as 'diagram' | 'doc' | 'reveal-slides'
         } : null
       };
 
       if (artifactMatch) {
         newMessage.artifact = {
           title: artifactMatch[1],
-          content: artifactMatch[2].trim(),
-          type: 'diagram'
+          content: artifactMatch[3].trim(),
+          type: artifactMatch[2] as 'diagram' | 'doc' | 'reveal-slides'
         };
         setCurrentArtifact(newMessage.artifact);
         setShowArtifact(true);
@@ -215,6 +216,10 @@ const ChatInterfaceComponent: React.FC = () => {
       e.preventDefault();
     }
     if ((input.trim() || uploadedFile) && !isLoading) {
+      // Close artifact panel if open
+      setShowArtifact(false);
+      setCurrentArtifact(null);
+
       // Create and save message whether it's a file or text
       const newMessage = {
         id: Date.now(),
@@ -237,8 +242,23 @@ const ChatInterfaceComponent: React.FC = () => {
   }
 
   const toggleArtifact = (artifact: Message['artifact'] | null) => {
-    setShowArtifact(!showArtifact)
-    setCurrentArtifact(artifact)
+    if (!artifact) {
+      // If no artifact is provided, just close the panel
+      setShowArtifact(false);
+      setCurrentArtifact(null);
+      return;
+    }
+
+    // If an artifact is provided
+    if (!showArtifact || currentArtifact?.content !== artifact.content) {
+      // If panel is closed OR different artifact is clicked, show the new artifact
+      setShowArtifact(true);
+      setCurrentArtifact(artifact);
+    } else {
+      // If same artifact is clicked while shown, close the panel
+      setShowArtifact(false);
+      setCurrentArtifact(null);
+    }
   }
 
   const toggleSidebar = () => {
@@ -447,6 +467,8 @@ const ChatInterfaceComponent: React.FC = () => {
     return null;
   };
 
+  const [isInitialLoaded, setIsInitialLoaded] = useState(false);
+
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
@@ -454,34 +476,16 @@ const ChatInterfaceComponent: React.FC = () => {
       timeoutId = setTimeout(() => {
         // Map the AI SDK messages to our Message interface
         const mappedMessages: Message[] = messages.map(msg => {
-          const artifactMatch = msg.content.match(/<artifact title="([^"]*)" type="diagram">([\s\S]*?)<\/artifact>/);
+          const artifactMatch = msg.content.match(/<artifact title="([^"]*)" type="([^"]*)">([\s\S]*?)<\/artifact>/);
           
-          let artifact: { title: string; content: string; type: "diagram" } | null = null;
+          let artifact: { title: string; content: string; type: "diagram" | "doc" | "reveal-slides" } | null = null;
 
           if (artifactMatch) {
             artifact = {
               title: artifactMatch[1],
-              content: artifactMatch[2].trim(),
-              type: 'diagram' as const
+              content: artifactMatch[3].trim(),
+              type: artifactMatch[2] as 'diagram' | 'doc' | 'reveal-slides'
             };
-          } else {
-            const startTagIndex = msg.content.indexOf('<artifact title="');
-            if (startTagIndex !== -1) {
-              const titleMatch = msg.content.substring(startTagIndex).match(/<artifact title="([^"]*?)"/);
-              if (titleMatch) {
-                const contentStartIndex = msg.content.indexOf('>', startTagIndex) + 1;
-                const endTagIndex = msg.content.indexOf('</artifact>', contentStartIndex);
-                const content = endTagIndex !== -1 
-                  ? msg.content.substring(contentStartIndex, endTagIndex).trim()
-                  : msg.content.substring(contentStartIndex).trim();
-                
-                artifact = {
-                  title: titleMatch[1],
-                  content: content,
-                  type: 'diagram' as const
-                };
-              }
-            }
           }
 
           return {
@@ -492,10 +496,23 @@ const ChatInterfaceComponent: React.FC = () => {
           };
         });
         
-        const lastArtifact = findLastArtifact(mappedMessages);
-        if (lastArtifact) {
-          setCurrentArtifact(lastArtifact);
-          setShowArtifact(true);
+        if (!isInitialLoaded && messages.length > 1) {
+          // Find and show the last complete artifact when loading a chat
+          const lastArtifact = findLastArtifact(mappedMessages);
+          if (lastArtifact) {
+            setCurrentArtifact(lastArtifact);
+            setShowArtifact(true);
+          }
+          setIsInitialLoaded(true);
+        } else {
+          // Only open artifact panel if the last message contains a complete artifact
+          const lastMessage = mappedMessages[mappedMessages.length - 1];
+          const hasCompleteArtifact = lastMessage.text.includes('</artifact>');
+          
+          if (hasCompleteArtifact && lastMessage.artifact) {
+            setCurrentArtifact(lastMessage.artifact);
+            setShowArtifact(true);
+          }
         }
       }, 300);
     }
@@ -505,7 +522,12 @@ const ChatInterfaceComponent: React.FC = () => {
         clearTimeout(timeoutId);
       }
     };
-  }, [messages.length]);
+  }, [messages, isInitialLoaded]);
+
+  // Reset isInitialLoaded when changing chats
+  useEffect(() => {
+    setIsInitialLoaded(false);
+  }, [currentChat.id]);
 
   return (
     <div className="flex h-screen bg-background">
@@ -580,41 +602,83 @@ const ChatInterfaceComponent: React.FC = () => {
                       <div className="flex flex-col">
                         <div className={`inline-block p-3 rounded-lg ${
                           message.role === 'user'
-                            ? 'text-foreground'
-                            : 'bg-secondary text-secondary-foreground'
+                            ? 'bg-secondary text-foreground'
+                            : 'text-secondary-foreground'
                         }`}>
                           {(() => {
                             const artifactTagIndex = message.content.indexOf('<artifact');
                             const closingTagIndex = message.content.indexOf('</artifact>');
+                            let content = message.content;
 
                             if (closingTagIndex !== -1) {
-                              return message.content.replace(/<artifact title="([^"]*)" type="diagram">([\s\S]*?)<\/artifact>/g, '');
+                              content = content.replace(/<artifact title="([^"]*)" type="([^"]*)">([\s\S]*?)<\/artifact>/g, '');
                             } else if (artifactTagIndex !== -1) {
-                              return message.content.substring(0, artifactTagIndex);
-                            } else {
-                              return message.content;
+                              content = content.substring(0, artifactTagIndex);
                             }
+
+                            return (
+                              <ReactMarkdown
+                                components={{
+                                  // Customize the styling of different elements if needed
+                                  p: ({children}) => <p className="mb-1">{children}</p>,
+                                  strong: ({children}) => <strong className="font-bold">{children}</strong>,
+                                  em: ({children}) => <em className="italic">{children}</em>,
+                                  code: ({children}) => <code className="bg-muted px-1 py-0.5 rounded">{children}</code>,
+                                  ul: ({children}) => <ul className="list-disc ml-4 mb-1">{children}</ul>,
+                                  ol: ({children}) => <ol className="list-decimal ml-4 mb-1">{children}</ol>,
+                                }}
+                              >
+                                {content}
+                              </ReactMarkdown>
+                            );
                           })()}
                         </div>
-                        {message.role === 'assistant' && message.content.includes('<artifact title="') && (() => {
-                          const artifactMatch = message.content.match(/<artifact title="([^"]*)" type="diagram">([\s\S]*?)<\/artifact>/);
-                          const artifact: { title: string; content: string; type: "diagram" } | null = artifactMatch ? {
-                            title: artifactMatch[1],
-                            content: artifactMatch[2].trim(),
-                            type: 'diagram' as const // Explicitly specify the type as a literal
-                          } : null;
+                        {message.role === 'assistant' && (() => {
+                          const startTagMatch = message.content.match(/<artifact title="([^"]*)" type="([^"]*)">/);
+                          const hasClosingTag = message.content.includes('</artifact>');
                           
-                          return artifact && (
-                            <Button 
-                              variant="outline" 
-                              className="mt-2 self-start" 
-                              onClick={() => toggleArtifact(artifact)}
-                            >
-                              <ImageIcon className="mr-2 h-4 w-4" />
-                              {artifact.title || 'View Artifact'}
-                              {showArtifact ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
-                            </Button>
-                          );
+                          if (startTagMatch) {
+                            if (!hasClosingTag) {
+                              // Show loading state when artifact is being generated
+                              return (
+                                <Button 
+                                  variant="outline" 
+                                  className="mt-2 self-start"
+                                  disabled
+                                >
+                                  <span className="animate-spin mr-2">⚪</span>
+                                  Generating {startTagMatch[1]}...
+                                </Button>
+                              );
+                            }
+                            
+                            // Show complete artifact button only when closing tag is present
+                            const artifactMatch = message.content.match(/<artifact title="([^"]*)" type="([^"]*)">([\s\S]*?)<\/artifact>/);
+                            const artifact = artifactMatch ? {
+                              title: artifactMatch[1],
+                              content: artifactMatch[3].trim(),
+                              type: artifactMatch[2] as 'diagram' | 'doc' | 'reveal-slides'
+                            } : null;
+                            
+                            return artifact && (
+                              <Button 
+                                variant="outline" 
+                                className="mt-2 self-start" 
+                                onClick={() => toggleArtifact(artifact)}
+                              >
+                                {artifact.type === 'doc' ? (
+                                  <FileText className="mr-2 h-4 w-4" />
+                                ) : artifact.type === 'reveal-slides' ? (
+                                  <Layers className="mr-2 h-4 w-4" />
+                                ) : (
+                                  <ImageIcon className="mr-2 h-4 w-4" />
+                                )}
+                                {artifact.title || 'View Artifact'}
+                                {showArtifact ? <ChevronLeft className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
+                              </Button>
+                            );
+                          }
+                          return null;
                         })()}
                       </div>
                     </div>

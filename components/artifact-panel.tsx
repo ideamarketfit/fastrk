@@ -3,13 +3,15 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, Download, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import DiagramDisplay from './diagram-display';
+import { TiptapEditorComponent } from './tiptap-editor'
+import { RevealSlideComponent } from './reveal-slide'
 
 interface ArtifactPanelProps {
   title: string;
   onClose: () => void;
   showBackButton?: boolean;
   artifactContent: string;
-  type: string; // diagram, code, doc
+  type: 'diagram' | 'doc' | 'reveal-slides';
 }
 
 const ArtifactPanel = ({
@@ -73,7 +75,6 @@ const ArtifactPanel = ({
         });
         break;
 
-      case 'code':
       case 'doc':
         const blob = new Blob([artifactContent], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
@@ -101,9 +102,17 @@ const ArtifactPanel = ({
         );
       case 'doc':
         return (
-          <div className="w-full h-full overflow-auto p-4">
-            {artifactContent}
-          </div>
+          <TiptapEditorComponent
+            content={artifactContent}
+            editable={true}
+            className="h-full"
+          />
+        );
+      case 'reveal-slides':
+        return (
+          <RevealSlideComponent 
+            content={artifactContent}
+          />
         );
       default:
         return (
@@ -156,7 +165,7 @@ const ArtifactPanel = ({
         </div>
       </div>
 
-      <div id="artifact-content" className="flex-grow flex items-center justify-center overflow-auto min-h-[400px]">
+      <div id="artifact-content" className="flex-grow overflow-hidden rounded-lg">
         {renderArtifactContent()}
       </div>
     </div>

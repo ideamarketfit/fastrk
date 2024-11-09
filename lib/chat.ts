@@ -11,7 +11,7 @@ interface Message {
   artifact?: {
     title: string;
     content: string;
-    type: 'diagram';
+    type: 'diagram' | 'doc' | 'reveal-slides';
   } | null;
   file?: File;
 }
