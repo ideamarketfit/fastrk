@@ -495,6 +495,9 @@ const ChatInterfaceComponent: React.FC = () => {
             artifact: artifact
           };
         });
+
+        console.log('conditions:', isInitialLoaded);
+        console.log('message update conditions:', !isInitialLoaded && messages.length > 1);
         
         if (!isInitialLoaded && messages.length > 1) {
           // Find and show the last complete artifact when loading a chat
@@ -504,16 +507,7 @@ const ChatInterfaceComponent: React.FC = () => {
             setShowArtifact(true);
           }
           setIsInitialLoaded(true);
-        } else {
-          // Only open artifact panel if the last message contains a complete artifact
-          const lastMessage = mappedMessages[mappedMessages.length - 1];
-          const hasCompleteArtifact = lastMessage.text.includes('</artifact>');
-          
-          if (hasCompleteArtifact && lastMessage.artifact) {
-            setCurrentArtifact(lastMessage.artifact);
-            setShowArtifact(true);
-          }
-        }
+        } 
       }, 300);
     }
 
@@ -522,7 +516,7 @@ const ChatInterfaceComponent: React.FC = () => {
         clearTimeout(timeoutId);
       }
     };
-  }, [messages.length, isInitialLoaded]);
+  }, [messages, isInitialLoaded]);
 
   // Reset isInitialLoaded when changing chats
   useEffect(() => {
