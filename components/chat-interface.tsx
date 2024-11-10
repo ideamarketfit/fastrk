@@ -201,11 +201,22 @@ const ChatInterfaceComponent: React.FC = () => {
     body: { model: selectedModel },
   });
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+  // Modify the scroll effect
+  useEffect(() => {
+    // Only scroll if there are messages
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      const isNewMessage = lastMessage.id !== previousMessageIdRef.current;
+      
+      if (isNewMessage) {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        previousMessageIdRef.current = lastMessage.id;
+      }
+    }
+  }, [messages]);
 
-  useEffect(scrollToBottom, [messages])
+  // Add this ref to track the last message
+  const previousMessageIdRef = useRef<string>('');
 
   useEffect(() => {
     setEditedTitle(currentChat.title)
@@ -524,7 +535,7 @@ const ChatInterfaceComponent: React.FC = () => {
   }, [currentChat.id]);
 
   return (
-    <div className="flex h-screen bg-background">
+    <div id="app-wrapper" className="flex h-screen bg-background w-full h-full">
       <ChatSidebar
         showSidebar={showSidebar}
         currentChat={currentChat}
@@ -536,7 +547,7 @@ const ChatInterfaceComponent: React.FC = () => {
 
       {/* Main Chat Area */}
       <div className="flex flex-col flex-grow">
-        <header className="p-4 border-b flex items-center justify-between h-[60px]">
+        <header className="p-4 border-b flex items-center justify-between h-[3.75rem]">
           <div className="flex items-center">
             {!showSidebar && (
               <>
@@ -579,13 +590,16 @@ const ChatInterfaceComponent: React.FC = () => {
             )}
           </div>
         </header>
-        <div className="flex flex-grow overflow-hidden">
-          <div id="chat-container" className={`flex flex-col h-full transition-all duration-300 ${
+        <div id="app-container" className="flex h-[calc(100vh-3.75rem)]">
+          <div id="chat-container" className={`flex flex-col transition-all duration-300 h-full ${
             showArtifact 
-              ? 'w-1/2 md:block hidden mx-auto' // Hide on mobile when artifact is shown
-              : 'w-full max-w-3xl mx-auto'
+              ? 'w-1/2 md:block hidden'
+              : 'w-full'
           }`}>
-            <ScrollArea className="flex-grow p-4 max-w-3xl mx-auto h-[calc(100%-160px)]">
+            <ScrollArea id='chat-msgs-scroll-area' className="flex-grow p-4 w-full h-[calc(100%-160px)]" style={{ 
+              paddingLeft: 'max(1rem, calc((100% - 48rem) / 2))',
+              paddingRight: 'max(1rem, calc((100% - 48rem) / 2))'
+            }}>
               {messages.map((message, index) => (
                 <div key={index} className={`mb-4 flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`flex items-start ${message.role === 'user' ? 'flex-row-reverse' : ''} max-w-full md:max-w-[70%]`}>
@@ -681,7 +695,10 @@ const ChatInterfaceComponent: React.FC = () => {
               ))}
               <div ref={messagesEndRef} />
             </ScrollArea>
-            <div className="p-4 w-full max-w-3xl mx-auto bg-background h-[160px]">
+            <div id='chat-input-container' className="flex-shrink-0 p-4 w-full bg-background h-[160px]" style={{ 
+              paddingLeft: 'max(1rem, calc((100% - 48rem) / 2))',
+              paddingRight: 'max(1rem, calc((100% - 48rem) / 2))'
+            }}>
               <div className="relative w-full">
                 {uploadedFile && (
                   <div className="mb-2 p-2 rounded-lg flex items-center">

@@ -16,6 +16,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { all, createLowlight } from 'lowlight'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import 'highlight.js/styles/github-dark.css' // or any other highlight.js theme
+
+const lowlight = createLowlight(all)
 
 interface MenuButtonProps {
   onClick: () => void;
@@ -53,7 +58,12 @@ export function TiptapEditorComponent({
 
   const editor = useEditor({
     extensions: [
-      StarterKit
+      StarterKit.configure({
+        codeBlock: false, // disable the basic code block
+      }),
+      CodeBlockLowlight.configure({
+        lowlight,
+      })
     ],
     content: processedContent,
     editable,

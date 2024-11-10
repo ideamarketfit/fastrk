@@ -141,7 +141,7 @@ const ArtifactPanel = ({
               <span className="sr-only">Back</span>
             </Button>
           )}
-          <h2 className="text-xl font-semibold">{title}</h2>
+          <h2 className="text-xl font-semibold truncate max-w-[calc(100%-4rem)]">{title}</h2>
         </div>
         <div className="flex items-center space-x-2">
           <Button

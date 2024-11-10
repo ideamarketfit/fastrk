@@ -178,7 +178,7 @@ classDiagram
 
 # 4. Documentation Format
 - Keyword: 'doc'
-- Use Cases: Technical documentation, explanations, guides, specifications
+- Use Cases: Technical documentation, explanations, guides, specifications, notes, code snippets, job descriptions, meeting minutes, tutorials, research summaries, project briefs, API documentation, troubleshooting guides, and more
 - Format: Markdown syntax
 - Example:
 <artifact title="Sample Documentation" type="doc">
