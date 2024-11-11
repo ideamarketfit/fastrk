@@ -64,7 +64,6 @@ function parseLocaleData(jsonString: string): LocalizedTemplateData {
 export async function getTemplateData(slug?: string, locale?: string): Promise<LocalizedTemplateData | TemplateData | Record<string, TemplateData> | null> {
   if (!slug) {
     const allTemplates = await getAllTemplates();
-    console.log('All templates from Airtable:', allTemplates);
     const templatesData: Record<string, TemplateData> = {};
     
     for (const template of allTemplates) {
@@ -85,12 +84,10 @@ export async function getTemplateData(slug?: string, locale?: string): Promise<L
       };
     }
     
-    console.log('Parsed templates data:', templatesData);
     return templatesData;
   }
   
   const template = await getTemplateBySlug(slug);
-  console.log('Template data from Airtable:', template);
   
   if (!template) return null;
   
@@ -110,7 +107,6 @@ export async function getTemplateData(slug?: string, locale?: string): Promise<L
     }
   };
   
-  console.log('Parsed template data:', templateData);
   
   if (locale) {
     return templateData.translations[locale as keyof typeof templateData.translations] || templateData.translations.en;
