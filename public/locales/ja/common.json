@@ -90,5 +90,12 @@
   "login": "ログイン",
   "aiPoweredDiagrammingTools": "AI搭載の図表作成ツール",
   "discoverBestAiTools": "最高のAIツールを使って図やビジュアライゼーションを作成しよう",
-  "tryNow": "今すぐ試す"
+  "tryNow": "今すぐ試す",
+  "usedXTimes": "{count}回使用されました",
+  "aiAssistantIncluded": "AIアシスタント付き",
+  "useTemplateFree": "このテンプレートを無料で使用",
+  "download": "ダウンロード",
+  "share": "共有",
+  "ratingsCount": "（{count}件の評価）",
+  "rateTemplatePrompt": "このテンプレートを評価しませんか？"
 }

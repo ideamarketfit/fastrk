@@ -90,5 +90,12 @@
   "login": "Log in",
   "aiPoweredDiagrammingTools": "AI-Powered Diagramming Tools",
   "discoverBestAiTools": "Discover the best AI tools for creating diagrams and visualizations",
-  "tryNow": "Try Now"
+  "tryNow": "Try Now",
+  "usedXTimes": "Used {count} times",
+  "aiAssistantIncluded": "AI assistant included",
+  "useTemplateFree": "Use this template — free",
+  "download": "Download",
+  "share": "Share",
+  "ratingsCount": "({count} ratings)",
+  "rateTemplatePrompt": "Care to rate this template?"
 }

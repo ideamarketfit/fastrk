@@ -10,6 +10,7 @@ import { HeaderComponent } from "@/components/header"
 import { FooterComponent } from "@/components/footer"
 import dynamic from 'next/dynamic'
 import ReactMarkdown from 'react-markdown'
+import useTranslation from '@/hooks/useTranslation';
 
 const ArtifactPanel = dynamic(() => import('@/components/artifact-panel'), {
   ssr: false,
@@ -38,8 +39,7 @@ export function TemplatePage({
   artifact
 }: TemplatePageProps) {
   const [userRating, setUserRating] = useState<number>(0)
-
-  console.log('TemplatePage received props:', { name, rating, categories, aboutTemplate, artifact });
+  const { t } = useTranslation();
 
   return (
     <div className="h-screen flex flex-col">
@@ -85,11 +85,11 @@ export function TemplatePage({
                   <div className="space-y-4">
                     <h1 className="text-2xl font-bold">{name}</h1>
                     <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <span>Used 4,872 times</span>
+                      <span>{t('usedXTimes').replace('{count}', '4,872')}</span>
                       <span>•</span>
                       <div className="flex items-center space-x-1">
                         <Sparkles className="h-4 w-4 text-purple-600" />
-                        <span>AI assistant included</span>
+                        <span>{t('aiAssistantIncluded')}</span>
                       </div>
                     </div>
 
@@ -108,16 +108,16 @@ export function TemplatePage({
                       </div>
                       <span className="text-sm font-medium">{rating?.score || 0}</span>
                       <span className="text-sm text-gray-500">
-                        ({rating?.totalRatings?.toLocaleString() || 0} ratings)
+                        ({t('ratingsCount').replace('{count}', rating?.totalRatings?.toLocaleString() || '0')})
                       </span>
                     </div>
 
                     <Button className="w-full bg-purple-600 hover:bg-purple-700">
-                      Use this template — free
+                      {t('useTemplateFree')}
                     </Button>
 
                     <div className="space-y-2">
-                      <p className="text-sm">Care to rate this template?</p>
+                      <p className="text-sm">{t('rateTemplatePrompt')}</p>
                       <div className="flex space-x-1">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <button
@@ -151,11 +151,11 @@ export function TemplatePage({
                     <div className="flex space-x-2">
                       <Button variant="outline" className="flex-1">
                         <Download className="mr-2 h-4 w-4" />
-                        Download
+                        {t('download')}
                       </Button>
                       <Button variant="outline" className="flex-1">
                         <Share2 className="mr-2 h-4 w-4" />
-                        Share
+                        {t('share')}
                       </Button>
                     </div>
                   </div>
