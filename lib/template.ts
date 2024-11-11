@@ -36,81 +36,100 @@ export interface TemplateData {
 }
 
 function parseLocaleData(jsonString: string): LocalizedTemplateData {
+  if (!jsonString || jsonString === 'undefined' || jsonString === 'null') {
+    console.warn('Empty or invalid template locale data received');
+    return getDefaultTemplateData();
+  }
+
   try {
-    return JSON.parse(jsonString);
+    const parsed = JSON.parse(jsonString);
+    return {
+      ...getDefaultTemplateData(),
+      ...parsed
+    };
   } catch (error) {
     console.error('Error parsing template locale data:', error);
-    return {
-      name: '',
-      meta: {
-        title: '',
-        description: ''
-      },
-      rating: {
-        score: 0,
-        totalRatings: 0
-      },
-      categories: [],
-      aboutTemplate: '',
-      artifact: {
-        title: '',
-        content: '',
-        type: 'diagram'
-      }
-    };
+    console.error('Invalid JSON string:', jsonString);
+    return getDefaultTemplateData();
   }
 }
 
-export async function getTemplateData(slug?: string, locale?: string): Promise<LocalizedTemplateData | TemplateData | Record<string, TemplateData> | null> {
-  if (!slug) {
-    const allTemplates = await getAllTemplates();
-    const templatesData: Record<string, TemplateData> = {};
-    
-    for (const template of allTemplates) {
-      templatesData[template.slug] = {
-        translations: {
-          en: parseLocaleData(template.en),
-          ja: parseLocaleData(template.ja),
-          ko: parseLocaleData(template.ko),
-          'zh-Hant': parseLocaleData(template['zh-Hant']),
-          es: parseLocaleData(template.es),
-          fr: parseLocaleData(template.fr),
-          pt: parseLocaleData(template.pt),
-          de: parseLocaleData(template.de),
-          it: parseLocaleData(template.it),
-          he: parseLocaleData(template.he),
-          ar: parseLocaleData(template.ar)
-        }
-      };
-    }
-    
-    return templatesData;
-  }
-  
-  const template = await getTemplateBySlug(slug);
-  
-  if (!template) return null;
-  
-  const templateData = {
-    translations: {
-      en: parseLocaleData(template.en),
-      ja: parseLocaleData(template.ja),
-      ko: parseLocaleData(template.ko),
-      'zh-Hant': parseLocaleData(template['zh-Hant']),
-      es: parseLocaleData(template.es),
-      fr: parseLocaleData(template.fr),
-      pt: parseLocaleData(template.pt),
-      de: parseLocaleData(template.de),
-      it: parseLocaleData(template.it),
-      he: parseLocaleData(template.he),
-      ar: parseLocaleData(template.ar)
+function getDefaultTemplateData(): LocalizedTemplateData {
+  return {
+    name: '',
+    meta: {
+      title: '',
+      description: ''
+    },
+    rating: {
+      score: 0,
+      totalRatings: 0
+    },
+    categories: [],
+    aboutTemplate: '',
+    artifact: {
+      title: '',
+      content: '',
+      type: 'diagram'
     }
   };
-  
-  
-  if (locale) {
-    return templateData.translations[locale as keyof typeof templateData.translations] || templateData.translations.en;
+}
+
+export async function getTemplateData(slug?: string, locale?: string): Promise<LocalizedTemplateData | TemplateData | Record<string, TemplateData> | null> {
+  try {
+    if (!slug) {
+      const allTemplates = await getAllTemplates();
+      const templatesData: Record<string, TemplateData> = {};
+      
+      for (const template of allTemplates) {
+        if (!template || !template.slug) continue;
+        
+        templatesData[template.slug] = {
+          translations: {
+            en: parseLocaleData(template.en || ''),
+            ja: parseLocaleData(template.ja || ''),
+            ko: parseLocaleData(template.ko || ''),
+            'zh-Hant': parseLocaleData(template['zh-Hant'] || ''),
+            es: parseLocaleData(template.es || ''),
+            fr: parseLocaleData(template.fr || ''),
+            pt: parseLocaleData(template.pt || ''),
+            de: parseLocaleData(template.de || ''),
+            it: parseLocaleData(template.it || ''),
+            he: parseLocaleData(template.he || ''),
+            ar: parseLocaleData(template.ar || '')
+          }
+        };
+      }
+      
+      return templatesData;
+    }
+    
+    const template = await getTemplateBySlug(slug);
+    if (!template) return null;
+    
+    const templateData = {
+      translations: {
+        en: parseLocaleData(template.en || ''),
+        ja: parseLocaleData(template.ja || ''),
+        ko: parseLocaleData(template.ko || ''),
+        'zh-Hant': parseLocaleData(template['zh-Hant'] || ''),
+        es: parseLocaleData(template.es || ''),
+        fr: parseLocaleData(template.fr || ''),
+        pt: parseLocaleData(template.pt || ''),
+        de: parseLocaleData(template.de || ''),
+        it: parseLocaleData(template.it || ''),
+        he: parseLocaleData(template.he || ''),
+        ar: parseLocaleData(template.ar || '')
+      }
+    };
+    
+    if (locale) {
+      return templateData.translations[locale as keyof typeof templateData.translations] || templateData.translations.en;
+    }
+    
+    return templateData;
+  } catch (error) {
+    console.error('Error in getTemplateData:', error);
+    return null;
   }
-  
-  return templateData;
 } 

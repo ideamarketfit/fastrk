@@ -20,19 +20,34 @@ export async function generateMetadata({ params }: { params: { slug: string; loc
 
 export default async function getTemplatePage({ params }: { params: { slug: string; locale: string } }) {
   const templateData = await getTemplateData(params.slug, params.locale) as LocalizedTemplateData;
-  if (!templateData) {
-    notFound()
+  
+  // If no template data is found, return 404
+  if (!templateData || !templateData.name) {
+    notFound();
   }
+
+  // Ensure all required properties exist with fallbacks
+  const safeTemplateData = {
+    name: templateData.name || '',
+    rating: templateData.rating || { score: 0, totalRatings: 0 },
+    categories: templateData.categories || [],
+    aboutTemplate: templateData.aboutTemplate || '',
+    artifact: templateData.artifact || {
+      title: '',
+      content: '',
+      type: 'diagram' as const
+    }
+  };
 
   return (
     <TemplatePage 
-        name={templateData.name}
-        rating={templateData.rating}
-        categories={templateData.categories}
-        aboutTemplate={templateData.aboutTemplate}
-        artifact={templateData.artifact}
+      name={safeTemplateData.name}
+      rating={safeTemplateData.rating}
+      categories={safeTemplateData.categories}
+      aboutTemplate={safeTemplateData.aboutTemplate}
+      artifact={safeTemplateData.artifact}
     />
-  )
+  );
 }
 
 export async function generateStaticParams() {
