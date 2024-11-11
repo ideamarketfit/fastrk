@@ -50,7 +50,7 @@ const DiagramDisplay = ({
               });
 
               setTimeout(() => {
-                // panZoom.zoom(0.7);
+                panZoom.zoom(0.8);
                 panZoom.center();
               }, 100);
 

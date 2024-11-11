@@ -9,6 +9,11 @@ export interface LocalizedToolData {
     title: string
     description: string
   }
+  artifact?: {
+    title: string
+    content: string
+    type: 'diagram' | 'doc' | 'reveal-slides'
+  }
 }
 
 export interface ToolData {
@@ -40,6 +45,11 @@ function parseLocaleData(jsonString: string): LocalizedToolData {
       meta: {
         title: '',
         description: ''
+      },
+      artifact: {
+        title: '',
+        content: '',
+        type: 'diagram'
       }
     };
   }

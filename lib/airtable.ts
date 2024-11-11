@@ -21,7 +21,8 @@ export interface AirtableToolData {
 export async function getAllTools(): Promise<AirtableToolData[]> {
   try {
     const records = await base('Pages').select({
-      view: 'Grid view'
+      view: 'Grid view',
+      filterByFormula: 'NOT({en} = "")'
     }).all();
     
     return records.map(record => ({

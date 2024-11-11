@@ -33,6 +33,7 @@ export default async function ToolPage({ params }: { params: { slug: string } })
       toolDescription={toolData.description}
       faqs={toolData.faqs}
       command={toolData.command}
+      artifact={toolData.artifact}
     />
   );
 }

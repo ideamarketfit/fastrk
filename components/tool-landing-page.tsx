@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { useState, useRef } from 'react'
 import { ChevronDown, ChevronUp, Paperclip, Send, X, Sparkles, Zap, FileText, Image as ImageIcon, Film, Music, Archive, Code, FileSpreadsheet, File, Share } from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -11,6 +10,11 @@ import { useTranslation } from '@/hooks/useTranslation'
 import { HeaderComponent } from '@/components/header'
 import { ParticlesEffect } from '@/components/mouse-particles'
 import { FooterComponent } from '@/components/footer'
+import dynamic from 'next/dynamic'
+
+const ArtifactPanel = dynamic(() => import('@/components/artifact-panel'), {
+  ssr: false,
+})
 
 export function ToolLandingPage({ 
   toolName, 
@@ -72,6 +76,17 @@ export function ToolLandingPage({
       return <File className="h-4 w-4" />
     }
   }
+
+  const demoMermaidDiagram = `
+    graph TD
+    A[Enter Chart Definition] --> B(Preview)
+    B --> C{decide}
+    C --> D[Keep]
+    C --> E[Edit Definition]
+    E --> B
+    D --> F[Save Image and Code]
+    F --> B
+  `;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -211,13 +226,14 @@ export function ToolLandingPage({
                 <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 <div className="flex-grow text-center text-sm text-gray-600">chatdiagram.com</div>
               </div>
-              <div className="frame-image">
-                <Image 
-                  src="/chat-diagram-demo.png"
-                  height={400} 
-                  width={600} 
-                  alt={`${toolName} Example`}
-                  className="w-full rounded-md shadow"
+              <div style={{ height: '600px' }}>
+                <ArtifactPanel
+                  title="Example Diagram"
+                  onClose={() => {}}
+                  showHeader={false}
+                  artifactContent={demoMermaidDiagram}
+                  type="diagram"
+                  className="!m-0 !p-0"
                 />
               </div>
             </div>

@@ -10,16 +10,20 @@ interface ArtifactPanelProps {
   title: string;
   onClose: () => void;
   showBackButton?: boolean;
+  showHeader?: boolean;
   artifactContent: string;
   type: 'diagram' | 'doc' | 'reveal-slides';
+  className?: string;
 }
 
 const ArtifactPanel = ({
   title,
   onClose,
   showBackButton = false,
+  showHeader = true,
   artifactContent,
-  type = 'diagram'
+  type = 'diagram',
+  className
 }: ArtifactPanelProps) => {
   const [isPanelReady, setIsPanelReady] = useState(false);
 
@@ -126,44 +130,46 @@ const ArtifactPanel = ({
   return (
     <div 
       id="artifact-panel"
-      className="flex flex-col h-full bg-muted p-4 rounded-lg m-4 shadow-lg relative animate-in slide-in-from-right"
+      className={`flex flex-col h-full bg-muted p-4 rounded-lg m-4 shadow-lg relative animate-in slide-in-from-right ${className || ''}`}
     >
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center">
-          {showBackButton && (
+      {showHeader && (
+        <div id="artifact-header" className="flex justify-between items-center mb-4">
+          <div className="flex items-center">
+            {showBackButton && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className="mr-2"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                <span className="sr-only">Back</span>
+              </Button>
+            )}
+            <h2 className="text-xl font-semibold truncate max-w-[calc(100%-4rem)]">{title}</h2>
+          </div>
+          <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
               size="sm"
-              onClick={onClose}
-              className="mr-2"
+              onClick={handleExportArtifact}
             >
-              <ChevronLeft className="h-4 w-4" />
-              <span className="sr-only">Back</span>
+              <Download className="h-4 w-4" />
+              <span className="sr-only">Export</span>
             </Button>
-          )}
-          <h2 className="text-xl font-semibold truncate max-w-[calc(100%-4rem)]">{title}</h2>
+            {!showBackButton && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+              >
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+              </Button>
+            )}
+          </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleExportArtifact}
-          >
-            <Download className="h-4 w-4" />
-            <span className="sr-only">Export</span>
-          </Button>
-          {!showBackButton && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-            >
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </Button>
-          )}
-        </div>
-      </div>
+      )}
 
       <div id="artifact-content" className="flex-grow overflow-hidden rounded-lg">
         {renderArtifactContent()}
