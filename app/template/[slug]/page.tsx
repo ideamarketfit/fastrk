@@ -1,4 +1,7 @@
 import { TemplatePage } from "@/components/template-page"
+import { getTemplateData, TemplateData } from "@/lib/template"
+import { notFound } from "next/navigation"
+import { Metadata } from 'next'
 
 interface TemplatePageProps {
   params: {
@@ -6,16 +9,42 @@ interface TemplatePageProps {
   }
 }
 
-export default function Template({  }: TemplatePageProps) {
-  return <TemplatePage />
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const template = await getTemplateData(params.slug) as TemplateData | null;
+  if (!template) {
+    return {
+      title: 'Template Not Found',
+      description: 'The requested template could not be found.',
+    }
+  }
+
+  const templateData = template.translations.en;
+  return {
+    title: templateData.meta.title,
+    description: templateData.meta.description,
+  }
 }
 
-// Optional: Generate static params if you want to pre-render specific templates
+export default async function Template({ params }: TemplatePageProps) {
+  const template = await getTemplateData(params.slug) as TemplateData | null;
+  if (!template) {
+    notFound();
+  }
+
+  const templateData = template.translations.en;
+
+  return <TemplatePage 
+    name={templateData.name}
+    rating={templateData.rating}
+    categories={templateData.categories}
+    aboutTemplate={templateData.aboutTemplate}
+    artifact={templateData.artifact}
+  />
+}
+
 export async function generateStaticParams() {
-  // This is just an example - replace with your actual template slugs
-  const templates = ['flowchart', 'gantt-chart', 'mind-map']
-  
-  return templates.map((template) => ({
-    slug: template,
-  }))
+  const allTemplates = await getTemplateData("") as Record<string, TemplateData>;
+  return Object.keys(allTemplates).map((slug) => ({
+    slug,
+  }));
 } 

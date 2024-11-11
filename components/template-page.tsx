@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from "react"
+import { useState } from "react"
 import { Star, Download, Share2, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,25 +9,37 @@ import { Card } from "@/components/ui/card"
 import { HeaderComponent } from "@/components/header"
 import { FooterComponent } from "@/components/footer"
 import dynamic from 'next/dynamic'
+import ReactMarkdown from 'react-markdown'
 
 const ArtifactPanel = dynamic(() => import('@/components/artifact-panel'), {
   ssr: false,
 })
 
-export function TemplatePage() {
-  const [rating, setRating] = useState<number>(0)
-  const templateScore = useMemo(() => (Math.random() * (5 - 4) + 4).toFixed(1), [])
+interface TemplatePageProps {
+  name: string;
+  rating?: {
+    score: number;
+    totalRatings: number;
+  };
+  categories?: string[];
+  aboutTemplate: string;
+  artifact: {
+    title: string;
+    type: 'diagram' | 'doc' | 'reveal-slides';
+    content: string;
+  };
+}
 
-  // Example diagram content - replace with your actual template content
-  const templateContent = `
-    graph TD
-      A[Start] --> B[Process]
-      B --> C{Decision}
-      C -->|Yes| D[Action 1]
-      C -->|No| E[Action 2]
-      D --> F[End]
-      E --> F
-  `
+export function TemplatePage({
+  name,
+  rating = { score: 0, totalRatings: 0 },
+  categories = [],
+  aboutTemplate,
+  artifact
+}: TemplatePageProps) {
+  const [userRating, setUserRating] = useState<number>(0)
+
+  console.log('TemplatePage received props:', { name, rating, categories, aboutTemplate, artifact });
 
   return (
     <div className="h-screen flex flex-col">
@@ -40,36 +52,23 @@ export function TemplatePage() {
             <div className="grid gap-8 lg:grid-cols-[1fr,400px]">
               {/* Left Column - Template Preview and About Template */}
               <div className="space-y-8">
-                <Card className="relative bg-gray-100 shadow-xl h-[600px]">
+                <Card className="relative bg-gray-100 shadow-xl h-[60vh]">
                   <ArtifactPanel
-                    title="Flow Chart Template"
+                    title={artifact.title}
                     onClose={() => {}}
                     showHeader={false}
-                    artifactContent={templateContent}
-                    type="diagram"
+                    artifactContent={artifact.content}
+                    type={artifact.type}
                     className="!m-0 !rounded-none h-full"
                   />
                 </Card>
 
                 {/* About Template Section */}
                 <div className="space-y-6">
-                  <h2 className="text-xl font-bold">About Template</h2>
                   <div className="prose max-w-none">
-                    <p>
-                      This flow chart template is designed to help you create professional diagrams and process flows with ease.
-                      Perfect for business processes, decision trees, and workflow documentation. The template includes:
-                    </p>
-                    <ul>
-                      <li>Pre-built shapes and connectors</li>
-                      <li>Customizable styles and colors</li>
-                      <li>Smart layout suggestions</li>
-                      <li>Export options in multiple formats</li>
-                    </ul>
-                    <p>
-                      Our AI assistant can help you optimize your flow charts and suggest improvements based on best practices.
-                      You can customize this template using our intuitive editor - add your branding, modify the layout, and make it
-                      your own.
-                    </p>
+                    <ReactMarkdown>
+                      {aboutTemplate}
+                    </ReactMarkdown>
                   </div>
                 </div>
               </div>
@@ -79,12 +78,12 @@ export function TemplatePage() {
                 <div className="sticky top-4 space-y-6">
                   <Input
                     type="search"
-                    placeholder="Search in PDF Templates"
+                    placeholder="Search in Templates"
                     className="w-full"
                   />
 
                   <div className="space-y-4">
-                    <h1 className="text-2xl font-bold">Flow Chart Template</h1>
+                    <h1 className="text-2xl font-bold">{name}</h1>
                     <div className="flex items-center space-x-2 text-sm text-gray-600">
                       <span>Used 4,872 times</span>
                       <span>•</span>
@@ -100,14 +99,17 @@ export function TemplatePage() {
                           <Star
                             key={star}
                             className={`h-5 w-5 ${
-                              star <= Math.floor(parseFloat(templateScore))
+                              star <= Math.floor(rating?.score || 0)
                                 ? "fill-yellow-400 text-yellow-400"
                                 : "text-gray-300"
                             }`}
                           />
                         ))}
                       </div>
-                      <span className="text-sm font-medium">{templateScore}</span>
+                      <span className="text-sm font-medium">{rating?.score || 0}</span>
+                      <span className="text-sm text-gray-500">
+                        ({rating?.totalRatings?.toLocaleString() || 0} ratings)
+                      </span>
                     </div>
 
                     <Button className="w-full bg-purple-600 hover:bg-purple-700">
@@ -120,12 +122,12 @@ export function TemplatePage() {
                         {[1, 2, 3, 4, 5].map((star) => (
                           <button
                             key={star}
-                            onClick={() => setRating(star)}
+                            onClick={() => setUserRating(star)}
                             className="focus:outline-none"
                           >
                             <Star
                               className={`h-6 w-6 ${
-                                rating >= star
+                                userRating >= star
                                   ? "fill-yellow-400 text-yellow-400"
                                   : "text-gray-300"
                               }`}
@@ -136,9 +138,14 @@ export function TemplatePage() {
                     </div>
 
                     <div className="flex flex-wrap gap-2">
-                      <Badge variant="secondary">Flow Charts</Badge>
-                      <Badge variant="secondary">Business</Badge>
-                      <Badge variant="secondary">Process</Badge>
+                      {(categories || []).map((category) => (
+                        <Badge 
+                          key={category} 
+                          variant="secondary"
+                        >
+                          {category}
+                        </Badge>
+                      ))}
                     </div>
 
                     <div className="flex space-x-2">
