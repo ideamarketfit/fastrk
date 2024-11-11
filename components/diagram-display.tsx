@@ -46,7 +46,7 @@ const DiagramDisplay = ({
                 center: true,
                 minZoom: 0.1,
                 maxZoom: 10,
-                zoomScaleSensitivity: 0.5,
+                zoomScaleSensitivity: 0.2,
               });
 
               setTimeout(() => {
