@@ -20,13 +20,20 @@ export function ToolLandingPage({
   toolName, 
   toolDescription, 
   faqs,
-  command
+  command,
+  artifact
 }: {
   toolName: string;
   toolDescription: string;
   faqs: { question: string; answer: string }[];
   command: string;
+  artifact?: {
+    title: string;
+    content: string;
+    type: 'diagram' | 'doc' | 'reveal-slides';
+  };
 }) {
+
   const router = useRouter()
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [input, setInput] = useState('')
@@ -76,17 +83,6 @@ export function ToolLandingPage({
       return <File className="h-4 w-4" />
     }
   }
-
-  const demoMermaidDiagram = `
-    graph TD
-    A[Enter Chart Definition] --> B(Preview)
-    B --> C{decide}
-    C --> D[Keep]
-    C --> E[Edit Definition]
-    E --> B
-    D --> F[Save Image and Code]
-    F --> B
-  `;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -228,11 +224,20 @@ export function ToolLandingPage({
               </div>
               <div style={{ height: '600px' }}>
                 <ArtifactPanel
-                  title="Example Diagram"
+                  title={artifact?.title || "Example Diagram"}
                   onClose={() => {}}
                   showHeader={false}
-                  artifactContent={demoMermaidDiagram}
-                  type="diagram"
+                  artifactContent={artifact?.content || `
+                    graph TD
+                    A[Enter Chart Definition] --> B(Preview)
+                    B --> C{decide}
+                    C --> D[Keep]
+                    C --> E[Edit Definition]
+                    E --> B
+                    D --> F[Save Image and Code]
+                    F --> B
+                  `}
+                  type={artifact?.type || "diagram"}
                   className="!m-0 !p-0"
                 />
               </div>
