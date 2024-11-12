@@ -11,6 +11,7 @@ import { FooterComponent } from "@/components/footer"
 import dynamic from 'next/dynamic'
 import ReactMarkdown from 'react-markdown'
 import useTranslation from '@/hooks/useTranslation';
+import { useRouter } from 'next/navigation';
 
 const ArtifactPanel = dynamic(() => import('@/components/artifact-panel'), {
   ssr: false,
@@ -40,6 +41,7 @@ export function TemplatePage({
 }: TemplatePageProps) {
   const [userRating, setUserRating] = useState<number>(0)
   const { t } = useTranslation();
+  const router = useRouter();
 
   return (
     <div className="h-screen flex flex-col">
@@ -112,7 +114,10 @@ export function TemplatePage({
                       </span>
                     </div>
 
-                    <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                    <Button 
+                      className="w-full bg-purple-600 hover:bg-purple-700"
+                      onClick={() => router.push('/chat')}
+                    >
                       {t('useTemplateFree')}
                     </Button>
 
