@@ -110,5 +110,14 @@
   "diagramTemplatesTitle": "Diagram Templates for Clear Communication",
   "diagramTemplatesDescription": "Explore our collection of customizable diagram templates. Start with a professional design and tailor it to your needs.",
   "searchDiagramTemplates": "Search diagram templates",
-  "loadMoreTemplates": "Load More Templates"
+  "loadMoreTemplates": "Load More Templates",
+  "tool_landing_3_easy_steps": "3 EASY STEPS",
+  "tool_landing_how_it_works": "How it works",
+  "tool_landing_create_flow_charts": "Create stunning flow charts in minutes with our AI-powered tool. Transform your ideas into visual masterpieces effortlessly.",
+  "tool_landing_step1_title": "Describe Your Process",
+  "tool_landing_step1_desc": "Input your ideas or upload a file describing your workflow or process.",
+  "tool_landing_step2_title": "AI Generation",
+  "tool_landing_step2_desc": "Our AI analyzes your input and creates a professional flow chart based on your description.",
+  "tool_landing_step3_title": "Customize and Share",
+  "tool_landing_step3_desc": "Fine-tune your flow chart, then export or share it with your team instantly."
 }
