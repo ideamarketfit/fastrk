@@ -40,6 +40,7 @@ export interface LocalizedTemplateData {
 export interface AirtableRecord {
   id: string;
   slug: string;
+  lastmod: string;
   en: string;
   ja: string;
   ko: string;
@@ -72,6 +73,7 @@ export interface TranslatedData<T> {
 const recordToData = (record: Record<FieldSet>): AirtableRecord => ({
   id: record.id,
   slug: record.get('slug') as string,
+  lastmod: record.get('lastmod') as string,
   en: record.get('en') as string,
   ja: record.get('ja') as string,
   ko: record.get('ko') as string,
