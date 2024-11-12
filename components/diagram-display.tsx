@@ -39,7 +39,8 @@ const DiagramDisplay = ({
       flowchart: {
         useMaxWidth: false,
         htmlLabels: true
-      }
+      },
+      suppressErrorRendering: true
     });
     
     mermaid.render(uniqueId, diagramContent)
@@ -99,7 +100,7 @@ const DiagramDisplay = ({
       className="w-full h-full flex items-center justify-center"
     >
       {error && (
-        <div className="text-red-500 p-4 border border-red-300 rounded bg-red-50">
+        <div className="text-grey p-4 border border-red-300 rounded bg-red-50">
           {error}
         </div>
       )}

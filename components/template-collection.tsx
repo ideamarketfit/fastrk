@@ -10,6 +10,8 @@ import { HeaderComponent } from "@/components/header"
 import { FooterComponent } from "@/components/footer"
 import dynamic from 'next/dynamic'
 import useTranslation from '@/hooks/useTranslation'
+import { useLocalizedNavigate } from '@/hooks/useLocalizedNavigate';
+import { ParticlesEffect } from '@/components/mouse-particles'
 
 interface Template {
   slug: string;
@@ -30,6 +32,7 @@ const ArtifactPanel = dynamic(() => import('@/components/artifact-panel'), {
 
 export function TemplateCollection({ templates }: { templates: Template[] }) {
   const { t } = useTranslation()
+  const { getLocalizedPath } = useLocalizedNavigate();
 
   // Move categories here
   const categories = [
@@ -58,6 +61,7 @@ export function TemplateCollection({ templates }: { templates: Template[] }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 via-white to-blue-50">
+      <ParticlesEffect />
       <HeaderComponent />
 
       <main className="flex-grow container mx-auto px-4 py-12 mt-20">
@@ -110,7 +114,10 @@ export function TemplateCollection({ templates }: { templates: Template[] }) {
               {/* Templates Grid */}
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredTemplates.map((template) => (
-                  <Link key={template.slug} href={`/template/${template.slug}`}>
+                  <Link 
+                    key={template.slug} 
+                    href={getLocalizedPath(`/template/${template.slug}`)}
+                  >
                     <Card className="group h-full overflow-hidden transition-shadow hover:shadow-lg">
                       <div className="aspect-video overflow-hidden bg-gray-100">
                         {!isLoading && (

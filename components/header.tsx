@@ -6,11 +6,13 @@ import { MessageSquare } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { usePathname } from 'next/navigation'
 import { useTranslation } from '@/hooks/useTranslation'
+import { useLocalizedNavigate } from '@/hooks/useLocalizedNavigate'
 
 export function HeaderComponent() {
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
   const { t } = useTranslation()
+  const { getLocalizedPath } = useLocalizedNavigate()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,7 +36,7 @@ export function HeaderComponent() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-8">
-            <Link href="/" className="flex items-center space-x-2 group">
+            <Link href={getLocalizedPath('/')} className="flex items-center space-x-2 group">
               <MessageSquare className="h-9 w-9 text-purple-600 group-hover:text-purple-700 transition-colors duration-300" />
               <span className="text-xl sm:text-2xl font-bold text-gray-800">
                 Chat Diagram
@@ -46,7 +48,7 @@ export function HeaderComponent() {
                   {navItems.map(({ key, href }) => (
                     <li key={key}>
                       <Link 
-                        href={href}
+                        href={getLocalizedPath(href)}
                         className="text-lg text-gray-600 hover:text-purple-600 transition-colors duration-300 relative group"
                       >
                         {t(key)}
