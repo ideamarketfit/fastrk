@@ -19,8 +19,8 @@ export default async function LocaleToolsPage({ params }: ToolCollectionPageProp
       slug,
       name: localizedData.name,
       description: localizedData.description,
-      image: "/chat-diagram-demo.png",
       category: localizedData.name,
+      artifact: localizedData.artifact
     };
   });
 

@@ -2,25 +2,40 @@
 
 import * as React from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { ArrowRight, ChevronDown, ChevronUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { HeaderComponent } from "@/components/header"
 import { FooterComponent } from "@/components/footer"
 import { useTranslation } from '@/hooks/useTranslation'
+import dynamic from 'next/dynamic'
+
+// Add ArtifactPanel dynamic import
+const ArtifactPanel = dynamic(() => import('@/components/artifact-panel'), {
+  ssr: false,
+})
 
 interface Tool {
   slug: string;
   name: string;
   description: string;
-  image: string;
   category: string;
+  artifact: {
+    title: string;
+    content: string;
+    type: 'diagram' | 'doc' | 'reveal-slides';
+  };
 }
 
 export function AiDiagrammingTools({ tools }: { tools: Tool[] }) {
   const [openFaq, setOpenFaq] = React.useState<number | null>(null)
   const { t } = useTranslation()
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  // Add useEffect to handle loading state
+  React.useEffect(() => {
+    setIsLoading(false);
+  }, []);
 
   const faqs = [
     {
@@ -58,7 +73,19 @@ export function AiDiagrammingTools({ tools }: { tools: Tool[] }) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {tools.map((tool, index) => (
                 <Card key={index} className="flex flex-col overflow-hidden transition duration-300 hover:shadow-lg">
-                  <Image src={tool.image} alt={tool.name} width={300} height={200} className="w-full h-48 object-cover" />
+                  <div className="aspect-video overflow-hidden bg-gray-100">
+                    {!isLoading && tool.artifact?.content && (
+                      <ArtifactPanel
+                        title=""
+                        onClose={() => {}}
+                        showHeader={false}
+                        artifactContent={tool.artifact.content}
+                        type={tool.artifact.type || 'doc'}
+                        avoidDiagramSvgPanZoom={true}
+                        className="!m-0 !shadow-none !bg-transparent"
+                      />
+                    )}
+                  </div>
                   <CardHeader>
                     <CardTitle>
                       <Link href={`/tool/${tool.slug}`} className="hover:text-purple-600 transition-colors">
