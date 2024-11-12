@@ -14,6 +14,7 @@ interface ArtifactPanelProps {
   artifactContent: string;
   type: 'diagram' | 'doc' | 'reveal-slides';
   className?: string;
+  avoidDiagramSvgPanZoom?: boolean;
 }
 
 const ArtifactPanel = ({
@@ -23,7 +24,8 @@ const ArtifactPanel = ({
   showHeader = true,
   artifactContent,
   type = 'diagram',
-  className
+  className,
+  avoidDiagramSvgPanZoom = false
 }: ArtifactPanelProps) => {
   const [isPanelReady, setIsPanelReady] = useState(false);
 
@@ -102,6 +104,7 @@ const ArtifactPanel = ({
           <DiagramDisplay 
             diagramContent={artifactContent} 
             isPanelReady={isPanelReady}
+            avoidDiagramSvgPanZoom={avoidDiagramSvgPanZoom}
           />
         );
       case 'doc':

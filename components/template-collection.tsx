@@ -1,36 +1,60 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
-import Image from "next/image"
 import Link from "next/link"
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
 import { HeaderComponent } from "@/components/header"
 import { FooterComponent } from "@/components/footer"
+import dynamic from 'next/dynamic'
+import useTranslation from '@/hooks/useTranslation'
 
 interface Template {
   slug: string;
   title: string;
   description: string;
   categories: string[];
+  artifact: {
+    title: string;
+    content: string;
+    type: 'diagram' | 'doc' | 'reveal-slides';
+  };
 }
 
-// Mock categories data
-const categories = [
-  { id: 1, name: "Flow Charts" },
-  { id: 2, name: "Mind Maps" },
-  { id: 3, name: "Org Charts" },
-  { id: 4, name: "Network Diagrams" },
-  { id: 5, name: "UML Diagrams" },
-  { id: 6, name: "ERD" },
-  { id: 7, name: "Sequence Diagrams" },
-  { id: 8, name: "Gantt Charts" },
-]
+// Dynamic import of ArtifactPanel with SSR disabled
+const ArtifactPanel = dynamic(() => import('@/components/artifact-panel'), {
+  ssr: false,
+})
 
 export function TemplateCollection({ templates }: { templates: Template[] }) {
+  const { t } = useTranslation()
+
+  // Move categories here
+  const categories = [
+    { id: 1, name: t('flowCharts') },
+    { id: 2, name: t('mindMaps') },
+    { id: 3, name: t('orgCharts') },
+    { id: 4, name: t('networkDiagrams') },
+    { id: 5, name: t('umlDiagrams') },
+    { id: 6, name: t('erd') },
+    { id: 7, name: t('sequenceDiagrams') },
+    { id: 8, name: t('ganttCharts') },
+  ]
+
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Add useEffect to handle loading state
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
+
+  // Filter templates based on selected category
+  const filteredTemplates = selectedCategory
+    ? templates.filter(template => template.categories.includes(selectedCategory))
+    : templates;
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 via-white to-blue-50">
@@ -46,7 +70,7 @@ export function TemplateCollection({ templates }: { templates: Template[] }) {
                   <MagnifyingGlassIcon className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
                     type="search"
-                    placeholder="Search diagram templates"
+                    placeholder={t('searchDiagramTemplates')}
                     className="pl-10"
                   />
                 </div>
@@ -76,26 +100,30 @@ export function TemplateCollection({ templates }: { templates: Template[] }) {
               {/* Hero Section */}
               <div className="rounded-xl bg-purple-500 p-8 text-white">
                 <div>
-                  <h1 className="mb-2 text-3xl font-bold">Diagram Templates for Clear Communication</h1>
+                  <h1 className="mb-2 text-3xl font-bold">{t('diagramTemplatesTitle')}</h1>
                   <p className="text-purple-100">
-                    Explore our collection of customizable diagram templates. Start with a professional design and tailor it to your needs.
+                    {t('diagramTemplatesDescription')}
                   </p>
                 </div>
               </div>
 
               {/* Templates Grid */}
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {templates.map((template) => (
+                {filteredTemplates.map((template) => (
                   <Link key={template.slug} href={`/template/${template.slug}`}>
                     <Card className="group h-full overflow-hidden transition-shadow hover:shadow-lg">
                       <div className="aspect-video overflow-hidden bg-gray-100">
-                        <Image
-                          src="/placeholder.svg"
-                          alt={template.title}
-                          width={400}
-                          height={225}
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
+                        {!isLoading && (
+                          <ArtifactPanel
+                            title=""
+                            onClose={() => {}}
+                            showHeader={false}
+                            artifactContent={template.artifact.content}
+                            type={template.artifact.type}
+                            avoidDiagramSvgPanZoom={true}
+                            className="!m-0 !shadow-none !bg-transparent"
+                          />
+                        )}
                       </div>
                       <div className="p-4">
                         <h3 className="font-semibold">{template.title}</h3>
@@ -112,7 +140,7 @@ export function TemplateCollection({ templates }: { templates: Template[] }) {
                   size="lg"
                   className="min-w-[200px]"
                 >
-                  Load More Templates
+                  {t('loadMoreTemplates')}
                 </Button>
               </div>
             </div>

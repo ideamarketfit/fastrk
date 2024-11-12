@@ -98,5 +98,17 @@
   "share": "共有",
   "ratingsCount": "（{count}件の評価）",
   "rateTemplatePrompt": "このテンプレートを評価しませんか？",
-  "searchInTemplates": "テンプレートを検索"
+  "searchInTemplates": "テンプレートを検索",
+  "flowCharts": "フローチャート",
+  "mindMaps": "マインドマッ��",
+  "orgCharts": "組織図",
+  "networkDiagrams": "ネットワーク図",
+  "umlDiagrams": "UMLダイアグラム",
+  "erd": "ER図",
+  "sequenceDiagrams": "シーケンス図",
+  "ganttCharts": "ガントチャート",
+  "diagramTemplatesTitle": "明確なコミュニケーションのための図表テンプレート",
+  "diagramTemplatesDescription": "カスタマイズ可能な図表テンプレートコレクションをご覧ください。プロフェッショナルなデザインから始めて、ニーズに合わせてカスタマイズできます。",
+  "searchDiagramTemplates": "図表テンプレートを検索",
+  "loadMoreTemplates": "テンプレートをさらに読み込む"
 }

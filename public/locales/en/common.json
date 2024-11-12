@@ -98,5 +98,17 @@
   "share": "Share",
   "ratingsCount": "({count} ratings)",
   "rateTemplatePrompt": "Care to rate this template?",
-  "searchInTemplates": "Search in Templates"
+  "searchInTemplates": "Search in Templates",
+  "flowCharts": "Flow Charts",
+  "mindMaps": "Mind Maps",
+  "orgCharts": "Org Charts",
+  "networkDiagrams": "Network Diagrams",
+  "umlDiagrams": "UML Diagrams",
+  "erd": "ERD",
+  "sequenceDiagrams": "Sequence Diagrams",
+  "ganttCharts": "Gantt Charts",
+  "diagramTemplatesTitle": "Diagram Templates for Clear Communication",
+  "diagramTemplatesDescription": "Explore our collection of customizable diagram templates. Start with a professional design and tailor it to your needs.",
+  "searchDiagramTemplates": "Search diagram templates",
+  "loadMoreTemplates": "Load More Templates"
 }

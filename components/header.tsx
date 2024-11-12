@@ -23,8 +23,8 @@ export function HeaderComponent() {
   const isChat = pathname === '/chat'
   const navItems = [
     { key: 'tools' as const, href: '/tool' },
-    { key: 'templates' as const, href: '#' },
-    { key: 'blogs' as const, href: '#' }
+    { key: 'templates' as const, href: '/template' },
+    // { key: 'blogs' as const, href: '#' }
   ]
 
   return (

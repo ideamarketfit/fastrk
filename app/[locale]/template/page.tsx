@@ -1,19 +1,20 @@
 import { TemplateCollection } from "@/components/template-collection"
 import { getTemplateData } from "@/lib/templates"
 import { LocalizedTemplateData, TranslatedData } from "@/lib/airtable"
-import { Metadata } from 'next'
+import { getSupportedLanguageCodes } from '@/lib/languages'
 
-export const metadata: Metadata = {
-  title: 'Diagram Templates - Find the Perfect Template for Your Needs',
-  description: 'Browse our collection of professional diagram templates. Create flowcharts, mind maps, org charts, and more with our customizable templates.',
+interface TemplateCollectionPageProps {
+  params: {
+    locale: keyof TranslatedData<LocalizedTemplateData>['translations'];
+  }
 }
 
-export default async function TemplatesPage() {
+export default async function LocaleTemplatesPage({ params }: TemplateCollectionPageProps) {
   const allTemplates = await getTemplateData("") as Record<string, TranslatedData<LocalizedTemplateData>>;
   if (!allTemplates) return null;
 
   const templates = Object.entries(allTemplates).map(([slug, template]) => {
-    const localizedData = template.translations.en;
+    const localizedData = template.translations[params.locale] || template.translations.en;
     return {
       slug,
       title: localizedData.name,
@@ -24,4 +25,10 @@ export default async function TemplatesPage() {
   });
 
   return <TemplateCollection templates={templates} />
-} 
+}
+
+export async function generateStaticParams() {
+  return getSupportedLanguageCodes().map(locale => ({
+    locale,
+  }));
+}
