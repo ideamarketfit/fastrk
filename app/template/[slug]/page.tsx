@@ -1,5 +1,6 @@
 import { TemplatePage } from "@/components/template-page"
-import { getTemplateData, TemplateData } from "@/lib/template"
+import { getTemplateData } from "@/lib/templates"
+import { LocalizedTemplateData, TranslatedData } from "@/lib/airtable"
 import { notFound } from "next/navigation"
 import { Metadata } from 'next'
 
@@ -10,40 +11,42 @@ interface TemplatePageProps {
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const template = await getTemplateData(params.slug) as TemplateData | null;
-  if (!template) {
+  const templateData = await getTemplateData(params.slug) as TranslatedData<LocalizedTemplateData> | null;
+  
+  if (!templateData) {
     return {
       title: 'Template Not Found',
       description: 'The requested template could not be found.',
     }
   }
 
-  const templateData = template.translations.en;
+  const localizedData = templateData.translations.en;
   return {
-    title: templateData.meta.title,
-    description: templateData.meta.description,
+    title: localizedData.meta.title,
+    description: localizedData.meta.description,
   }
 }
 
 export default async function Template({ params }: TemplatePageProps) {
-  const template = await getTemplateData(params.slug) as TemplateData | null;
-  if (!template) {
+  const templateData = await getTemplateData(params.slug) as TranslatedData<LocalizedTemplateData> | null;
+  
+  if (!templateData) {
     notFound();
   }
 
-  const templateData = template.translations.en;
+  const localizedData = templateData.translations.en;
 
   return <TemplatePage 
-    name={templateData.name}
-    rating={templateData.rating}
-    categories={templateData.categories}
-    aboutTemplate={templateData.aboutTemplate}
-    artifact={templateData.artifact}
+    name={localizedData.name}
+    rating={localizedData.rating}
+    categories={localizedData.categories}
+    aboutTemplate={localizedData.aboutTemplate}
+    artifact={localizedData.artifact}
   />
 }
 
 export async function generateStaticParams() {
-  const allTemplates = await getTemplateData("") as Record<string, TemplateData>;
+  const allTemplates = await getTemplateData() as Record<string, TranslatedData<LocalizedTemplateData>>;
   return Object.keys(allTemplates).map((slug) => ({
     slug,
   }));

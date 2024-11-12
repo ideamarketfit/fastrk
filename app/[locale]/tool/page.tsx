@@ -1,22 +1,36 @@
 import { AiDiagrammingTools } from "@/components/tool-collection";
-import { getToolData, ToolData } from "@/lib/tools";
+import { getToolData } from "@/lib/tools";
+import { LocalizedToolData, TranslatedData } from "@/lib/airtable";
+import { getSupportedLanguageCodes } from '@/lib/languages';
 
-export default async function LocaleToolsPage({ params }: { params: { locale: string } }) {
-  const allTools = await getToolData("") as Record<string, ToolData>;
+interface ToolCollectionPageProps {
+  params: {
+    locale: keyof TranslatedData<LocalizedToolData>['translations'];
+  }
+}
+
+export default async function LocaleToolsPage({ params }: ToolCollectionPageProps) {
+  const allTools = await getToolData("") as Record<string, TranslatedData<LocalizedToolData>>;
   if (!allTools) return null;
 
   const tools = Object.entries(allTools).map(([slug, tool]) => {
-    const locale = params.locale as keyof typeof tool.translations;
+    const localizedData = tool.translations[params.locale] || tool.translations.en;
     return {
       slug,
-      name: tool.translations[locale]?.name || tool.translations.en.name,
-      description: tool.translations[locale]?.description || tool.translations.en.description,
+      name: localizedData.name,
+      description: localizedData.description,
       image: "/chat-diagram-demo.png",
-      category: tool.translations[locale]?.name || tool.translations.en.name,
+      category: localizedData.name,
     };
   });
 
   return (
     <AiDiagrammingTools tools={tools} />
   );
+}
+
+export async function generateStaticParams() {
+  return getSupportedLanguageCodes().map(locale => ({
+    locale,
+  }));
 }

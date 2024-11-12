@@ -1,62 +1,61 @@
 import { TemplatePage } from "@/components/template-page"
-import { getTemplateData, TemplateData, LocalizedTemplateData } from "@/lib/template"
+import { getTemplateData } from "@/lib/templates"
+import { LocalizedTemplateData, TranslatedData } from "@/lib/airtable"
 import { notFound } from "next/navigation"
 import { Metadata } from 'next'
 import { getSupportedLanguageCodes } from '@/lib/languages'
 
-export async function generateMetadata({ params }: { params: { slug: string; locale: string } }): Promise<Metadata> {
-  const templateData = await getTemplateData(params.slug, params.locale) as LocalizedTemplateData;
+// Define supported locales type to match TranslatedData interface
+type SupportedLocale = keyof TranslatedData<LocalizedTemplateData>['translations'];
+
+interface TemplatePageProps {
+  params: {
+    slug: string;
+    locale: SupportedLocale;
+  }
+}
+
+export async function generateMetadata({ params }: TemplatePageProps): Promise<Metadata> {
+  const templateData = await getTemplateData(params.slug) as TranslatedData<LocalizedTemplateData> | null;
+  
   if (!templateData) {
     return {
       title: 'Template Not Found',
       description: 'The requested template could not be found.',
     }
   }
+
+  // Now TypeScript knows that params.locale is a valid key
+  const localizedData = templateData.translations[params.locale] || templateData.translations.en;
   return {
-    title: templateData.meta.title,
-    description: templateData.meta.description,
+    title: localizedData.meta.title,
+    description: localizedData.meta.description,
   }
 }
 
-export default async function getTemplatePage({ params }: { params: { slug: string; locale: string } }) {
-  const templateData = await getTemplateData(params.slug, params.locale) as LocalizedTemplateData;
+export default async function LocaleTemplatePage({ params }: TemplatePageProps) {
+  const templateData = await getTemplateData(params.slug) as TranslatedData<LocalizedTemplateData> | null;
   
-  // If no template data is found, return 404
-  if (!templateData || !templateData.name) {
+  if (!templateData) {
     notFound();
   }
 
-  // Ensure all required properties exist with fallbacks
-  const safeTemplateData = {
-    name: templateData.name || '',
-    rating: templateData.rating || { score: 0, totalRatings: 0 },
-    categories: templateData.categories || [],
-    aboutTemplate: templateData.aboutTemplate || '',
-    artifact: templateData.artifact || {
-      title: '',
-      content: '',
-      type: 'diagram' as const
-    }
-  };
+  const localizedData = templateData.translations[params.locale] || templateData.translations.en;
 
-  return (
-    <TemplatePage 
-      name={safeTemplateData.name}
-      rating={safeTemplateData.rating}
-      categories={safeTemplateData.categories}
-      aboutTemplate={safeTemplateData.aboutTemplate}
-      artifact={safeTemplateData.artifact}
-    />
-  );
+  return <TemplatePage 
+    name={localizedData.name}
+    rating={localizedData.rating}
+    categories={localizedData.categories}
+    aboutTemplate={localizedData.aboutTemplate}
+    artifact={localizedData.artifact}
+  />
 }
 
 export async function generateStaticParams() {
-  const allTemplates = await getTemplateData('') as Record<string, TemplateData>;
-  const templates = Object.keys(allTemplates);
-  
-  return templates.flatMap(slug => 
+  const allTemplates = await getTemplateData() as Record<string, TranslatedData<LocalizedTemplateData>>;
+  return Object.keys(allTemplates).flatMap((slug) => 
     getSupportedLanguageCodes().map(locale => ({
-      locale,
+      locale: locale as SupportedLocale,
       slug,
     }))
   );

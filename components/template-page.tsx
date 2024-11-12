@@ -78,7 +78,7 @@ export function TemplatePage({
                 <div className="sticky top-4 space-y-6">
                   <Input
                     type="search"
-                    placeholder="Search in Templates"
+                    placeholder={t('searchInTemplates')}
                     className="w-full"
                   />
 

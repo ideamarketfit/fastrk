@@ -1,39 +1,39 @@
 import { ToolLandingPage } from '@/components/tool-landing-page'
 import { getToolData } from '@/lib/tools'
+import { LocalizedToolData, TranslatedData } from '@/lib/airtable'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
-import { ToolData } from '@/lib/tools'
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const tool = await getToolData(params.slug) as ToolData | null;
-  if (!tool) {
+  const toolData = await getToolData(params.slug) as TranslatedData<LocalizedToolData> | null;
+  if (!toolData) {
     return {
       title: 'Tool Not Found',
       description: 'The requested tool could not be found.',
     }
   }
-  const toolData = tool.translations.en; // Use English as default
+  const localizedData = toolData.translations.en; // Use English as default
   return {
-    title: toolData.meta.title,
-    description: toolData.meta.description,
+    title: localizedData.meta.title,
+    description: localizedData.meta.description,
   }
 }
 
 export default async function ToolPage({ params }: { params: { slug: string } }) {
-  const tool = await getToolData(params.slug) as ToolData | null;
-  if (!tool) {
+  const toolData = await getToolData(params.slug) as TranslatedData<LocalizedToolData> | null;
+  if (!toolData) {
     notFound();
   }
 
-  const toolData = tool.translations.en; // Get English translation data
+  const localizedData = toolData.translations.en; // Get English translation data
 
   return (
     <ToolLandingPage
-      toolName={toolData.name}
-      toolDescription={toolData.description}
-      faqs={toolData.faqs}
-      command={toolData.command}
-      artifact={toolData.artifact}
+      toolName={localizedData.name}
+      toolDescription={localizedData.description}
+      faqs={localizedData.faqs}
+      command={localizedData.command}
+      artifact={localizedData.artifact}
     />
   );
 }

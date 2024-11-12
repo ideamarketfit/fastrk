@@ -97,5 +97,6 @@
   "download": "ダウンロード",
   "share": "共有",
   "ratingsCount": "（{count}件の評価）",
-  "rateTemplatePrompt": "このテンプレートを評価しませんか？"
+  "rateTemplatePrompt": "このテンプレートを評価しませんか？",
+  "searchInTemplates": "テンプレートを検索"
 }

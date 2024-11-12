@@ -97,5 +97,6 @@
   "download": "Download",
   "share": "Share",
   "ratingsCount": "({count} ratings)",
-  "rateTemplatePrompt": "Care to rate this template?"
+  "rateTemplatePrompt": "Care to rate this template?",
+  "searchInTemplates": "Search in Templates"
 }

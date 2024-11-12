@@ -1,45 +1,54 @@
 import { ToolLandingPage } from '@/components/tool-landing-page'
-import { getToolData, LocalizedToolData, ToolData } from '@/lib/tools'
+import { getToolData } from '@/lib/tools'
+import { LocalizedToolData, TranslatedData } from '@/lib/airtable'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
-import { getSupportedLanguageCodes } from '@/lib/languages';
+import { getSupportedLanguageCodes } from '@/lib/languages'
 
-export async function generateMetadata({ params }: { params: { slug: string; locale: string } }): Promise<Metadata> {
-  const toolData = await getToolData(params.slug, params.locale) as LocalizedToolData;
+interface ToolPageProps {
+  params: {
+    slug: string;
+    locale: keyof TranslatedData<LocalizedToolData>['translations'];
+  }
+}
+
+export async function generateMetadata({ params }: ToolPageProps): Promise<Metadata> {
+  const toolData = await getToolData(params.slug) as TranslatedData<LocalizedToolData> | null;
   if (!toolData) {
     return {
       title: 'Tool Not Found',
       description: 'The requested tool could not be found.',
     }
   }
+  const localizedData = toolData.translations[params.locale] || toolData.translations.en;
   return {
-    title: toolData.meta.title,
-    description: toolData.meta.description,
+    title: localizedData.meta.title,
+    description: localizedData.meta.description,
   }
 }
 
-export default async function ToolPage({ params }: { params: { slug: string; locale: string } }) {
-  const toolData = await getToolData(params.slug, params.locale) as LocalizedToolData;
+export default async function LocaleToolPage({ params }: ToolPageProps) {
+  const toolData = await getToolData(params.slug) as TranslatedData<LocalizedToolData> | null;
   if (!toolData) {
-    notFound()
+    notFound();
   }
+
+  const localizedData = toolData.translations[params.locale] || toolData.translations.en;
 
   return (
     <ToolLandingPage
-      toolName={toolData.name}
-      toolDescription={toolData.description}
-      faqs={toolData.faqs}
-      command={toolData.command}
-      artifact={toolData.artifact}
+      toolName={localizedData.name}
+      toolDescription={localizedData.description}
+      faqs={localizedData.faqs}
+      command={localizedData.command}
+      artifact={localizedData.artifact}
     />
-  )
+  );
 }
 
 export async function generateStaticParams() {
-  const allTools = await getToolData('') as Record<string, ToolData>;
-  const tools = Object.keys(allTools);
-  
-  return tools.flatMap(slug => 
+  const allTools = await getToolData() as Record<string, TranslatedData<LocalizedToolData>>;
+  return Object.keys(allTools).flatMap(slug => 
     getSupportedLanguageCodes().map(locale => ({
       locale,
       slug,

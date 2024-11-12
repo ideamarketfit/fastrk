@@ -1,36 +1,4 @@
-import { AirtableToolData, getAllTools, getToolBySlug } from './airtable';
-
-export interface LocalizedToolData {
-  name: string
-  description: string
-  command: string
-  faqs: { question: string; answer: string }[]
-  meta: {
-    title: string
-    description: string
-  }
-  artifact?: {
-    title: string
-    content: string
-    type: 'diagram' | 'doc' | 'reveal-slides'
-  }
-}
-
-export interface ToolData {
-  translations: {
-    en: LocalizedToolData
-    ja: LocalizedToolData
-    ko: LocalizedToolData
-    'zh-Hant': LocalizedToolData
-    es: LocalizedToolData
-    fr: LocalizedToolData
-    pt: LocalizedToolData
-    de: LocalizedToolData
-    it: LocalizedToolData
-    he: LocalizedToolData
-    ar: LocalizedToolData
-  }
-}
+import { AirtableRecord, LocalizedToolData, TranslatedData, getAllTools, getToolBySlug } from './airtable';
 
 function parseLocaleData(jsonString: string): LocalizedToolData {
   try {
@@ -55,7 +23,7 @@ function parseLocaleData(jsonString: string): LocalizedToolData {
   }
 }
 
-function convertAirtableToToolData(airtableData: AirtableToolData): ToolData {
+function convertAirtableToToolData(airtableData: AirtableRecord): TranslatedData<LocalizedToolData> {
   return {
     translations: {
       en: parseLocaleData(airtableData.en),
@@ -73,16 +41,16 @@ function convertAirtableToToolData(airtableData: AirtableToolData): ToolData {
   };
 }
 
-export async function getToolData(slug?: string, locale?: string): Promise<LocalizedToolData | ToolData | Record<string, ToolData> | null> {
+export async function getToolData(
+  slug?: string,
+  locale?: string
+): Promise<LocalizedToolData | TranslatedData<LocalizedToolData> | Record<string, TranslatedData<LocalizedToolData>> | null> {
   if (!slug) {
     const allTools = await getAllTools();
-    const toolsData: Record<string, ToolData> = {};
-    
-    for (const tool of allTools) {
-      toolsData[tool.slug] = convertAirtableToToolData(tool);
-    }
-    
-    return toolsData;
+    return allTools.reduce((acc, tool) => ({
+      ...acc,
+      [tool.slug]: convertAirtableToToolData(tool)
+    }), {});
   }
   
   const tool = await getToolBySlug(slug);
