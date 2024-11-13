@@ -17,7 +17,8 @@ The project is a Next.js application that uses AI to generate various types of a
 
 ## Development Handbook
 > This playbook will help you adapt the Chat Diagram codebase to create your own artifact generation application (e.g., document generator, table creator, presentation maker, etc.).
-通过完成以下任务，你可以将该项目改造成任何 GPT Wrapper, 如：Diagram Generator, Job Description Generator, Essay Writer, Slides Generator, etc.
+
+> 通过完成以下任务，你可以将该项目改造成任何 GPT Wrapper, 如：Diagram Generator, Job Description Generator, Essay Writer, Slides Generator, etc.
 
 ### Part 1: SEO & Website Structure
 
