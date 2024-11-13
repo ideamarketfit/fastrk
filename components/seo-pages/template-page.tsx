@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic'
 import ReactMarkdown from 'react-markdown'
 import useTranslation from '@/hooks/useTranslation';
 import { useRouter } from 'next/navigation';
+import { setTemplateArtifact } from '@/lib/chat';
 
 const ArtifactPanel = dynamic(() => import('@/components/artifact/artifact-panel'), {
   ssr: false,
@@ -30,6 +31,12 @@ interface TemplatePageProps {
     type: 'diagram' | 'doc' | 'reveal-slides';
     content: string;
   };
+}
+
+interface Artifact {
+  title: string;
+  content: string;
+  type: 'diagram' | 'doc' | 'reveal-slides';
 }
 
 export function TemplatePage({
@@ -116,7 +123,15 @@ export function TemplatePage({
 
                     <Button 
                       className="w-full bg-purple-600 hover:bg-purple-700"
-                      onClick={() => router.push('/chat')}
+                      onClick={() => {
+                        const artifactToSave: Artifact = {
+                          title: artifact.title,
+                          content: artifact.content,
+                          type: artifact.type,
+                        };
+                        setTemplateArtifact(artifactToSave);
+                        router.push('/chat?cid=new');
+                      }}
                     >
                       {t('useTemplateFree')}
                     </Button>

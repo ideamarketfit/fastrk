@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useChat } from 'ai/react'
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getChat, getChatIds, getAllChats, saveMessage, getLastOpenedChatId, setLastOpenedChatId, createNewChat, updateChatTitle, getSidebarState, setSidebarState } from '@/lib/chat';
+import { getChat, getChatIds, getAllChats, saveMessage, getLastOpenedChatId, setLastOpenedChatId, createNewChat, updateChatTitle, getSidebarState, setSidebarState, getTemplateArtifact } from '@/lib/chat';
 import ChatSidebar from '@/components/app/chat-sidebar'
 import ArtifactPanel from '../artifact/artifact-panel';
 import ReactMarkdown from 'react-markdown'
@@ -51,8 +51,9 @@ const ChatInterfaceComponent: React.FC = () => {
   // Initialize current chat based on URL parameter, last opened chat, or create new chat
   const [currentChat, setCurrentChat] = useState<Chat>(() => {
     if (typeof window !== 'undefined') {
-      if (userPrompt && taskPrompt && !chatId) {
-        return createNewChat();
+      if (chatId === 'new') {
+        console.log("Creating new chat from parameter")
+        return createNewChat(); // Create a new chat if cid is 'new'
       }
 
       if (chatId) {
@@ -407,8 +408,9 @@ const ChatInterfaceComponent: React.FC = () => {
       try {
         isSubmitting.current = true;
 
-        const newChat = createNewChat();
-        const savedChat = getChat(newChat.id);
+        // Use the current chat instead of creating a new one
+        const currentChatId = currentChat.id; // Assuming currentChat is already defined in your component
+        const savedChat = getChat(currentChatId);
         
         if (savedChat) {
           // Update URL first, before any state changes
@@ -423,7 +425,7 @@ const ChatInterfaceComponent: React.FC = () => {
             createdAt: new Date()
           };
 
-          // Then update states
+          // Update states
           setChats(prevChats => [savedChat, ...prevChats]);
           setCurrentChat(savedChat);
           setLastOpenedChatId(savedChat.id);
@@ -435,14 +437,66 @@ const ChatInterfaceComponent: React.FC = () => {
             sender: 'user'
           });
 
-          
-
           await append(userMessage);
         }
       } catch (error) {
         console.error('❌ Error sending message:', error);
       } finally {
         isSubmitting.current = false;
+      }
+    }
+
+    // Check for template artifact when chatId is 'new'
+    if (chatId === 'new' && getTemplateArtifact() !== null) {
+      const templateArtifact = getTemplateArtifact();
+      
+      if (templateArtifact) { // Ensure templateArtifact is not null
+        const artifactMessage = {
+          id: Math.random().toString(36).substr(2, 7),
+          content: `<artifact title="${templateArtifact.title}" type="${templateArtifact.type}">${templateArtifact.content}</artifact> \n use this as template for my following input`,
+          role: 'user' as const,
+          createdAt: new Date(),
+          artifact: {
+            title: templateArtifact.title,
+            content: templateArtifact.content,
+            type: templateArtifact.type
+          }
+        };
+
+        try {
+          isSubmitting.current = true;
+
+          const currentChatId = currentChat.id; // Use the current chat instead of creating a new one
+          const savedChat = getChat(currentChatId);
+          
+          if (savedChat) {
+            // Update URL first, before any state changes
+            await router.replace(`/chat?cid=${savedChat.id}`);
+
+            // Update states
+            setChats(prevChats => [savedChat, ...prevChats]);
+            setCurrentChat(savedChat);
+            setLastOpenedChatId(savedChat.id);
+
+            // Save message
+            saveMessage(savedChat.id, {
+              id: parseInt(artifactMessage.id, 36),
+              text: artifactMessage.content,
+              sender: 'user',
+              artifact: {
+                title: templateArtifact.title,
+                content: templateArtifact.content,
+                type: templateArtifact.type
+              }
+            });
+
+            await append(artifactMessage);
+          }
+        } catch (error) {
+          console.error('❌ Error sending template artifact message:', error);
+        } finally {
+          isSubmitting.current = false;
+        }
       }
     }
   };
@@ -457,7 +511,13 @@ const ChatInterfaceComponent: React.FC = () => {
   useEffect(() => {
     let mounted = true;
 
+    // Check if userPrompt or taskPrompt is present and chatId is not set
     if ((userPrompt || taskPrompt) && !chatId && mounted) {
+      handleAutoSubmit();
+    }
+
+    // Check if chatId is 'new' and there is a template artifact
+    if (chatId === 'new' && getTemplateArtifact() !== null) {
       handleAutoSubmit();
     }
 
@@ -469,9 +529,7 @@ const ChatInterfaceComponent: React.FC = () => {
   const findLastArtifact = (messages: Message[]) => {
     for (let i = messages.length - 1; i >= 0; i--) {
       const message = messages[i];
-      const isAssistant = message.sender === 'ai';
-
-      if (isAssistant && message.artifact) {
+      if ( message.artifact) {
         return message.artifact;
       }
     }
@@ -641,7 +699,7 @@ const ChatInterfaceComponent: React.FC = () => {
                             );
                           })()}
                         </div>
-                        {message.role === 'assistant' && (() => {
+                        {(message.role === 'user' || message.role === 'assistant') && (() => {
                           const startTagMatch = message.content.match(/<artifact title="([^"]*)" type="([^"]*)">/);
                           const hasClosingTag = message.content.includes('</artifact>');
                           
