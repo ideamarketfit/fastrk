@@ -1,4 +1,4 @@
-import { LandingPageComponent } from '@/components/landing-page';
+import { LandingPageComponent } from '@/components/seo-pages/landing-page';
 import { getSupportedLanguageCodes } from '@/lib/languages';
 
 export default function LocaleHomePage() {

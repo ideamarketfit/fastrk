@@ -1,4 +1,4 @@
-import { TemplateCollection } from "@/components/template-collection"
+import { TemplateCollection } from "@/components/seo-pages/template-collection"
 import { getTemplateData } from "@/lib/templates"
 import { LocalizedTemplateData, TranslatedData } from "@/lib/airtable"
 import { getSupportedLanguageCodes } from '@/lib/languages'

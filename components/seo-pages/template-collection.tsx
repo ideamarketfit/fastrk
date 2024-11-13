@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import Link from "next/link"
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
-import { HeaderComponent } from "@/components/header"
-import { FooterComponent } from "@/components/footer"
+import { HeaderComponent } from "@/components/seo-pages/header"
+import { FooterComponent } from "@/components/seo-pages/footer"
 import dynamic from 'next/dynamic'
 import useTranslation from '@/hooks/useTranslation'
 import { useLocalizedNavigate } from '@/hooks/useLocalizedNavigate';
@@ -26,7 +26,7 @@ interface Template {
 }
 
 // Dynamic import of ArtifactPanel with SSR disabled
-const ArtifactPanel = dynamic(() => import('@/components/artifact-panel'), {
+const ArtifactPanel = dynamic(() => import('@/components/artifact/artifact-panel'), {
   ssr: false,
 })
 

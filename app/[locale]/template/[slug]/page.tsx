@@ -1,4 +1,4 @@
-import { TemplatePage } from "@/components/template-page"
+import { TemplatePage } from "@/components/seo-pages/template-page"
 import { getTemplateData } from "@/lib/templates"
 import { LocalizedTemplateData, TranslatedData } from "@/lib/airtable"
 import { notFound } from "next/navigation"

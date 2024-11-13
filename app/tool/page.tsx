@@ -1,4 +1,4 @@
-import { AiDiagrammingTools } from "@/components/tool-collection";
+import { AiDiagrammingTools } from "@/components/seo-pages/tool-collection";
 import { getToolData } from "@/lib/tools";
 import { LocalizedToolData, TranslatedData } from "@/lib/airtable";
 import { Metadata } from 'next';

@@ -11,8 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useChat } from 'ai/react'
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getChat, getChatIds, getAllChats, saveMessage, getLastOpenedChatId, setLastOpenedChatId, createNewChat, updateChatTitle, getSidebarState, setSidebarState } from '@/lib/chat';
-import ChatSidebar from '@/components/chat-sidebar'
-import ArtifactPanel from './artifact-panel';
+import ChatSidebar from '@/components/app/chat-sidebar'
+import ArtifactPanel from '../artifact/artifact-panel';
 import ReactMarkdown from 'react-markdown'
 
 export interface Message {

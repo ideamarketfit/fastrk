@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { ChevronLeft, Plus } from 'lucide-react'
-import { Message } from '@/components/chat-interface'
+import { Message } from '@/components/app/chat-interface'
 
 interface Chat {
   id: string

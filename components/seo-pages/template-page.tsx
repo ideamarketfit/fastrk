@@ -6,14 +6,14 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
-import { HeaderComponent } from "@/components/header"
-import { FooterComponent } from "@/components/footer"
+import { HeaderComponent } from "@/components/seo-pages/header"
+import { FooterComponent } from "@/components/seo-pages/footer"
 import dynamic from 'next/dynamic'
 import ReactMarkdown from 'react-markdown'
 import useTranslation from '@/hooks/useTranslation';
 import { useRouter } from 'next/navigation';
 
-const ArtifactPanel = dynamic(() => import('@/components/artifact-panel'), {
+const ArtifactPanel = dynamic(() => import('@/components/artifact/artifact-panel'), {
   ssr: false,
 })
 

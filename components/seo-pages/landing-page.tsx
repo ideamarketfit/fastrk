@@ -14,8 +14,8 @@ import {
   Workflow,
   ChevronDown,
 } from 'lucide-react';
-import { HeaderComponent } from '@/components/header';
-import { FooterComponent } from '@/components/footer';
+import { HeaderComponent } from '@/components/seo-pages/header';
+import { FooterComponent } from '@/components/seo-pages/footer';
 import { ParticlesEffect } from '@/components/mouse-particles';
 
 export function LandingPageComponent() {

@@ -5,13 +5,13 @@ import Link from "next/link"
 import { ArrowRight, ChevronDown, ChevronUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
-import { HeaderComponent } from "@/components/header"
-import { FooterComponent } from "@/components/footer"
+import { HeaderComponent } from "@/components/seo-pages/header"
+import { FooterComponent } from "@/components/seo-pages/footer"
 import { useTranslation } from '@/hooks/useTranslation'
 import dynamic from 'next/dynamic'
 
 // Add ArtifactPanel dynamic import
-const ArtifactPanel = dynamic(() => import('@/components/artifact-panel'), {
+const ArtifactPanel = dynamic(() => import('@/components/artifact/artifact-panel'), {
   ssr: false,
 })
 

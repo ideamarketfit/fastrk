@@ -7,12 +7,12 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useRouter } from 'next/navigation'
 import { useTranslation } from '@/hooks/useTranslation'
-import { HeaderComponent } from '@/components/header'
+import { HeaderComponent } from '@/components/seo-pages/header'
 import { ParticlesEffect } from '@/components/mouse-particles'
-import { FooterComponent } from '@/components/footer'
+import { FooterComponent } from '@/components/seo-pages/footer'
 import dynamic from 'next/dynamic'
 
-const ArtifactPanel = dynamic(() => import('@/components/artifact-panel'), {
+const ArtifactPanel = dynamic(() => import('@/components/artifact/artifact-panel'), {
   ssr: false,
 })
 

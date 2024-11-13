@@ -1,4 +1,4 @@
-import { ToolLandingPage } from '@/components/tool-landing-page'
+import { ToolLandingPage } from '@/components/seo-pages/tool-landing-page'
 import { getToolData } from '@/lib/tools'
 import { LocalizedToolData, TranslatedData } from '@/lib/airtable'
 import { notFound } from 'next/navigation'
