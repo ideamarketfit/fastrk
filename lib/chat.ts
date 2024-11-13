@@ -117,3 +117,12 @@ export const getSidebarState = (): boolean => {
 export const setSidebarState = (isOpen: boolean): void => {
   localStorage.setItem('sidebarOpen', JSON.stringify(isOpen));
 };
+
+export const setTemplateArtifact = (artifact: { title: string; content: string; type: 'diagram' | 'doc' | 'reveal-slides' }): void => {
+  localStorage.setItem('template_artifact', JSON.stringify(artifact));
+};
+
+export const getTemplateArtifact = (): { title: string; content: string; type: 'diagram' | 'doc' | 'reveal-slides' } | null => {
+  const artifactData = localStorage.getItem('template_artifact');
+  return artifactData ? JSON.parse(artifactData) : null;
+};

@@ -51,7 +51,7 @@ export function ToolLandingPage({
     e.preventDefault()
     if (input.trim() !== '') {
       // Navigate to /chat with both user_prompt and prompt (command) as query parameters
-      router.push(`/chat?user_prompt=${encodeURIComponent(input.trim())}&task_prompt=${encodeURIComponent(command)}`)
+      router.push(`/chat?cid=new&user_prompt=${encodeURIComponent(input.trim())}&task_prompt=${encodeURIComponent(command)}`)
     }
   }
 

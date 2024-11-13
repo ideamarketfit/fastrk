@@ -1,4 +1,13 @@
 {
+  "tool_landing_3_easy_steps": "3つの簡単ステップ",
+  "tool_landing_how_it_works": "使い方",
+  "tool_landing_create_flow_charts": "AI搭載ツールで数分で魅力的なフローチャートを作成。アイデアを簡単にビジュアルの傑作に変換。",
+  "tool_landing_step1_title": "プロセスを説明する",
+  "tool_landing_step1_desc": "アイデアを入力するか、ワークフローやプロセスを説明するファイルをアップロードしてください。",
+  "tool_landing_step2_title": "AI生成",
+  "tool_landing_step2_desc": "AIがあなたの入力を分析し、説明に基づいてプロフェッショナルなフローチャートを作成します。",
+  "tool_landing_step3_title": "カスタマイズして共有",
+  "tool_landing_step3_desc": "フローチャートを微調整し、すぐにチームと共有またはエクスポートしましょう。",
   "title": "チャット図",
   "tagline": "最も簡単に図を作成する方法",
   "description": "AIを活用した会話を通じて、プロフェッショナルな図を簡単に作成できます。",

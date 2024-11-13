@@ -1,4 +1,13 @@
 {
+  "tool_landing_3_easy_steps": "3 個簡單步驟",
+  "tool_landing_how_it_works": "運作方式",
+  "tool_landing_create_flow_charts": "使用我們的AI驅動工具，只需幾分鐘即可創建令人驚豔的流程圖。輕鬆將您的想法轉化為視覺傑作。",
+  "tool_landing_step1_title": "描述您的流程",
+  "tool_landing_step1_desc": "輸入您的想法或上傳描述您的工作流程或過程的文件。",
+  "tool_landing_step2_title": "AI生成",
+  "tool_landing_step2_desc": "我們的AI會分析您的輸入，並根據您的描述創建專業的流程圖。",
+  "tool_landing_step3_title": "自訂和分享",
+  "tool_landing_step3_desc": "微調您的流程圖，然後立即匯出或與團隊分享。",
   "title": "聊天圖表",
   "tagline": "最簡單的圖表製作方式",
   "description": "透過人工智慧驅動的對話輕鬆創建專業圖表。",
