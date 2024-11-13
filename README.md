@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Artifact Generation Through Chat 
 
-## Getting Started
+## Project Overview
 
-First, run the development server:
+The project is a Next.js application that uses AI to generate various types of artifacts through a chat interface. The core components are:
+- SEO-optimized landing pages （主要SEO页面类型）
+- Artifact generation system （定义了App产出的workpiece的类型）
+- Internationalization i18n support （多语言支持）
+- CMS integration - Airtable （CMS内容管理&生成）
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+![Chat Diagram Demo](public/chat-diagram-demo.png)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development Handbook
+> This playbook will help you adapt the Chat Diagram codebase to create your own artifact generation application (e.g., document generator, table creator, presentation maker, etc.).
+通过完成以下任务，你可以将该项目改造成任何 GPT Wrapper, 如：Diagram Generator, Job Description Generator, Essay Writer, Slides Generator, etc.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Part 1: SEO & Website Structure
 
-## Deploy on Vercel
+- [ ] Define Pages - 自定义SEO页面 
+    Recommend V0 for component generatetion 建议用V0直接生成以下页面
+    1. [Landing Page](components/seo-pages/landing-page.tsx) - 官网
+    2. [Tool Landing Page](components/seo-pages/tool-landing-page.tsx) - 工具页面
+    3. [Template Landing Page](components/seo-pages/template-landing-page.tsx) - 模板页面
+    4. [Tool Collection](components/seo-pages/tool-collection.tsx) - 工具集合页面
+    5. [Template Collection](components/seo-pages/template-collection.tsx) - 模板集合页面
+- [ ] Add all English content from new components to `public/locales/en.json` for internationalization - 新增组件更新英文部分的内容
+- [ ] Setup CMS - Airtable (and update content data structure if you are not using default) - 在Airtable 上设置工具、模板页面内容
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Part 2: Product Development
+- [ ] Define Artifact System (optional) - 定义App产出的workpiece的类型 (reference: components/artifact/artifact-panel.tsx)
+- [ ] Update System Prompt - 更新生成 workpiece 的系统提示词
+
+### Part 3: Before Deployment
+- [ ] Generate all language translations usign `yarn translate` - 一键翻译页面内容
+- [ ] set new domain in `next-sitemap.config.mjs` - 设置新域名
+- [ ] set environment variables in `.env.local` - 设置环境变量
+    ```env
+    AIRTABLE_API_KEY=your_api_key
+    AIRTABLE_BASE_ID=your_base_id
+    OPENAI_API_KEY=your_openai_key
+    SITE_URL=your_domain
+    ```
+
+
+
+
+## More Details
+- this project uses 11 languages including English, Japanese, Korean, Traditional Chinese, Spanish, French, Portuguese, German, Italian, Hebrew, and Arabic. - 该项目支持11种语言
+- Project Structure
+    ```
+    /
+    ├── app/ # Next.js app router
+    ├── components/
+    │ ├── artifact/ # Artifact type components
+    │ ├── seo-pages/ # SEO-optimized page components
+    │ └── ui/ # Shared UI components
+    ├── lib/ # Core utilities
+    └── public/ # Static assets & locales
+    ```
+
+
+
+## Acknowledgments
+
+- Built with [Next.js](https://nextjs.org/)
+- Diagrams powered by [Mermaid.js](https://mermaid.js.org/)
+- AI capabilities by [OpenAI](https://openai.com/) & [Claude](https://www.anthropic.com/)
+- CMS by [Airtable](https://airtable.com/)
+- Styling with [TailwindCSS](https://tailwindcss.com/)
+- Build by [V0](https://v0.dev/) & [Cursor](https://www.cursor.com/)
+
+## Authors
+
+- Victor Zhang - [@victorzhrn](https://github.com/victorzhrn)
+
+
