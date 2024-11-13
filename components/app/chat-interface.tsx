@@ -512,7 +512,7 @@ const ChatInterfaceComponent: React.FC = () => {
     let mounted = true;
 
     // Check if userPrompt or taskPrompt is present and chatId is not set
-    if ((userPrompt || taskPrompt) && !chatId && mounted) {
+    if ((userPrompt || taskPrompt) && chatId === 'new' && mounted) {
       handleAutoSubmit();
     }
 
