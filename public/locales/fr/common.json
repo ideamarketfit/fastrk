@@ -1,4 +1,13 @@
 {
+  "tool_landing_3_easy_steps": "3 ÉTAPES SIMPLES",
+  "tool_landing_how_it_works": "Comment ça fonctionne",
+  "tool_landing_create_flow_charts": "Créez des organigrammes époustouflants en quelques minutes avec notre outil alimenté par l'IA. Transformez vos idées en chefs-d'œuvre visuels sans effort.",
+  "tool_landing_step1_title": "Décrivez votre processus",
+  "tool_landing_step1_desc": "Saisissez vos idées ou téléchargez un fichier décrivant votre flux de travail ou processus.",
+  "tool_landing_step2_title": "Génération par IA",
+  "tool_landing_step2_desc": "Notre IA analyse vos données et crée un organigramme professionnel basé sur votre description.",
+  "tool_landing_step3_title": "Personnaliser et partager",
+  "tool_landing_step3_desc": "Peaufinez votre organigramme, puis exportez-le ou partagez-le instantanément avec votre équipe.",
   "title": "Diagramme de discussion",
   "tagline": "La manière la plus simple de créer des diagrammes",
   "description": "Créez des diagrammes professionnels sans effort grâce à des conversations assistées par l'IA.",

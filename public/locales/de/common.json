@@ -1,4 +1,13 @@
 {
+  "tool_landing_3_easy_steps": "3 EINFACHE SCHRITTE",
+  "tool_landing_how_it_works": "Wie es funktioniert",
+  "tool_landing_create_flow_charts": "Erstellen Sie atemberaubende Flussdiagramme in wenigen Minuten mit unserem KI-gestützten Tool. Verwandeln Sie Ihre Ideen mühelos in visuelle Meisterwerke.",
+  "tool_landing_step1_title": "Beschreiben Sie Ihren Prozess",
+  "tool_landing_step1_desc": "Geben Sie Ihre Ideen ein oder laden Sie eine Datei hoch, die Ihren Arbeitsablauf oder Prozess beschreibt.",
+  "tool_landing_step2_title": "KI-Generierung",
+  "tool_landing_step2_desc": "Unsere KI analysiert Ihre Eingaben und erstellt basierend auf Ihrer Beschreibung ein professionelles Flussdiagramm.",
+  "tool_landing_step3_title": "Anpassen und Teilen",
+  "tool_landing_step3_desc": "Optimieren Sie Ihr Flussdiagramm und exportieren oder teilen Sie es sofort mit Ihrem Team.",
   "title": "Chat-Diagramm",
   "tagline": "Einfachster Weg, Diagramme zu erstellen",
   "description": "Erstellen Sie mühelos professionelle Diagramme durch KI-gestützte Unterhaltungen.",

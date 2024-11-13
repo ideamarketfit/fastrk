@@ -1,4 +1,13 @@
 {
+  "tool_landing_3_easy_steps": "3 SEMPLICI PASSAGGI",
+  "tool_landing_how_it_works": "Come funziona",
+  "tool_landing_create_flow_charts": "Crea diagrammi di flusso straordinari in pochi minuti con il nostro strumento potenziato dall'IA. Trasforma le tue idee in capolavori visivi senza sforzo.",
+  "tool_landing_step1_title": "Descrivi il tuo processo",
+  "tool_landing_step1_desc": "Inserisci le tue idee o carica un file che descriva il tuo flusso di lavoro o processo.",
+  "tool_landing_step2_title": "Generazione AI",
+  "tool_landing_step2_desc": "La nostra IA analizza il tuo input e crea un diagramma di flusso professionale basato sulla tua descrizione.",
+  "tool_landing_step3_title": "Personalizza e Condividi",
+  "tool_landing_step3_desc": "Affina il tuo diagramma di flusso, quindi esportalo o condividilo immediatamente con il tuo team.",
   "title": "Diagramma della chat",
   "tagline": "Il modo più semplice per creare diagrammi",
   "description": "Crea diagrammi professionali senza sforzo attraverso conversazioni potenziate dall'IA.",

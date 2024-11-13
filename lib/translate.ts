@@ -31,13 +31,15 @@ const SUPPORTED_LANGUAGES: Language[] = [
   { code: 'he', name: 'Hebrew' }
 ]
 
-async function translateJson(content: TranslationContent, targetLang: string): Promise<TranslationContent> {
+async function translateJson(content: TranslationContent, existingTranslation: TranslationContent, targetLang: string): Promise<TranslationContent> {
   const translatedContent: TranslationContent = {}
 
   for (const [key, value] of Object.entries(content)) {
     if (typeof value === 'string') {
-      try {
-        const prompt = `You are a native ${targetLang} speaker and professional translator. 
+      if (!existingTranslation.hasOwnProperty(key)) {
+        console.log("translating", key, value)
+        try {
+          const prompt = `You are a native ${targetLang} speaker and professional translator. 
 This is a JSON key-value pair from a website localization file.
 
 Original English text: "${value}"
@@ -51,25 +53,35 @@ Instructions:
 6. Do not wrap the output in quotes - the JSON stringification will handle that
 
 The output will be used as a JSON string value, so ensure it's properly formatted.`
-        
-        const translation = await generateText({
-          model: openai('gpt-4o'),
-          prompt,
-        })
+          
+          const translation = await generateText({
+            model: openai('gpt-4o'),
+            prompt,
+          })
 
-        // Remove any extra quotes that might be in the translation
-        const cleanTranslation = translation.text.trim().replace(/^["']|["']$/g, '')
-        translatedContent[key] = cleanTranslation || value
-        
-        await new Promise(resolve => setTimeout(resolve, 500))
-      } catch (error) {
-        console.error(`Error translating key ${key}:`, error)
-        translatedContent[key] = value
+          // Remove any extra quotes that might be in the translation
+          const cleanTranslation = translation.text.trim().replace(/^["']|["']$/g, '')
+          translatedContent[key] = cleanTranslation || value
+          
+          await new Promise(resolve => setTimeout(resolve, 500))
+        } catch (error) {
+          console.error(`Error translating key ${key}:`, error)
+          translatedContent[key] = value
+        }
+      } else {
+        // console.log(`Key ${key} already translated, skipping...`);
       }
     } else if (typeof value === 'object') {
-      translatedContent[key] = await translateJson(value as TranslationContent, targetLang)
+      translatedContent[key] = await translateJson(value as TranslationContent, existingTranslation, targetLang)
     } else {
       translatedContent[key] = value
+    }
+  }
+
+  // Merge existing translation with the newly translated content
+  for (const [key, value] of Object.entries(existingTranslation)) {
+    if (!translatedContent.hasOwnProperty(key)) {
+      translatedContent[key] = value;
     }
   }
 
@@ -94,7 +106,9 @@ async function main() {
     }
 
     try {
-      const translatedContent = await translateJson(sourceContent, lang.name)
+      // Read existing translation file if it exists
+      const targetContent = JSON.parse(fs.readFileSync(targetFile, 'utf8'))
+      const translatedContent = await translateJson(sourceContent , targetContent, lang.name)
       
       // Preserve the original localeCode
       translatedContent.localeCode = lang.code

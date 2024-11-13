@@ -1,4 +1,13 @@
 {
+  "tool_landing_3_easy_steps": "3단계로 간편하게",
+  "tool_landing_how_it_works": "작동 방식",
+  "tool_landing_create_flow_charts": "AI 기반 도구로 몇 분 만에 멋진 순서도를 만들어 보세요. 아이디어를 손쉽게 시각적 걸작으로 변환하세요.",
+  "tool_landing_step1_title": "프로세스를 설명하세요",
+  "tool_landing_step1_desc": "아이디어를 입력하거나 워크플로우 또는 프로세스를 설명하는 파일을 업로드하세요.",
+  "tool_landing_step2_title": "AI 생성",
+  "tool_landing_step2_desc": "저희 AI는 입력 내용을 분석하여 설명에 기반한 전문적인 순서도를 생성합니다.",
+  "tool_landing_step3_title": "사용자 정의 및 공유",
+  "tool_landing_step3_desc": "흐름도를 세밀하게 조정한 후, 즉시 팀과 공유하거나 내보내세요.",
   "title": "채팅 다이어그램",
   "tagline": "다이어그램을 쉽게 만드는 방법",
   "description": "AI 기반 대화를 통해 손쉽게 전문적인 다이어그램을 생성하세요.",
