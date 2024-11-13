@@ -39,8 +39,9 @@ The project is a Next.js application that uses AI to generate various types of a
 
 ### Part 3: Before Deployment
 - [ ] Generate all language translations usign `yarn translate` - 一键翻译页面内容
-- [ ] set new domain in `next-sitemap.config.mjs` - 设置新域名
-- [ ] set environment variables in `.env.local` - 设置环境变量
+- [ ] Set new domain in `next-sitemap.config.mjs` - 设置新域名
+- [ ] Set plausible and Google Analytics - 设置plausible和Google Analytics
+- [ ] Set environment variables in `.env.local` - 设置环境变量
     ```env
     AIRTABLE_API_KEY=your_api_key
     AIRTABLE_BASE_ID=your_base_id
