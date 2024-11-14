@@ -1,195 +1,215 @@
-'use client';
+'use client'
 
-import { useTranslation } from '@/hooks/useTranslation';
-import Link from 'next/link';
-import Image from 'next/image';
-import {
-  Network,
-  GitBranch,
-  Database,
-  PieChart,
-  Map,
-  LayoutGrid,
-  Clock,
-  Workflow,
-  ChevronDown,
-} from 'lucide-react';
-import { HeaderComponent } from '@/components/seo-pages/header';
-import { FooterComponent } from '@/components/seo-pages/footer';
-import { ParticlesEffect } from '@/components/mouse-particles';
+import Link from 'next/link'
+import Image from 'next/image'
+import { useState } from 'react'
+import { ChevronDown, ChevronUp, FileText, MapIcon as Diagram, Presentation, Repeat, Sparkles, Users, Clock, Download } from 'lucide-react'
+import { HeaderComponent } from '@/components/seo-pages/header'
+import { FooterComponent } from '@/components/seo-pages/footer'
+import useTranslation from '@/hooks/useTranslation'
 
 export function LandingPageComponent() {
   const { t } = useTranslation();
 
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
+
   const faqs = [
     {
-      question: t('faq1Question'),
-      answer: t('faq1Answer'),
+      question: t("home-faq-howDoesFastrkAIWork"),
+      answer: t("home-faq-howFastrkWorksAnswer")
     },
     {
-      question: t('faq2Question'),
-      answer: t('faq2Answer'),
+      question: t("home-faq-canICollaborate"),
+      answer: t("home-faq-canICollaborateAnswer")
     },
     {
-      question: t('faq3Question'),
-      answer: t('faq3Answer'),
+      question: t("home-faq-typesOfContent"),
+      answer: t("home-faq-typesOfContentAnswer")
     },
     {
-      question: t('faq4Question'),
-      answer: t('faq4Answer'),
-    },
-  ];
+      question: t("home-faq-exportMyWork"),
+      answer: t("home-faq-exportMyWorkAnswer")
+    }
+  ]
 
-  const diagrams = [
+  const features = [
     {
-      icon: Network,
-      title: t('diagramMindMap'),
-      description: t('diagramMindMapDesc'),
+      icon: FileText,
+      title: t("home-feature-documents"),
+      description: t("home-feature-documentsDescription")
     },
     {
-      icon: GitBranch,
-      title: t('diagramFlowChart'),
-      description: t('diagramFlowChartDesc'),
+      icon: Diagram,
+      title: t("home-feature-diagrams"),
+      description: t("home-feature-diagramsDescription")
     },
     {
-      icon: Database,
-      title: t('diagramERD'),
-      description: t('diagramERDDesc'),
+      icon: Presentation,
+      title: t("home-feature-slides"),
+      description: t("home-feature-slidesDescription")
     },
     {
-      icon: PieChart,
-      title: t('diagramPieChart'),
-      description: t('diagramPieChartDesc'),
+      icon: Repeat,
+      title: t("home-feature-iterativeProcess"),
+      description: t("home-feature-iterativeProcessDescription")
     },
     {
-      icon: Map,
-      title: t('diagramUserJourney'),
-      description: t('diagramUserJourneyDesc'),
+      icon: Sparkles,
+      title: t("home-feature-aiEnhancement"),
+      description: t("home-feature-aiEnhancementDescription")
     },
     {
-      icon: LayoutGrid,
-      title: t('diagramQuadrant'),
-      description: t('diagramQuadrantDesc'),
+      icon: Users,
+      title: t("home-feature-collaboration"),
+      description: t("home-feature-collaborationDescription")
     },
     {
       icon: Clock,
-      title: t('diagramTimeline'),
-      description: t('diagramTimelineDesc'),
+      title: t("home-feature-timeSaving"),
+      description: t("home-feature-timeSavingDescription")
     },
     {
-      icon: Workflow,
-      title: t('diagramUML'),
-      description: t('diagramUMLDesc'),
-    },
-  ];
+      icon: Download,
+      title: t("home-feature-easyExport"),
+      description: t("home-feature-easyExportDescription")
+    }
+  ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ParticlesEffect />
+    <div className="min-h-screen bg-sky-50">
       <HeaderComponent />
-
       <main className="container mx-auto px-4 py-12">
         {/* Hero Section */}
-        <section className="text-center mb-20 relative py-16 md:py-24 lg:py-32">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 lg:mb-6 text-gray-900">{t('tagline')}</h1>
-          <p className="text-lg md:text-xl text-gray-600 mb-10 lg:mb-16 max-w-3xl mx-auto">{t('description')}</p>
-          <Link
-            href="/chat"
-            className="bg-purple-600 text-white px-6 py-3 rounded-md text-lg hover:bg-purple-700 transition duration-300 mb-4 lg:mb-6"
-          >
-            {t('startDiagramming')}
+        <section className="text-center mb-20 relative">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">{t("hero-title")}</h1>
+          <p className="text-lg md:text-xl text-gray-600 mb-12">
+            {t("hero-description")}
+          </p>
+          <Link href="/chat">
+            <button className="bg-yellow-400 text-white px-6 py-3 rounded-md text-lg hover:bg-yellow-500 transition duration-300 mb-4">
+              {t("hero-startCreating")}
+            </button>
           </Link>
-          <p className="text-sm text-gray-500 mb-16 lg:mb-24 mt-2">{t('noSignupNeeded')}</p>
+          <p className="text-sm text-gray-500 mb-16">{t("hero-noCreditCard")}</p>
 
           {/* Window Frame for Demo */}
-          <div className="mt-16 lg:mt-24 bg-white rounded-lg shadow-2xl overflow-hidden max-w-4xl mx-auto relative">
+          <div className="mt-16 bg-white rounded-lg shadow-2xl overflow-hidden max-w-4xl mx-auto relative">
             <div className="bg-gray-200 px-4 py-2 flex items-center space-x-2">
               <div className="w-3 h-3 rounded-full bg-red-500"></div>
               <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
               <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              <div className="flex-grow text-center text-sm text-gray-600">chatdiagram.com</div>
+              <div className="flex-grow text-center text-sm text-gray-600">fastrk.ai</div>
             </div>
-            <div className="bg-gray-100">
+            <div className="p-4">
               <Image 
                 src="/chat-diagram-demo.png" 
-                alt="Chat Diagram Demo" 
-                width={800} 
-                height={600} 
-                className="w-full h-auto rounded-md shadow-md"
+                height={400} 
+                width={600} 
+                alt="Fastrk.AI Demo" 
+                className="w-full rounded-md shadow"
               />
             </div>
           </div>
         </section>
 
-        {/* Supported Diagrams Section */}
-        <section className="py-16 bg-gray-50 mb-20">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">{t('supportedDiagramTypes')}</h2>
+        {/* Features Section */}
+        <section className="py-16 bg-sky-100 mb-20 rounded-lg">
+          <div className="container mx-auto px-8">
+            <h2 className="text-3xl font-bold text-center mb-12">Powerful Features</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {diagrams.map((diagram, index) => (
+              {features.map((feature, index) => (
                 <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-                  <diagram.icon className="w-12 h-12 text-purple-600 mb-4" />
-                  <h3 className="text-xl font-semibold mb-2">{diagram.title}</h3>
-                  <p className="text-gray-600">{diagram.description}</p>
+                  <feature.icon className="w-12 h-12 text-yellow-400 mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-gray-600">{feature.description}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Features Section */}
+        {/* How It Works Section */}
         <section className="mb-20">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">{t('keyFeatures')}</h2>
-          <div className="grid md:grid-cols-2 gap-8">
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">How Fastrk.AI Works</h2>
+          <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">{t('aiPoweredDiagramming')}</h3>
-              <p className="text-gray-600">{t('aiPoweredDiagrammingDesc')}</p>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">1. Start Your Project</h3>
+              <p className="text-gray-600">Begin with your ideas or initial content. Choose from documents, diagrams, or slides.</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">{t('realTimeCollaboration')}</h3>
-              <p className="text-gray-600">{t('realTimeCollaborationDesc')}</p>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">2. AI-Powered Iteration</h3>
+              <p className="text-gray-600">Our AI analyzes your work and suggests improvements, helping you refine your content step-by-step.</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">{t('extensiveTemplateLibrary')}</h3>
-              <p className="text-gray-600">{t('extensiveTemplateLibraryDesc')}</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">{t('exportIntegration')}</h3>
-              <p className="text-gray-600">{t('exportIntegrationDesc')}</p>
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">3. Collaborate & Finalize</h3>
+              <p className="text-gray-600">Work with your team in real-time, incorporate feedback, and polish your project to perfection.</p>
             </div>
           </div>
         </section>
 
         {/* FAQ Section */}
         <section className="mb-20">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">{t('frequentlyAskedQuestions')}</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">Frequently Asked Questions</h2>
           <div className="space-y-4">
             {faqs.map((faq, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="flex justify-between items-center w-full p-4 text-left">
+                <button
+                  className="flex justify-between items-center w-full p-4 text-left"
+                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                >
                   <span className="font-semibold text-gray-800">{faq.question}</span>
-                  <ChevronDown className="w-5 h-5 text-gray-600" />
-                </div>
-                <div className="p-4 bg-gray-50">
-                  <p className="text-gray-600">{faq.answer}</p>
-                </div>
+                  {openFaq === index ? (
+                    <ChevronUp className="w-5 h-5 text-gray-600" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-gray-600" />
+                  )}
+                </button>
+                {openFaq === index && (
+                  <div className="p-4 bg-sky-50">
+                    <p className="text-gray-600">{faq.answer}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="bg-purple-100 py-20 rounded-lg">
+        <section className="bg-yellow-50 py-20 rounded-lg">
           <div className="text-center">
-            <h2 className="text-3xl font-bold mb-6 text-gray-900">{t('readyToStartDiagramming')}</h2>
-            <p className="text-xl text-gray-600 mb-8">{t('joinOurUserGroup')}</p>
-            <Link href="/chat" className="bg-purple-600 text-white px-6 py-3 rounded-md text-lg hover:bg-purple-700 transition duration-300">
-              {t('signUpNow')}
+            <h2 className="text-3xl font-bold mb-6 text-gray-900">Ready to fast track your work?</h2>
+            <p className="text-xl text-gray-600 mb-8">Join thousands of professionals already using Fastrk.AI to streamline their content creation.</p>
+            <Link href="/chat">
+              <button className="bg-yellow-400 text-white px-6 py-3 rounded-md text-lg hover:bg-yellow-500 transition duration-300">
+                Start Your Free Trial
+              </button>
             </Link>
           </div>
         </section>
+        <style jsx>{`
+          @keyframes cycle {
+            0%, 20% { transform: translateY(0); }
+            25%, 45% { transform: translateY(-1.25em); }
+            50%, 70% { transform: translateY(-2.5em); }
+            75%, 95% { transform: translateY(-3.75em); }
+            100% { transform: translateY(-5em); }
+          }
+          .highlight {
+            background: linear-gradient(120deg, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0.3) 100%);
+            border-radius: 4px;
+            padding: 2px 4px;
+            margin: 0 -4px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #1a202c;
+          }
+          .highlight:hover {
+            background: linear-gradient(120deg, rgba(255,215,0,0.3) 0%, rgba(255,215,0,0.4) 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+        `}</style>
       </main>
-
       <FooterComponent />
     </div>
   )
