@@ -37,7 +37,7 @@ export function HeaderComponent() {
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-8">
             <Link href={getLocalizedPath('/')} className="flex items-center space-x-2 group">
-              <MessageSquare className="h-9 w-9 text-purple-600 group-hover:text-purple-700 transition-colors duration-300" />
+              <MessageSquare className="h-9 w-9 text-yellow-400 group-hover:text-yellow-500 transition-colors duration-300" />
               <span className="text-xl sm:text-2xl font-bold text-gray-800">
                 Chat Diagram
               </span>
@@ -49,10 +49,10 @@ export function HeaderComponent() {
                     <li key={key}>
                       <Link 
                         href={getLocalizedPath(href)}
-                        className="text-lg text-gray-600 hover:text-purple-600 transition-colors duration-300 relative group"
+                        className="text-lg text-gray-600 hover:text-yellow-400 transition-colors duration-300 relative group"
                       >
                         {t(key)}
-                        <span className="absolute left-0 right-0 bottom-0 h-0.5 bg-purple-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                        <span className="absolute left-0 right-0 bottom-0 h-0.5 bg-yellow-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                       </Link>
                     </li>
                   ))}
@@ -64,13 +64,13 @@ export function HeaderComponent() {
             <div className="flex items-center space-x-6">
               <Button 
                 variant="ghost" 
-                className="hidden md:flex items-center text-lg text-gray-600 hover:text-purple-600 hover:bg-transparent transition-colors duration-300 relative group h-auto py-2"
+                className="hidden md:flex items-center text-lg text-gray-600 hover:text-yellow-400 hover:bg-transparent transition-colors duration-300 relative group h-auto py-2"
               >
                 {t('login')}
-                <span className="absolute left-0 right-0 bottom-0 h-0.5 bg-purple-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                <span className="absolute left-0 right-0 bottom-0 h-0.5 bg-yellow-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
               </Button>
               <Link href="/chat">
-                <Button className="bg-purple-600 text-white px-3 py-3 rounded-md text-lg hover:bg-purple-700 transition duration-300">
+                <Button className="bg-yellow-400 text-white px-3 py-3 rounded-md text-lg hover:bg-yellow-500 transition duration-300">
                   {t('getStarted')}
                 </Button>
               </Link>

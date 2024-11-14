@@ -60,7 +60,7 @@ export function TemplateCollection({ templates }: { templates: Template[] }) {
     : templates;
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 via-white to-blue-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-yellow-50 via-white to-green-50">
       <ParticlesEffect />
       <HeaderComponent />
 
@@ -88,7 +88,7 @@ export function TemplateCollection({ templates }: { templates: Template[] }) {
                       )}
                       className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors ${
                         selectedCategory === category.name
-                          ? "bg-purple-100 text-purple-900"
+                          ? "bg-yellow-100 text-yellow-900"
                           : "hover:bg-gray-100"
                       }`}
                     >
@@ -102,10 +102,10 @@ export function TemplateCollection({ templates }: { templates: Template[] }) {
             {/* Main Content */}
             <div className="space-y-8">
               {/* Hero Section */}
-              <div className="rounded-xl bg-purple-500 p-8 text-white">
+              <div className="rounded-xl bg-yellow-500 p-8 text-white">
                 <div>
                   <h1 className="mb-2 text-3xl font-bold">{t('diagramTemplatesTitle')}</h1>
-                  <p className="text-purple-100">
+                  <p className="text-yellow-100">
                     {t('diagramTemplatesDescription')}
                   </p>
                 </div>

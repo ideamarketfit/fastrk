@@ -94,7 +94,7 @@ export function ToolLandingPage({
         <section className="relative bg-gradient-to-b from-gray-50 to-white min-h-[calc(100vh-12rem)] flex items-center overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
-              <div className="w-[600px] h-[500px] bg-purple-200 rounded-full opacity-20 blur-3xl"></div>
+              <div className="w-[600px] h-[500px] bg-yellow-200 rounded-full opacity-20 blur-3xl"></div>
             </div>
             <div className="absolute right-0 bottom-0 translate-x-1/2 translate-y-1/2">
               <div className="w-[400px] h-[400px] bg-blue-200 rounded-full opacity-20 blur-3xl"></div>
@@ -104,7 +104,7 @@ export function ToolLandingPage({
             <div className="text-center mb-12">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 leading-tight">
                 {toolName}
-                <span className="text-purple-600 ml-2">
+                <span className="text-yellow-600 ml-2">
                   <Sparkles className="inline-block w-10 h-10 md:w-12 md:h-12 animate-pulse" />
                 </span>
               </h1>
@@ -140,7 +140,7 @@ export function ToolLandingPage({
                       handleSend(e as unknown as React.FormEvent<HTMLFormElement>);
                     }
                   }}
-                  className="w-full min-h-[120px] pr-12 pl-6 py-4 resize-none rounded-lg border-gray-300 focus:border-purple-500 focus:ring-0 transition duration-200"
+                  className="w-full min-h-[120px] pr-12 pl-6 py-4 resize-none rounded-lg border-gray-300 focus:border-yellow-400 focus:ring-0 transition duration-200"
                   rows={3}
                 />
                 <div className="absolute left-2 bottom-2 flex items-center space-x-2 z-10">
@@ -171,7 +171,7 @@ export function ToolLandingPage({
                   className={`absolute right-2 bottom-2 z-10 transition duration-200 ${
                     input.trim() === ''
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : 'bg-purple-600 hover:bg-purple-700 text-white'
+                      : 'bg-yellow-500 hover:bg-yellow-600 text-white'
                   }`}
                 >
                   <Send className="h-4 w-4 mr-2" />
@@ -219,7 +219,7 @@ export function ToolLandingPage({
         {/* How it works Section (New) */}
         <section className="py-12 bg-white">
           <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-5 py-16 md:px-10 md:py-20">
-            <p className="mb-2 text-center text-sm font-medium text-purple-600">
+            <p className="mb-2 text-center text-sm font-medium text-yellow-600">
               {t('tool_landing_3_easy_steps')}
             </p>
             <h2 className="text-center text-3xl font-bold text-gray-900 lg:text-4xl mb-4">
@@ -231,8 +231,8 @@ export function ToolLandingPage({
             <div className="flex flex-col items-start justify-center lg:flex-row">
               {/* Step 1 */}
               <div className="relative my-8 flex w-full rounded-md lg:mx-8 lg:flex-col">
-                <div className="flex h-16 w-16 items-center justify-center rounded-md bg-purple-100">
-                  <h3 className="text-3xl font-medium text-purple-600">1</h3>
+                <div className="flex h-16 w-16 items-center justify-center rounded-md bg-yellow-100">
+                  <h3 className="text-3xl font-medium text-yellow-600">1</h3>
                 </div>
                 <div className="ml-6 lg:ml-0">
                   <h4 className="mb-5 text-xl font-medium text-gray-900 lg:mt-8">
@@ -248,8 +248,8 @@ export function ToolLandingPage({
               </div>
               {/* Step 2 */}
               <div className="relative my-8 flex w-full rounded-md lg:mx-8 lg:flex-col">
-                <div className="flex h-16 w-16 items-center justify-center rounded-md bg-purple-100">
-                  <h3 className="text-3xl font-medium text-purple-600">2</h3>
+                <div className="flex h-16 w-16 items-center justify-center rounded-md bg-yellow-100">
+                  <h3 className="text-3xl font-medium text-yellow-600">2</h3>
                 </div>
                 <div className="ml-6 lg:ml-0">
                   <h4 className="mb-5 text-xl font-medium text-gray-900 lg:mt-8">
@@ -265,8 +265,8 @@ export function ToolLandingPage({
               </div>
               {/* Step 3 */}
               <div className="relative my-8 flex w-full rounded-md lg:mx-8 lg:flex-col">
-                <div className="flex h-16 w-16 items-center justify-center rounded-md bg-purple-100">
-                  <h3 className="text-3xl font-medium text-purple-600">3</h3>
+                <div className="flex h-16 w-16 items-center justify-center rounded-md bg-yellow-100">
+                  <h3 className="text-3xl font-medium text-yellow-600">3</h3>
                 </div>
                 <div className="ml-6 lg:ml-0">
                   <h4 className="mb-5 text-xl font-medium text-gray-900 lg:mt-8">
@@ -287,22 +287,22 @@ export function ToolLandingPage({
             <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">{t('whyChooseUs')}</h2>
             <div className="grid md:grid-cols-4 gap-8">
               <div className="bg-white rounded-lg p-6 shadow-md transition duration-300 hover:shadow-lg">
-                <Zap className="h-12 w-12 text-purple-600 mb-4" />
+                <Zap className="h-12 w-12 text-yellow-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2">{t('ideaToDiagram')}</h3>
                 <p className="text-gray-600">{t('ideaToDiagramDesc')}</p>
               </div>
               <div className="bg-white rounded-lg p-6 shadow-md transition duration-300 hover:shadow-lg">
-                <FileText className="h-12 w-12 text-purple-600 mb-4" />
+                <FileText className="h-12 w-12 text-yellow-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2">{t('importAnything')}</h3>
                 <p className="text-gray-600">{t('importAnythingDesc')}</p>
               </div>
               <div className="bg-white rounded-lg p-6 shadow-md transition duration-300 hover:shadow-lg">
-                <Sparkles className="h-12 w-12 text-purple-600 mb-4" />
+                <Sparkles className="h-12 w-12 text-yellow-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2">{t('fastIterativeUpdates')}</h3>
                 <p className="text-gray-600">{t('fastIterativeUpdatesDesc')}</p>
               </div>
               <div className="bg-white rounded-lg p-6 shadow-md transition duration-300 hover:shadow-lg">
-                <Share className="h-12 w-12 text-purple-600 mb-4" />
+                <Share className="h-12 w-12 text-yellow-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2">{t('exportAnywhere')}</h3>
                 <p className="text-gray-600">{t('exportAnywhereDesc')}</p>
               </div>

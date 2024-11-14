@@ -88,7 +88,7 @@ export function AiDiagrammingTools({ tools }: { tools: Tool[] }) {
                   </div>
                   <CardHeader>
                     <CardTitle>
-                      <Link href={`/tool/${tool.slug}`} className="hover:text-purple-600 transition-colors">
+                      <Link href={`/tool/${tool.slug}`} className="hover:text-yellow-600 transition-colors">
                         {tool.name}
                       </Link>
                     </CardTitle>
@@ -96,7 +96,7 @@ export function AiDiagrammingTools({ tools }: { tools: Tool[] }) {
                   </CardHeader>
                   <CardFooter className="mt-auto">
                     <Link href={`/tool/${tool.slug}`} className="w-full">
-                      <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white transition duration-300">
+                      <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white transition duration-300">
                         {t('tryNow')}
                         <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>

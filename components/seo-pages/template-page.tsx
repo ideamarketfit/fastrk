@@ -56,7 +56,7 @@ export function TemplatePage({
         <HeaderComponent />
       </div>
       <div className="flex-1 overflow-auto pt-16">
-        <div className="min-h-full bg-gradient-to-br from-purple-50 via-white to-blue-50">
+        <div className="min-h-full bg-gradient-to-br from-yellow-50 via-white to-green-50">
           <div className="container mx-auto px-4 py-8">
             <div className="grid gap-8 lg:grid-cols-[1fr,400px]">
               {/* Left Column - Template Preview and About Template */}
@@ -97,7 +97,7 @@ export function TemplatePage({
                       <span>{t('usedXTimes').replace('{count}', '4,872')}</span>
                       <span>•</span>
                       <div className="flex items-center space-x-1">
-                        <Sparkles className="h-4 w-4 text-purple-600" />
+                        <Sparkles className="h-4 w-4 text-yellow-500" />
                         <span>{t('aiAssistantIncluded')}</span>
                       </div>
                     </div>
@@ -109,7 +109,7 @@ export function TemplatePage({
                             key={star}
                             className={`h-5 w-5 ${
                               star <= Math.floor(rating?.score || 0)
-                                ? "fill-yellow-400 text-yellow-400"
+                                ? "fill-yellow-500 text-yellow-500"
                                 : "text-gray-300"
                             }`}
                           />
@@ -122,7 +122,7 @@ export function TemplatePage({
                     </div>
 
                     <Button 
-                      className="w-full bg-purple-600 hover:bg-purple-700"
+                      className="w-full bg-yellow-500 hover:bg-yellow-600"
                       onClick={() => {
                         const artifactToSave: Artifact = {
                           title: artifact.title,
@@ -148,7 +148,7 @@ export function TemplatePage({
                             <Star
                               className={`h-6 w-6 ${
                                 userRating >= star
-                                  ? "fill-yellow-400 text-yellow-400"
+                                  ? "fill-yellow-500 text-yellow-500"
                                   : "text-gray-300"
                               }`}
                             />
@@ -169,12 +169,12 @@ export function TemplatePage({
                     </div>
 
                     <div className="flex space-x-2">
-                      <Button variant="outline" className="flex-1">
-                        <Download className="mr-2 h-4 w-4" />
+                      <Button variant="outline" className="flex-1 border-yellow-500">
+                        <Download className="mr-2 h-4 w-4 text-yellow-500" />
                         {t('download')}
                       </Button>
-                      <Button variant="outline" className="flex-1">
-                        <Share2 className="mr-2 h-4 w-4" />
+                      <Button variant="outline" className="flex-1 border-yellow-500">
+                        <Share2 className="mr-2 h-4 w-4 text-yellow-500" />
                         {t('share')}
                       </Button>
                     </div>
