@@ -30,11 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script
-          defer
-          data-domain="chatdiagram.com"
-          src="https://plausible.io/js/script.file-downloads.outbound-links.js"
-        ></script>
+      <script defer data-domain="fastrk.ai" src="https://plausible.io/js/script.file-downloads.outbound-links.js"></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
