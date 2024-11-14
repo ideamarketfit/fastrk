@@ -49,7 +49,9 @@ The project is a Next.js application that uses AI to generate various types of a
     SITE_URL=your_domain
     ```
 
-
+### Part 4: Midea
+- [ ] Logo & Favicon
+- [ ] Demo images & videos
 
 
 ## More Details
