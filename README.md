@@ -24,11 +24,11 @@ The project is a Next.js application that uses AI to generate various types of a
 
 - [ ] Define Pages - 自定义SEO页面 
     Recommend V0 for component generatetion 建议用V0直接生成以下页面
-    1. [Landing Page](components/seo-pages/landing-page.tsx) - 官网 - [V0](https://v0.dev/chat/lTVGbKnR468?b=b_6ysZClex5Wx)
-    2. [Tool Landing Page](components/seo-pages/tool-landing-page.tsx) - 工具页面 - [V0](https://v0.dev/chat/mkKcL2GGJD3)
-    3. [Template Landing Page](components/seo-pages/template-landing-page.tsx) - 模板页面 - [V0](https://v0.dev/chat/umiI3lqkPgg?b=b_Pzawq99zA1b)
-    4. [Tool Collection](components/seo-pages/tool-collection.tsx) - 工具集合页面 
-    5. [Template Collection](components/seo-pages/template-collection.tsx) - 模板集合页面 - [V0](https://v0.dev/chat/sqKwPtG3GIR?b=b_4ygovrHkZv8)
+    - [ ] [Landing Page](components/seo-pages/landing-page.tsx) - 官网 - [V0](https://v0.dev/chat/lTVGbKnR468?b=b_6ysZClex5Wx)
+    - [ ] [Tool Landing Page](components/seo-pages/tool-landing-page.tsx) - 工具页面 - [V0](https://v0.dev/chat/mkKcL2GGJD3)
+    - [ ] [Template Landing Page](components/seo-pages/template-landing-page.tsx) - 模板页面 - [V0](https://v0.dev/chat/umiI3lqkPgg?b=b_Pzawq99zA1b)
+    - [ ] [Tool Collection](components/seo-pages/tool-collection.tsx) - 工具集合页面 
+    - [ ] [Template Collection](components/seo-pages/template-collection.tsx) - 模板集合页面 - [V0](https://v0.dev/chat/sqKwPtG3GIR?b=b_4ygovrHkZv8)
 - [ ] Add all English content from new components to `public/locales/en.json` for internationalization - 新增组件更新英文部分的内容
 - [ ] Setup CMS - Airtable (and update content data structure if you are not using default) - 在Airtable 上设置工具、模板页面内容
 
