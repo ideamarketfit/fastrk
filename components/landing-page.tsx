@@ -108,7 +108,7 @@ export function LandingPageComponent() {
             </div>
             <div className="p-4">
               <Image 
-                src="/public/chat-diagram-demo.png" 
+                src="/chat-diagram-demo.png" 
                 height={400} 
                 width={600} 
                 alt="Fastrk.AI Demo" 
