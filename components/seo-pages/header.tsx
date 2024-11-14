@@ -39,7 +39,7 @@ export function HeaderComponent() {
             <Link href={getLocalizedPath('/')} className="flex items-center space-x-2 group">
               <MessageSquare className="h-9 w-9 text-yellow-400 group-hover:text-yellow-500 transition-colors duration-300" />
               <span className="text-xl sm:text-2xl font-bold text-gray-800">
-                Chat Diagram
+                Fastrk.AI
               </span>
             </Link>
             {!isChat && (
